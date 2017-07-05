@@ -1,0 +1,5 @@
+# Created by .ignore support plugin (hsz.mobi)
+.idea/
+target/
+dowish-oa-server.iml
+pom-war.xml
