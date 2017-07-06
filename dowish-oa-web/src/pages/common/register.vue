@@ -29,8 +29,8 @@
 </template>
 ·
 <script>
-  import * as types from '../store/mutation-types'
-  import api from '../axios'
+  import * as types from '../../store/mutation-types'
+  import api from '../../utils/axios'
   export default {
     name: 'login',
     data() {

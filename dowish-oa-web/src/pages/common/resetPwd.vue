@@ -17,7 +17,7 @@
   </imp-panel>
 </template>
 <script>
-  import * as api from "../api"
+  import * as api from "../../utils/api"
   export  default{
     data(){
       return {

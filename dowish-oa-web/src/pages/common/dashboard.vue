@@ -10,7 +10,7 @@
 
 <script>
   import echarts from 'echarts';
-  import data from '../../static/data/data.json';
+  import data from '../../../static/data/data.json';
   export default {
     data() {
       return {
@@ -172,7 +172,7 @@
 
 <style scoped>
   .wrapper.fixed {
-    background: url("../../static/img/Bitmap.5ad3457.png");
+    background: url("../../../static/img/Bitmap.5ad3457.png");
     background-size: 100% 100%;
   }
 

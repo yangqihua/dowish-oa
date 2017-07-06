@@ -86,8 +86,8 @@
 <script>
   import {mapGetters, mapActions, mapMutations} from 'vuex'
   import * as types from "../../store/mutation-types"
-  import * as api from "../../api"
-  import  auth from '../../auth'
+  import * as api from "../../utils/api"
+  import  auth from '../../utils/auth'
   export default {
     data(){
       return {

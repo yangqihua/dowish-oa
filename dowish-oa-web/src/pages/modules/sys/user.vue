@@ -111,9 +111,9 @@
 </template>
 
 <script>
-  import panel from "../../components/panel.vue"
-  import * as api from "../../api"
-  import testData from "../../../static/data/data.json"
+  import panel from "../../../components/panel.vue"
+  import * as api from "../../../utils/api"
+  import testData from "../../../../static/data/data.json"
 
   export default {
     components: {

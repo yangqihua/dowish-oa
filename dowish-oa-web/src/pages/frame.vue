@@ -17,12 +17,12 @@
 <script>
 
   import Vue from 'vue'
-  import sideMenu from './components/sideMenu.vue'
-  import impHeader from "./pages/layout/header.vue"
-  import impFooter from "./pages/layout/footer.vue"
+  import sideMenu from '../components/sideMenu.vue'
+  import impHeader from "./layout/header.vue"
+  import impFooter from "./layout/footer.vue"
   require("jquery-slimscroll/jquery.slimscroll.js")
   import {mapGetters, mapActions,mapMutations} from 'vuex'
-  import * as types from "./store/mutation-types"
+  import * as types from "../store/mutation-types"
   import 'animate.css'
 
   export default {

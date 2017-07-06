@@ -12,7 +12,7 @@ import filters from "./filters";
 import VueProgressBar from "vue-progressbar";
 import {TOGGLE_SIDEBAR} from "./store/mutation-types";
 import VueLazyload from "vue-lazyload";
-import auth from "./auth";
+import auth from "./utils/auth";
 import Element from "element-ui";
 import "element-ui/lib/theme-default/index.css";
 import ImpPanel from "./components/panel.vue";

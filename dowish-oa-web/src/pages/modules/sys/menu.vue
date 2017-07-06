@@ -72,12 +72,12 @@
 </template>
 <script  type="text/babel">
 
-  import panel from "../../components/panel.vue"
-  import selectTree from "../../components/selectTree.vue"
-  import treeter from "../../components/treeter"
+  import panel from "../../../components/panel.vue"
+  import selectTree from "../../../components/selectTree.vue"
+  import treeter from "../../../components/treeter"
   import merge from 'element-ui/src/utils/merge';
 
-  import * as api from "../../api"
+  import * as api from "../../../utils/api"
 
   export default {
     mixins: [treeter],

@@ -4,7 +4,7 @@ import * as types from "./mutation-types";
 import defaultMenu from "./default-menu";
 // import app from './modules/app'
 // import menu from './modules/menu'
-import * as api from "../api";
+import * as api from "../utils/api";
 
 Vue.use(Vuex)
 

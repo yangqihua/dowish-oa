@@ -42,8 +42,8 @@
   </imp-panel>
 </template>
 <script>
-  import panel from "../../components/panel.vue"
-  import * as api from "../../api"
+  import panel from "../../../components/panel.vue"
+  import * as api from "../../../utils/api"
 
   export default {
     components: {
