@@ -106,7 +106,6 @@
     top: 5px;
   }
 
-
   .box-header > .box-tools [data-toggle="tooltip"] {
     position: relative;
   }

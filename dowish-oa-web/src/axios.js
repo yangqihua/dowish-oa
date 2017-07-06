@@ -1,6 +1,3 @@
-/**
- * Created by lanux on 2017/3/9.
- */
 import axios from "axios";
 
 // 适配vue-resource

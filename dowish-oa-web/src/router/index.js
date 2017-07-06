@@ -4,7 +4,7 @@ import menuList from "../pages/sys/menu.vue";
 import role from "../pages/sys/role.vue";
 import resource from "../pages/sys/resource.vue";
 import login from "../pages/login.vue";
-import app from "../App.vue";
+import frame from "../frame.vue";
 import sysUser from "../pages/sys/user.vue";
 import userAdd from "../pages/sys/userAdd.vue";
 import resetPwd from "../pages/resetPwd.vue";
@@ -12,12 +12,15 @@ import resetPwd from "../pages/resetPwd.vue";
 const routes = [
   {path: '/login', component: login},
   {
-    path: '/test', component: app, children: [
-    {path: '*', component: NotFoundView}
-  ]
+    path: '/test', component: frame,
+    children: [
+      {
+        path: '*', component: NotFoundView
+      }
+    ]
   },
   {
-    path: '', component: app, children: [
+    path: '', component: frame, children: [
     {path: '/resetPwd', component: resetPwd},
     {path: '/index', component: dashboard},
     {path: '/sys/menuList', component: menuList},
