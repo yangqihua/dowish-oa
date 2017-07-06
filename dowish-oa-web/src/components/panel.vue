@@ -10,16 +10,17 @@
       <slot v-else>
       </slot>
     </div>
+
     <div class="box-footer" v-text="footer" v-if="footer">
     </div>
   </div>
 </template>
 <script type="text/javascript">
   export default{
-    name:"ImpPanel",
+    name: "ImpPanel",
     props: {
-      widthBorder:{
-          type:Boolean
+      widthBorder: {
+        type: Boolean
       },
       title: {
         type: String
@@ -31,8 +32,8 @@
   }
 </script>
 <style scoped>
-  .box{
-    box-shadow: 0 2px 4px 0 rgba(0,0,0,.12), 0 0 6px 0 rgba(0,0,0,.04);
+  .box {
+    box-shadow: 0 2px 4px 0 rgba(0, 0, 0, .12), 0 0 6px 0 rgba(0, 0, 0, .04);
     border: 1px solid #d3dce6;
     border-radius: 4px;
   }
@@ -51,6 +52,7 @@
   .overlay-wrapper .overlay.dark {
     background: rgba(0, 0, 0, 0.5);
   }
+
   .box-header:before,
   .box-body:before,
   .box-footer:before,
@@ -60,23 +62,28 @@
     content: " ";
     display: table;
   }
+
   .box-header:after,
   .box-body:after,
   .box-footer:after {
     clear: both;
   }
+
   .box-header {
     color: #444;
     display: block;
     padding: 15px;
     position: relative;
   }
+
   .box-header.with-border {
     border-bottom: 1px solid #f4f4f4;
   }
+
   .collapsed-box .box-header.with-border {
     border-bottom: none;
   }
+
   .box-header > .fa,
   .box-header > .glyphicon,
   .box-header > .ion,
@@ -86,25 +93,31 @@
     margin: 0;
     line-height: 1;
   }
+
   .box-header > .fa,
   .box-header > .glyphicon,
   .box-header > .ion {
     margin-right: 5px;
   }
+
   .box-header > .box-tools {
     position: absolute;
     right: 10px;
     top: 5px;
   }
+
+
   .box-header > .box-tools [data-toggle="tooltip"] {
     position: relative;
   }
+
   .box-header > .box-tools.pull-right .dropdown-menu {
     right: 0;
     left: auto;
   }
+
   .box-header > .box-tools .dropdown-menu > li > a {
-    color: #444!important;
+    color: #444 !important;
   }
 
   .box-body {
