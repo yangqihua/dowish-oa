@@ -55,6 +55,23 @@ var vm = new Vue({
 				return ;
 			}
 			location.href = baseURL + "sys/generator/code?tables=" + JSON.stringify(tableNames);
+            var url = "sys/generator/code?tables=" + JSON.stringify(tableNames);
+            console.log(url);
+            $.ajax({
+                type: "POST",
+                url: baseURL + url,
+                contentType: "application/json",
+                success: function(r){
+                    console.log("result is : ",r);
+                    // if(r.code === 0){
+                    //     alert('操作成功', function(){
+                    //         vm.reload();
+                    //     });
+                    // }else{
+                    //     alert(r.msg);
+                    // }
+                }
+            });
 		}
 	}
 });
