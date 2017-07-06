@@ -11,8 +11,7 @@ import javax.servlet.DispatcherType;
 /**
  * Filter配置
  *
- * @author chenshun
- * @email sunlightcs@gmail.com
+ *
  * @date 2017-04-21 21:56
  */
 @Configuration

@@ -10,6 +10,7 @@ import net.dowish.modules.sys.service.SysUserTokenService;
 import org.apache.commons.io.IOUtils;
 import org.apache.shiro.crypto.hash.Sha256Hash;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.RestController;
@@ -23,11 +24,9 @@ import java.io.IOException;
 import java.util.Map;
 
 /**
+ *
  * 登录相关
- * 
- * @author chenshun
- * @email sunlightcs@gmail.com
- * @date 2016年11月10日 下午1:15:31
+ *
  */
 @RestController
 public class SysLoginController {
@@ -37,6 +36,9 @@ public class SysLoginController {
 	private SysUserService sysUserService;
 	@Autowired
 	private SysUserTokenService sysUserTokenService;
+
+	@Value("${spring.profiles.active}")
+	private String env;
 
 
 	@RequestMapping("captcha.jpg")
@@ -62,8 +64,10 @@ public class SysLoginController {
 	@RequestMapping(value = "/sys/login", method = RequestMethod.POST)
 	public Map<String, Object> login(String username, String password, String captcha)throws IOException {
 		String kaptcha = ShiroUtils.getKaptcha(Constants.KAPTCHA_SESSION_KEY);
-		if(!captcha.equalsIgnoreCase(kaptcha)){
-			return R.error("验证码不正确");
+		if(!"dev".equals(env)) {
+			if (!captcha.equalsIgnoreCase(kaptcha)) {
+				return R.error("验证码不正确");
+			}
 		}
 
 		//用户信息

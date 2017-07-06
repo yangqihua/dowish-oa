@@ -22,8 +22,7 @@ import java.util.Set;
 /**
  * 系统菜单
  * 
- * @author chenshun
- * @email sunlightcs@gmail.com
+ *
  * @date 2016年10月27日 下午9:58:15
  */
 @RestController
