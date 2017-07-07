@@ -7,9 +7,6 @@ import java.util.UUID;
 
 /**
  * 生成token
- *
- *
- * @date 2017-05-20 14:41
  */
 public class TokenGenerator {
 

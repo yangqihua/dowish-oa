@@ -1,10 +1,10 @@
 package net.dowish.modules.job.controller;
 
+import net.dowish.common.utils.Apis;
 import net.dowish.modules.job.entity.ScheduleJobLogEntity;
 import net.dowish.modules.job.service.ScheduleJobLogService;
 import net.dowish.common.utils.PageUtils;
 import net.dowish.common.utils.Query;
-import net.dowish.common.utils.R;
 import org.apache.shiro.authz.annotation.RequiresPermissions;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.PathVariable;
@@ -32,7 +32,7 @@ public class ScheduleJobLogController {
 	 */
 	@RequestMapping("/list")
 	@RequiresPermissions("sys:schedule:log")
-	public R list(@RequestParam Map<String, Object> params){
+	public Apis list(@RequestParam Map<String, Object> params){
 		//查询列表数据
 		Query query = new Query(params);
 		List<ScheduleJobLogEntity> jobList = scheduleJobLogService.queryList(query);
@@ -40,16 +40,16 @@ public class ScheduleJobLogController {
 		
 		PageUtils pageUtil = new PageUtils(jobList, total, query.getLimit(), query.getPage());
 		
-		return R.ok().put("page", pageUtil);
+		return Apis.ok().put("page", pageUtil);
 	}
 	
 	/**
 	 * 定时任务日志信息
 	 */
 	@RequestMapping("/info/{logId}")
-	public R info(@PathVariable("logId") Long logId){
+	public Apis info(@PathVariable("logId") Long logId){
 		ScheduleJobLogEntity log = scheduleJobLogService.queryObject(logId);
 		
-		return R.ok().put("log", log);
+		return Apis.ok().put("log", log);
 	}
 }

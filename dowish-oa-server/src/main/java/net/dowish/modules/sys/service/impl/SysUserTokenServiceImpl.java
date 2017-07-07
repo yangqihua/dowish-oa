@@ -1,9 +1,9 @@
 package net.dowish.modules.sys.service.impl;
 
+import net.dowish.common.utils.Apis;
 import net.dowish.modules.sys.dao.SysUserTokenDao;
 import net.dowish.modules.sys.entity.SysUserTokenEntity;
 import net.dowish.modules.sys.service.SysUserTokenService;
-import net.dowish.common.utils.R;
 import net.dowish.modules.sys.oauth2.TokenGenerator;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
@@ -39,7 +39,7 @@ public class SysUserTokenServiceImpl implements SysUserTokenService {
 	}
 
 	@Override
-	public R createToken(long userId) {
+	public Apis createToken(long userId) {
 		//生成一个token
 		String token = TokenGenerator.generateValue();
 
@@ -68,8 +68,8 @@ public class SysUserTokenServiceImpl implements SysUserTokenService {
 			update(tokenEntity);
 		}
 
-		R r = R.ok().put("token", token).put("expire", EXPIRE);
+		Apis apis = Apis.ok().put("token", token).put("expire", EXPIRE);
 
-		return r;
+		return apis;
 	}
 }

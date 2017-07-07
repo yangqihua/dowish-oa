@@ -99,13 +99,13 @@ var vm = new Vue({
 			    url: baseURL + "sys/login",
 			    data: data,
 			    dataType: "json",
-			    success: function(r){
-					if(r.code == 0){//登录成功
-                        localStorage.setItem("token", r.token);
+			    success: function(apis){
+					if(apis.code == 0){//登录成功
+                        localStorage.setItem("token", apis.token);
                         parent.location.href ='index.html';
 					}else{
 						vm.error = true;
-						vm.errorMsg = r.msg;
+						vm.errorMsg = apis.msg;
 
                         vm.refreshCode();
 					}

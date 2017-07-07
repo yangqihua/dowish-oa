@@ -47,7 +47,7 @@ public class SysOssController {
 	 */
 	@RequestMapping("/list")
 	@RequiresPermissions("sys:oss:all")
-	public R list(@RequestParam Map<String, Object> params){
+	public Apis list(@RequestParam Map<String, Object> params){
 		//查询列表数据
 		Query query = new Query(params);
 		List<SysOssEntity> sysOssList = sysOssService.queryList(query);
@@ -55,7 +55,7 @@ public class SysOssController {
 		
 		PageUtils pageUtil = new PageUtils(sysOssList, total, query.getLimit(), query.getPage());
 		
-		return R.ok().put("page", pageUtil);
+		return Apis.ok().put("page", pageUtil);
 	}
 
 
@@ -64,10 +64,10 @@ public class SysOssController {
      */
     @RequestMapping("/config")
     @RequiresPermissions("sys:oss:all")
-    public R config(){
+    public Apis config(){
         CloudStorageConfig config = sysConfigService.getConfigObject(KEY, CloudStorageConfig.class);
 
-        return R.ok().put("config", config);
+        return Apis.ok().put("config", config);
     }
 
 
@@ -76,7 +76,7 @@ public class SysOssController {
 	 */
 	@RequestMapping("/saveConfig")
 	@RequiresPermissions("sys:oss:all")
-	public R saveConfig(@RequestBody CloudStorageConfig config){
+	public Apis saveConfig(@RequestBody CloudStorageConfig config){
 		//校验类型
 		ValidatorUtils.validateEntity(config);
 
@@ -94,7 +94,7 @@ public class SysOssController {
 
         sysConfigService.updateValueByKey(KEY, new Gson().toJson(config));
 
-		return R.ok();
+		return Apis.ok();
 	}
 	
 
@@ -103,7 +103,7 @@ public class SysOssController {
 	 */
 	@RequestMapping("/upload")
 	@RequiresPermissions("sys:oss:all")
-	public R upload(@RequestParam("file") MultipartFile file) throws Exception {
+	public Apis upload(@RequestParam("file") MultipartFile file) throws Exception {
 		if (file.isEmpty()) {
 			throw new RRException("上传文件不能为空");
 		}
@@ -117,7 +117,7 @@ public class SysOssController {
 		ossEntity.setCreateDate(new Date());
 		sysOssService.save(ossEntity);
 
-		return R.ok().put("url", url);
+		return Apis.ok().put("url", url);
 	}
 
 
@@ -126,10 +126,10 @@ public class SysOssController {
 	 */
 	@RequestMapping("/delete")
 	@RequiresPermissions("sys:oss:all")
-	public R delete(@RequestBody Long[] ids){
+	public Apis delete(@RequestBody Long[] ids){
 		sysOssService.deleteBatch(ids);
 
-		return R.ok();
+		return Apis.ok();
 	}
 
 }

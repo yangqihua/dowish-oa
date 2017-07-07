@@ -1,7 +1,7 @@
 package net.dowish.modules.sys.service;
 
 import net.dowish.modules.sys.entity.SysUserTokenEntity;
-import net.dowish.common.utils.R;
+import net.dowish.common.utils.Apis;
 
 /**
  * 用户Token
@@ -23,6 +23,6 @@ public interface SysUserTokenService {
 	 * 生成token
 	 * @param userId  用户ID
 	 */
-	R createToken(long userId);
+	Apis createToken(long userId);
 
 }

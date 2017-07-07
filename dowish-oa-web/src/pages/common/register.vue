@@ -29,7 +29,7 @@
 </template>
 ·
 <script>
-  import * as types from '../../store/mutation-types'
+  import * as types from '../../store/common/mutation-types'
   import api from '../../utils/axios'
   export default {
     name: 'login',

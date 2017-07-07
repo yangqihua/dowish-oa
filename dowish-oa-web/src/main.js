@@ -8,9 +8,9 @@ import routeConfig from "./router";
 import {sync} from "vuex-router-sync";
 import store from "./store";
 import axios from "axios";
-import filters from "./filters";
+import filters from "./utils/string-utils";
 import VueProgressBar from "vue-progressbar";
-import {TOGGLE_SIDEBAR} from "./store/mutation-types";
+import {TOGGLE_SIDEBAR} from "./store/common/mutation-types";
 import VueLazyload from "vue-lazyload";
 import auth from "./utils/auth";
 import Element from "element-ui";
@@ -70,15 +70,15 @@ Vue.use(VueProgressBar, options)
 //定义路由
 const router = new VueRouter({
   routes: routeConfig,
-  //mode: 'history'
 })
 
 sync(store, router)
 
 const {state} = store
+console.log(store)
 
 router.beforeEach((route, redirect, next) => {
-  if (state.device.isMobile && state.sidebar.opened) {
+  if (state.common.device.isMobile && state.sidebar.opened) {
     store.commit(TOGGLE_SIDEBAR, false)
   }
   if (!auth.loggedIn() && route.path !== '/login') {

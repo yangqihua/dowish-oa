@@ -1,7 +1,7 @@
 package net.dowish.modules.api.controller;
 
 
-import net.dowish.common.utils.R;
+import net.dowish.common.utils.Apis;
 import net.dowish.modules.api.annotation.AuthIgnore;
 import net.dowish.modules.api.annotation.LoginUser;
 import net.dowish.modules.api.entity.UserEntity;
@@ -29,8 +29,8 @@ public class ApiTestController {
     @GetMapping("userInfo")
     @ApiOperation(value = "获取用户信息")
     @ApiImplicitParam(paramType = "header", name = "token", value = "token", required = true)
-    public R userInfo(@LoginUser UserEntity user){
-        return R.ok().put("user", user);
+    public Apis userInfo(@LoginUser UserEntity user){
+        return Apis.ok().put("user", user);
     }
 
     /**
@@ -39,7 +39,7 @@ public class ApiTestController {
     @AuthIgnore
     @GetMapping("notToken")
     @ApiOperation(value = "忽略Token验证测试")
-    public R notToken(){
-        return R.ok().put("msg", "无需token也能访问。。。");
+    public Apis notToken(){
+        return Apis.ok().put("msg", "无需token也能访问。。。");
     }
 }

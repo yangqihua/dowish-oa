@@ -1,11 +1,10 @@
 package net.dowish.modules.sys.controller;
 
+import net.dowish.common.utils.Apis;
 import net.dowish.common.utils.PageUtils;
 import net.dowish.common.utils.Query;
-import net.dowish.common.utils.R;
 import net.dowish.common.xss.XssHttpServletRequestWrapper;
 import net.dowish.modules.sys.service.SysGeneratorService;
-import org.apache.commons.io.IOUtils;
 import org.apache.shiro.authz.annotation.RequiresPermissions;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
@@ -15,7 +14,6 @@ import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.ResponseBody;
 
 import javax.servlet.http.HttpServletRequest;
-import javax.servlet.http.HttpServletResponse;
 import java.io.IOException;
 import java.util.List;
 import java.util.Map;
@@ -36,7 +34,7 @@ public class SysGeneratorController {
 	@ResponseBody
 	@RequestMapping("/list")
 	@RequiresPermissions("sys:generator:list")
-	public R list(@RequestParam Map<String, Object> params){
+	public Apis list(@RequestParam Map<String, Object> params){
 		//查询列表数据
 		Query query = new Query(params);
 		List<Map<String, Object>> list = sysGeneratorService.queryList(query);
@@ -44,7 +42,7 @@ public class SysGeneratorController {
 		
 		PageUtils pageUtil = new PageUtils(list, total, query.getLimit(), query.getPage());
 		
-		return R.ok().put("page", pageUtil);
+		return Apis.ok().put("page", pageUtil);
 	}
 	
 	/**
@@ -52,7 +50,7 @@ public class SysGeneratorController {
 	 */
 	@PostMapping("/code")
 	@RequiresPermissions("sys:generator:code")
-	public R code(HttpServletRequest request) throws IOException{
+	public Apis code(HttpServletRequest request) throws IOException{
 		String[] tableNames = new String[]{};
 		//获取表名，不进行xss过滤
 		HttpServletRequest orgRequest = XssHttpServletRequestWrapper.getOrgRequest(request);
@@ -67,6 +65,6 @@ public class SysGeneratorController {
 //        response.setContentType("application/octet-stream; charset=UTF-8");
 //
 //        IOUtils.write(data, response.getOutputStream());
-		return R.ok();
+		return Apis.ok();
 	}
 }

@@ -1,6 +1,6 @@
 package net.dowish.common.exception;
 
-import net.dowish.common.utils.R;
+import net.dowish.common.utils.Apis;
 import org.apache.shiro.authz.AuthorizationException;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -22,29 +22,29 @@ public class RRExceptionHandler {
 	 * 自定义异常
 	 */
 	@ExceptionHandler(RRException.class)
-	public R handleRRException(RRException e){
-		R r = new R();
-		r.put("code", e.getCode());
-		r.put("msg", e.getMessage());
+	public Apis handleRRException(RRException e){
+		Apis apis = new Apis();
+		apis.put("code", e.getCode());
+		apis.put("msg", e.getMessage());
 
-		return r;
+		return apis;
 	}
 
 	@ExceptionHandler(DuplicateKeyException.class)
-	public R handleDuplicateKeyException(DuplicateKeyException e){
+	public Apis handleDuplicateKeyException(DuplicateKeyException e){
 		logger.error(e.getMessage(), e);
-		return R.error("数据库中已存在该记录");
+		return Apis.error("数据库中已存在该记录");
 	}
 
 	@ExceptionHandler(AuthorizationException.class)
-	public R handleAuthorizationException(AuthorizationException e){
+	public Apis handleAuthorizationException(AuthorizationException e){
 		logger.error(e.getMessage(), e);
-		return R.error("没有权限，请联系管理员授权");
+		return Apis.error("没有权限，请联系管理员授权");
 	}
 
 	@ExceptionHandler(Exception.class)
-	public R handleException(Exception e){
+	public Apis handleException(Exception e){
 		logger.error(e.getMessage(), e);
-		return R.error();
+		return Apis.error();
 	}
 }

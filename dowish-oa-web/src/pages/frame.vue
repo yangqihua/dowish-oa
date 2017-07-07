@@ -22,7 +22,7 @@
   import impFooter from "./layout/footer.vue"
   require("jquery-slimscroll/jquery.slimscroll.js")
   import {mapGetters, mapActions,mapMutations} from 'vuex'
-  import * as types from "../store/mutation-types"
+  import * as types from "../store/common/mutation-types"
   import 'animate.css'
 
   export default {

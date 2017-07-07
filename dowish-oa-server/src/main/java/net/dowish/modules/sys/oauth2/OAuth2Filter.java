@@ -1,7 +1,7 @@
 package net.dowish.modules.sys.oauth2;
 
 import com.google.gson.Gson;
-import net.dowish.common.utils.R;
+import net.dowish.common.utils.Apis;
 import org.apache.commons.lang.StringUtils;
 import org.apache.http.HttpStatus;
 import org.apache.shiro.authc.AuthenticationException;
@@ -17,8 +17,6 @@ import java.io.IOException;
 /**
  * oauth2过滤器
  *
- *
- * @date 2017-05-20 13:00
  */
 public class OAuth2Filter extends AuthenticatingFilter {
 
@@ -45,7 +43,7 @@ public class OAuth2Filter extends AuthenticatingFilter {
         String token = getRequestToken((HttpServletRequest) request);
         if(StringUtils.isBlank(token)){
             HttpServletResponse httpResponse = (HttpServletResponse) response;
-            String json = new Gson().toJson(R.error(HttpStatus.SC_UNAUTHORIZED, "invalid token"));
+            String json = new Gson().toJson(Apis.error(HttpStatus.SC_UNAUTHORIZED, "invalid token"));
             httpResponse.getWriter().print(json);
 
             return false;
@@ -61,9 +59,9 @@ public class OAuth2Filter extends AuthenticatingFilter {
         try {
             //处理登录失败的异常
             Throwable throwable = e.getCause() == null ? e : e.getCause();
-            R r = R.error(HttpStatus.SC_UNAUTHORIZED, throwable.getMessage());
+            Apis apis = Apis.error(HttpStatus.SC_UNAUTHORIZED, throwable.getMessage());
 
-            String json = new Gson().toJson(r);
+            String json = new Gson().toJson(apis);
             httpResponse.getWriter().print(json);
         } catch (IOException e1) {
 

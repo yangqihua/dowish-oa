@@ -2,7 +2,7 @@ package net.dowish.modules.sys.controller;
 
 import com.google.code.kaptcha.Constants;
 import com.google.code.kaptcha.Producer;
-import net.dowish.common.utils.R;
+import net.dowish.common.utils.Apis;
 import net.dowish.common.utils.ShiroUtils;
 import net.dowish.modules.sys.entity.SysUserEntity;
 import net.dowish.modules.sys.service.SysUserService;
@@ -63,29 +63,29 @@ public class SysLoginController {
 	 */
 	@RequestMapping(value = "/sys/login", method = RequestMethod.POST)
 	public Map<String, Object> login(String username, String password, String captcha)throws IOException {
-		String kaptcha = ShiroUtils.getKaptcha(Constants.KAPTCHA_SESSION_KEY);
-		if(!"dev".equals(env)) {
-			if (!captcha.equalsIgnoreCase(kaptcha)) {
-				return R.error("验证码不正确");
-			}
-		}
+//		String kaptcha = ShiroUtils.getKaptcha(Constants.KAPTCHA_SESSION_KEY);
+//		if(!"dev".equals(env)) {
+//			if (!captcha.equalsIgnoreCase(kaptcha)) {
+//				return Apis.error("验证码不正确");
+//			}
+//		}
 
 		//用户信息
 		SysUserEntity user = sysUserService.queryByUserName(username);
 
 		//账号不存在、密码错误
 		if(user == null || !user.getPassword().equals(new Sha256Hash(password, user.getSalt()).toHex())) {
-			return R.error("账号或密码不正确");
+			return Apis.error("账号或密码不正确");
 		}
 
 		//账号锁定
 		if(user.getStatus() == 0){
-			return R.error("账号已被锁定,请联系管理员");
+			return Apis.error("账号已被锁定,请联系管理员");
 		}
 
 		//生成token，并保存到数据库
-		R r = sysUserTokenService.createToken(user.getUserId());
-		return r;
+		Apis apis = sysUserTokenService.createToken(user.getUserId());
+		return apis;
 	}
 	
 }

@@ -85,7 +85,7 @@
 </template>
 <script>
   import {mapGetters, mapActions, mapMutations} from 'vuex'
-  import * as types from "../../store/mutation-types"
+  import * as types from "../../store/common/mutation-types"
   import * as api from "../../utils/api"
   import  auth from '../../utils/auth'
   export default {

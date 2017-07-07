@@ -2,8 +2,8 @@ package net.dowish.modules.sys.controller;
 
 import net.dowish.common.annotation.SysLog;
 import net.dowish.common.exception.RRException;
+import net.dowish.common.utils.Apis;
 import net.dowish.common.utils.Constant;
-import net.dowish.common.utils.R;
 import net.dowish.modules.sys.entity.SysMenuEntity;
 import net.dowish.modules.sys.service.ShiroService;
 import net.dowish.modules.sys.service.SysMenuService;
@@ -49,7 +49,7 @@ public class SysMenuController extends AbstractController {
 	 */
 	@RequestMapping("/select")
 	@RequiresPermissions("sys:menu:select")
-	public R select(){
+	public Apis select(){
 		//查询列表数据
 		List<SysMenuEntity> menuList = sysMenuService.queryNotButtonList();
 		
@@ -61,7 +61,7 @@ public class SysMenuController extends AbstractController {
 		root.setOpen(true);
 		menuList.add(root);
 		
-		return R.ok().put("menuList", menuList);
+		return Apis.ok().put("menuList", menuList);
 	}
 	
 	/**
@@ -69,7 +69,7 @@ public class SysMenuController extends AbstractController {
 	 */
 	@RequestMapping("/perms")
 	@RequiresPermissions("sys:menu:perms")
-	public R perms(){
+	public Apis perms(){
 		//查询列表数据
 		List<SysMenuEntity> menuList = null;
 		
@@ -80,7 +80,7 @@ public class SysMenuController extends AbstractController {
 			menuList = sysMenuService.queryUserList(getUserId());
 		}
 		
-		return R.ok().put("menuList", menuList);
+		return Apis.ok().put("menuList", menuList);
 	}
 	
 	/**
@@ -88,9 +88,9 @@ public class SysMenuController extends AbstractController {
 	 */
 	@RequestMapping("/info/{menuId}")
 	@RequiresPermissions("sys:menu:info")
-	public R info(@PathVariable("menuId") Long menuId){
+	public Apis info(@PathVariable("menuId") Long menuId){
 		SysMenuEntity menu = sysMenuService.queryObject(menuId);
-		return R.ok().put("menu", menu);
+		return Apis.ok().put("menu", menu);
 	}
 	
 	/**
@@ -99,13 +99,13 @@ public class SysMenuController extends AbstractController {
 	@SysLog("保存菜单")
 	@RequestMapping("/save")
 	@RequiresPermissions("sys:menu:save")
-	public R save(@RequestBody SysMenuEntity menu){
+	public Apis save(@RequestBody SysMenuEntity menu){
 		//数据校验
 		verifyForm(menu);
 		
 		sysMenuService.save(menu);
 		
-		return R.ok();
+		return Apis.ok();
 	}
 	
 	/**
@@ -114,13 +114,13 @@ public class SysMenuController extends AbstractController {
 	@SysLog("修改菜单")
 	@RequestMapping("/update")
 	@RequiresPermissions("sys:menu:update")
-	public R update(@RequestBody SysMenuEntity menu){
+	public Apis update(@RequestBody SysMenuEntity menu){
 		//数据校验
 		verifyForm(menu);
 				
 		sysMenuService.update(menu);
 		
-		return R.ok();
+		return Apis.ok();
 	}
 	
 	/**
@@ -129,30 +129,30 @@ public class SysMenuController extends AbstractController {
 	@SysLog("删除菜单")
 	@RequestMapping("/delete")
 	@RequiresPermissions("sys:menu:delete")
-	public R delete(long menuId){
+	public Apis delete(long menuId){
 		if(menuId <= 30){
-			return R.error("系统菜单，不能删除");
+			return Apis.error("系统菜单，不能删除");
 		}
 
 		//判断是否有子菜单或按钮
 		List<SysMenuEntity> menuList = sysMenuService.queryListParentId(menuId);
 		if(menuList.size() > 0){
-			return R.error("请先删除子菜单或按钮");
+			return Apis.error("请先删除子菜单或按钮");
 		}
 
 		sysMenuService.deleteBatch(new Long[]{menuId});
 		
-		return R.ok();
+		return Apis.ok();
 	}
 	
 	/**
 	 * 用户菜单列表
 	 */
 	@RequestMapping("/user")
-	public R user(){
+	public Apis user(){
 		List<SysMenuEntity> menuList = sysMenuService.getUserMenuList(getUserId());
 		Set<String> permissions = shiroService.getUserPermissions(getUserId());
-		return R.ok().put("menuList", menuList).put("permissions", permissions);
+		return Apis.ok().put("menuList", menuList).put("permissions", permissions);
 	}
 	
 	/**

@@ -1,13 +1,13 @@
 package net.dowish.modules.sys.controller;
 
 import net.dowish.common.annotation.SysLog;
+import net.dowish.common.utils.Apis;
 import net.dowish.modules.sys.entity.SysRoleEntity;
 import net.dowish.modules.sys.service.SysRoleMenuService;
 import net.dowish.modules.sys.service.SysRoleService;
 import net.dowish.common.utils.Constant;
 import net.dowish.common.utils.PageUtils;
 import net.dowish.common.utils.Query;
-import net.dowish.common.utils.R;
 import net.dowish.common.validator.ValidatorUtils;
 import org.apache.shiro.authz.annotation.RequiresPermissions;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -36,7 +36,7 @@ public class SysRoleController extends AbstractController {
 	 */
 	@RequestMapping("/list")
 	@RequiresPermissions("sys:role:list")
-	public R list(@RequestParam Map<String, Object> params){
+	public Apis list(@RequestParam Map<String, Object> params){
 		//如果不是超级管理员，则只查询自己创建的角色列表
 		if(getUserId() != Constant.SUPER_ADMIN){
 			params.put("createUserId", getUserId());
@@ -49,7 +49,7 @@ public class SysRoleController extends AbstractController {
 		
 		PageUtils pageUtil = new PageUtils(list, total, query.getLimit(), query.getPage());
 		
-		return R.ok().put("page", pageUtil);
+		return Apis.ok().put("page", pageUtil);
 	}
 	
 	/**
@@ -57,7 +57,7 @@ public class SysRoleController extends AbstractController {
 	 */
 	@RequestMapping("/select")
 	@RequiresPermissions("sys:role:select")
-	public R select(){
+	public Apis select(){
 		Map<String, Object> map = new HashMap<>();
 		
 		//如果不是超级管理员，则只查询自己所拥有的角色列表
@@ -66,7 +66,7 @@ public class SysRoleController extends AbstractController {
 		}
 		List<SysRoleEntity> list = sysRoleService.queryList(map);
 		
-		return R.ok().put("list", list);
+		return Apis.ok().put("list", list);
 	}
 	
 	/**
@@ -74,14 +74,14 @@ public class SysRoleController extends AbstractController {
 	 */
 	@RequestMapping("/info/{roleId}")
 	@RequiresPermissions("sys:role:info")
-	public R info(@PathVariable("roleId") Long roleId){
+	public Apis info(@PathVariable("roleId") Long roleId){
 		SysRoleEntity role = sysRoleService.queryObject(roleId);
 		
 		//查询角色对应的菜单
 		List<Long> menuIdList = sysRoleMenuService.queryMenuIdList(roleId);
 		role.setMenuIdList(menuIdList);
 		
-		return R.ok().put("role", role);
+		return Apis.ok().put("role", role);
 	}
 	
 	/**
@@ -90,13 +90,13 @@ public class SysRoleController extends AbstractController {
 	@SysLog("保存角色")
 	@RequestMapping("/save")
 	@RequiresPermissions("sys:role:save")
-	public R save(@RequestBody SysRoleEntity role){
+	public Apis save(@RequestBody SysRoleEntity role){
 		ValidatorUtils.validateEntity(role);
 		
 		role.setCreateUserId(getUserId());
 		sysRoleService.save(role);
 		
-		return R.ok();
+		return Apis.ok();
 	}
 	
 	/**
@@ -105,13 +105,13 @@ public class SysRoleController extends AbstractController {
 	@SysLog("修改角色")
 	@RequestMapping("/update")
 	@RequiresPermissions("sys:role:update")
-	public R update(@RequestBody SysRoleEntity role){
+	public Apis update(@RequestBody SysRoleEntity role){
 		ValidatorUtils.validateEntity(role);
 		
 		role.setCreateUserId(getUserId());
 		sysRoleService.update(role);
 		
-		return R.ok();
+		return Apis.ok();
 	}
 	
 	/**
@@ -120,9 +120,9 @@ public class SysRoleController extends AbstractController {
 	@SysLog("删除角色")
 	@RequestMapping("/delete")
 	@RequiresPermissions("sys:role:delete")
-	public R delete(@RequestBody Long[] roleIds){
+	public Apis delete(@RequestBody Long[] roleIds){
 		sysRoleService.deleteBatch(roleIds);
 		
-		return R.ok();
+		return Apis.ok();
 	}
 }

@@ -10,7 +10,9 @@ import userAdd from "../pages/modules/sys/userAdd.vue";
 import resetPwd from "../pages/common/resetPwd.vue";
 // Routes
 const routes = [
-  {path: '/login', component: login},
+  {
+    path: '/login', component: login
+  },
   {
     path: '/test', component: frame,
     children: [
@@ -21,16 +23,32 @@ const routes = [
   },
   {
     path: '', component: frame, children: [
-    {path: '/resetPwd', component: resetPwd},
-    {path: '/index', component: dashboard},
-    {path: '/sys/menuList', component: menuList},
-    {path: '/sys/roleList', component: role},
-    {path: '/sys/userList', component: sysUser},
-    {path: '/sys/userAdd', component: userAdd},
-    {path: '/sys/resource', component: resource}
-  ]
+      {
+        path: '/resetPwd', component: resetPwd
+      },
+      {
+        path: '/index', component: dashboard
+      },
+      {
+        path: '/sys/menuList', component: menuList
+      },
+      {
+        path: '/sys/roleList', component: role
+      },
+      {
+        path: '/sys/userList', component: sysUser
+      },
+      {
+        path: '/sys/userAdd', component: userAdd
+      },
+      {
+        path: '/sys/resource', component: resource
+      }
+    ]
   },
-  {path: '*', component: NotFoundView}
+  {
+    path: '*', component: NotFoundView
+  }
 ]
 
 

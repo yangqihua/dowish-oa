@@ -1,7 +1,7 @@
 package net.dowish.modules.api.controller;
 
 
-import net.dowish.common.utils.R;
+import net.dowish.common.utils.Apis;
 import net.dowish.common.validator.Assert;
 import net.dowish.modules.api.annotation.AuthIgnore;
 import net.dowish.modules.api.service.UserService;
@@ -36,12 +36,12 @@ public class ApiRegisterController {
             @ApiImplicitParam(paramType = "query", dataType="string", name = "mobile", value = "手机号", required = true),
             @ApiImplicitParam(paramType = "query", dataType="string", name = "password", value = "密码", required = true)
     })
-    public R register(String mobile, String password){
+    public Apis register(String mobile, String password){
         Assert.isBlank(mobile, "手机号不能为空");
         Assert.isBlank(password, "密码不能为空");
 
         userService.save(mobile, password);
 
-        return R.ok();
+        return Apis.ok();
     }
 }

@@ -5,6 +5,7 @@ import net.dowish.modules.sys.entity.SysUserEntity;
 import org.apache.shiro.SecurityUtils;
 import org.apache.shiro.session.Session;
 import org.apache.shiro.subject.Subject;
+import org.springframework.beans.factory.annotation.Value;
 
 /**
  * Shiro工具类
@@ -13,6 +14,9 @@ import org.apache.shiro.subject.Subject;
  * @date 2016年11月12日 上午9:49:19
  */
 public class ShiroUtils {
+
+	@Value("${spring.profiles.active}")
+	private String env;
 
 	public static Session getSession() {
 		return SecurityUtils.getSubject().getSession();

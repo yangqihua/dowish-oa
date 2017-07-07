@@ -1,10 +1,10 @@
 package net.dowish.modules.sys.controller;
 
 import net.dowish.common.annotation.SysLog;
+import net.dowish.common.utils.Apis;
 import net.dowish.common.utils.Constant;
 import net.dowish.common.utils.PageUtils;
 import net.dowish.common.utils.Query;
-import net.dowish.common.utils.R;
 import net.dowish.common.validator.Assert;
 import net.dowish.common.validator.ValidatorUtils;
 import net.dowish.common.validator.group.AddGroup;
@@ -40,7 +40,7 @@ public class SysUserController extends AbstractController {
 	 */
 	@RequestMapping("/list")
 	@RequiresPermissions("sys:user:list")
-	public R list(@RequestParam Map<String, Object> params){
+	public Apis list(@RequestParam Map<String, Object> params){
 		//只有超级管理员，才能查看所有管理员列表
 		if(getUserId() != Constant.SUPER_ADMIN){
 			params.put("createUserId", getUserId());
@@ -53,15 +53,15 @@ public class SysUserController extends AbstractController {
 		
 		PageUtils pageUtil = new PageUtils(userList, total, query.getLimit(), query.getPage());
 		
-		return R.ok().put("page", pageUtil);
+		return Apis.ok().put("page", pageUtil);
 	}
 	
 	/**
 	 * 获取登录的用户信息
 	 */
 	@RequestMapping("/info")
-	public R info(){
-		return R.ok().put("user", getUser());
+	public Apis info(){
+		return Apis.ok().put("user", getUser());
 	}
 	
 	/**
@@ -69,7 +69,7 @@ public class SysUserController extends AbstractController {
 	 */
 	@SysLog("修改密码")
 	@RequestMapping("/password")
-	public R password(String password, String newPassword){
+	public Apis password(String password, String newPassword){
 		Assert.isBlank(newPassword, "新密码不为能空");
 		
 		//sha256加密
@@ -80,10 +80,10 @@ public class SysUserController extends AbstractController {
 		//更新密码
 		int count = sysUserService.updatePassword(getUserId(), password, newPassword);
 		if(count == 0){
-			return R.error("原密码不正确");
+			return Apis.error("原密码不正确");
 		}
 		
-		return R.ok();
+		return Apis.ok();
 	}
 	
 	/**
@@ -91,14 +91,14 @@ public class SysUserController extends AbstractController {
 	 */
 	@RequestMapping("/info/{userId}")
 	@RequiresPermissions("sys:user:info")
-	public R info(@PathVariable("userId") Long userId){
+	public Apis info(@PathVariable("userId") Long userId){
 		SysUserEntity user = sysUserService.queryObject(userId);
 		
 		//获取用户所属的角色列表
 		List<Long> roleIdList = sysUserRoleService.queryRoleIdList(userId);
 		user.setRoleIdList(roleIdList);
 		
-		return R.ok().put("user", user);
+		return Apis.ok().put("user", user);
 	}
 	
 	/**
@@ -107,13 +107,13 @@ public class SysUserController extends AbstractController {
 	@SysLog("保存用户")
 	@RequestMapping("/save")
 	@RequiresPermissions("sys:user:save")
-	public R save(@RequestBody SysUserEntity user){
+	public Apis save(@RequestBody SysUserEntity user){
 		ValidatorUtils.validateEntity(user, AddGroup.class);
 		
 		user.setCreateUserId(getUserId());
 		sysUserService.save(user);
 		
-		return R.ok();
+		return Apis.ok();
 	}
 	
 	/**
@@ -122,13 +122,13 @@ public class SysUserController extends AbstractController {
 	@SysLog("修改用户")
 	@RequestMapping("/update")
 	@RequiresPermissions("sys:user:update")
-	public R update(@RequestBody SysUserEntity user){
+	public Apis update(@RequestBody SysUserEntity user){
 		ValidatorUtils.validateEntity(user, UpdateGroup.class);
 		
 		user.setCreateUserId(getUserId());
 		sysUserService.update(user);
 		
-		return R.ok();
+		return Apis.ok();
 	}
 	
 	/**
@@ -137,17 +137,17 @@ public class SysUserController extends AbstractController {
 	@SysLog("删除用户")
 	@RequestMapping("/delete")
 	@RequiresPermissions("sys:user:delete")
-	public R delete(@RequestBody Long[] userIds){
+	public Apis delete(@RequestBody Long[] userIds){
 		if(ArrayUtils.contains(userIds, 1L)){
-			return R.error("系统管理员不能删除");
+			return Apis.error("系统管理员不能删除");
 		}
 		
 		if(ArrayUtils.contains(userIds, getUserId())){
-			return R.error("当前用户不能删除");
+			return Apis.error("当前用户不能删除");
 		}
 		
 		sysUserService.deleteBatch(userIds);
 		
-		return R.ok();
+		return Apis.ok();
 	}
 }

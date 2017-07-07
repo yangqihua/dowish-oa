@@ -7,7 +7,7 @@
 <script>
   import "font-awesome/css/font-awesome.css";
   export default{
-      name:'frame'
+      name:'app'
   }
 </script>
 <style>
