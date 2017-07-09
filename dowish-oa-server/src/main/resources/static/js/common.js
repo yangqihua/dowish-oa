@@ -22,9 +22,9 @@ T.p = url;
 //var baseURL = "/dowish-oa-server/";
 var baseURL = "/";
 
-//登录token
-var token = localStorage.getItem("token");
-if(token == 'null'){
+//登录Authorization
+var authorization = localStorage.getItem("Authorization");
+if(authorization == 'null'){
     parent.location.href = baseURL + 'login.html';
 }
 
@@ -34,10 +34,10 @@ $.ajaxSetup({
     contentType:"application/json",
 	cache: false,
     headers: {
-        "token": token
+        "Authorization": 'Bearer '+authorization
     },
     complete: function(xhr) {
-        //token过期，则跳转到登录页面
+        //Authorization过期，则跳转到登录页面
         if(xhr.responseJSON.code == 401){
             parent.location.href = baseURL + 'login.html';
         }
@@ -56,7 +56,7 @@ $.ajaxSetup({
 $.extend($.jgrid.defaults, {
     ajaxGridOptions : {
         headers: {
-            "token": token
+            "Authorization": 'Bearer '+authorization
         }
     }
 });

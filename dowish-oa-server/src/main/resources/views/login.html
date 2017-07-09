@@ -106,7 +106,7 @@ var vm = new Vue({
                 contentType:"application/json",
 			    success: function(apis){
 					if(apis.code == 200){//登录成功
-                        localStorage.setItem("token", apis.token);
+                        localStorage.setItem("Authorization", apis.token);
                         parent.location.href ='index.html';
 					}else{
 						vm.error = true;

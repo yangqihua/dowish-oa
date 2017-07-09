@@ -34,7 +34,7 @@ $(function () {
     });
 
     new AjaxUpload('#upload', {
-        action: baseURL + 'sys/oss/upload?token=' + token,
+        action: baseURL + 'sys/oss/upload?Authorization=Bearer ' + authorization,
         name: 'file',
         autoSubmit:true,
         responseType:"json",
