@@ -17,68 +17,50 @@ import Element from "element-ui";
 import "element-ui/lib/theme-default/index.css";
 import ImpPanel from "./components/panel.vue";
 
+import stringUtils from './utils/string-utils';
+import localStore from './utils/localStore'
+// import interceptor from './utils/ajax/interceptor';
 
 Vue.use(Element);
 
 // or with options
-Vue.use(VueLazyload, {
-  preLoad: 1.3,
-  attempt: 1
-})
-
-function getBaseUrl(url) {
-  var reg = /^((\w+):\/\/([^\/:]*)(?::(\d+))?)(.*)/;
-  reg.exec(url);
-  return RegExp.$1;
-}
-
-// axios.defaults.baseURL = 'https://www.baidu.com';
-axios.defaults.baseURL = getBaseUrl(window.location.href);
-axios.defaults.headers.common['authUid'] = auth.getUid();
-axios.defaults.headers.common['authSid'] = auth.getSid();
-
-Vue.prototype.$http = axios
-Vue.axios = axios
-
+// Vue.use(VueLazyload, {
+//   preLoad: 1.3,
+//   attempt: 1
+// })
 
 //加载路由中间件
 Vue.use(VueRouter)
-// const options = {
-//   latencyThreshold: 200, // Number of ms before progressbar starts showing, default: 100,
-//   router: true, // Show progressbar when navigating routes, default: true
-//   http: true // Show progressbar when doing Vue.http and Vue.axios default: true
-// };
-// Vue.use(NProgress, options)
 
 Vue.component(ImpPanel.name, ImpPanel);
 
-const options = {
-  color: '#eeeeee',
-  failedColor: '#874b4b',
-  thickness: '2px',
-  transition: {
-    speed: '0.2s',
-    opacity: '0.6s'
-  },
-  autoRevert: true,
-  location: 'top',
-  inverse: false
-}
+// const options = {
+//   color: '#eeeeee',
+//   failedColor: '#874b4b',
+//   thickness: '2px',
+//   transition: {
+//     speed: '0.2s',
+//     opacity: '0.6s'
+//   },
+//   autoRevert: true,
+//   location: 'top',
+//   inverse: false
+// }
 
-Vue.use(VueProgressBar, options)
+// Vue.use(VueProgressBar, options)
+
 
 //定义路由
 const router = new VueRouter({
   routes: routeConfig,
 })
 
-sync(store, router)
+
+// sync(store, router)
 
 const {state} = store
-console.log(store)
-
 router.beforeEach((route, redirect, next) => {
-  if (state.common.device.isMobile && state.sidebar.opened) {
+  if (state.common.device.isMobile && state.common.sidebar.opened) {
     store.commit(TOGGLE_SIDEBAR, false)
   }
   if (!auth.loggedIn() && route.path !== '/login') {
@@ -91,24 +73,64 @@ router.beforeEach((route, redirect, next) => {
   }
 })
 
-axios.interceptors.response.use(
-  response => {
-    if (response.data && response.data.code) {
-      if (response.data.code === '2001') {
-        auth.logout()
+
+// console.log(router,state);
+
+axios.interceptors.request.use(
+  config => {
+    let url = config.url.substring(config.baseURL.length, config.url.length);
+    if (stringUtils.useTokenApi(url)) {
+      // 没有设置token
+      if(!(config.headers.hasOwnProperty('Authorization') && config.headers.Authorization.indexOf("Bearer")>-1)){
+        let user = state.common.user;
+        if (stringUtils.isEmptyObject(user)) {
+          user = localStore.getSession("user");
+        }
+        if (user) {  // 判断是否存在token，如果存在的话，则每个http header都加上token
+          config.headers.Authorization = `Bearer ${user.token}`;
+        } else {
+          localStore.deleteSession("user");
+          router.replace('sys/login');
+        }
       }
     }
+    return config;
+  },
+  err => {
+    // console.log(err); // for debug
+    return Promise.reject(err);
+  });
+
+// http response 拦截器
+axios.interceptors.response.use(
+  response => {
+    // if (response.data && response.data.code) {
+    //   if (response.data.code === '2001') {
+    //     auth.logout()
+    //   }
+    // }
     return response;
   },
   error => {
-    if (error.response) {
-      //全局ajax错误信息提示
-      // Element.MessageBox({type:"error",message:error.response.data,title:"温馨提示"});
+    try {
+      if (error.response.status) {
+        if (error.response.status == 403) {
+          localStore.deleteSession("user");
+          router.replace('login');
+        } else if (error.response.status == 400 || error.response.status == 401) {
+          Message({message: '请求参数错误！', type: 'warning', showClose: true});
+        } else if (error.response.status == 404) {
+          // router.push('404');
+        } else if (error.response.status == 500) {
+          Message({message: '服务器异常！', type: 'warning', showClose: true});
+        }
+      }
+      return Promise.reject(error.response.data);   // 返回接口返回的错误信息
+    } catch (e) {
+      localStore.deleteSession("user");
+      router.replace('login');
     }
-    return Promise.reject(error);
   });
-
-// const nprogress = new NProgress({parent: '.nprogress-container'})
 
 Object.keys(filters).forEach(key => {
   Vue.filter(key, filters[key])

@@ -1,3 +1,14 @@
+/**
+ * Created by yangqihua on 2017/7/7.
+ */
+
+
+
+export const LOGIN = 'LOGIN';
+
+
+
+
 export const TOGGLE_LOADING = 'TOGGLE_LOADING';
 
 export const TOGGLE_SIDEBAR = 'TOGGLE_SIDEBAR';

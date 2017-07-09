@@ -1,3 +1,7 @@
+
+/**
+ * Created by yangqihua on 2017/7/7.
+ */
 export default [
   {"id":1,"parentId":null,"sort":0,"name":"仪表盘","href":"/index","icon":"fa fa-dashboard","children":[]},
   {"id":31,"parentId":null,"sort":1,"name":"上传图片","href":"/img/upload","icon":"fa fa-upload","children":

@@ -3,8 +3,18 @@
  */
 
 import * as types from "./mutation-types";
-
+import localStore from '../../utils/localStore'
 const mutations = {
+
+  [types.LOGIN](state,response){
+    console.log("res:",response);
+    state.user = response.user;
+    state.user['token'] = response.token;
+    localStore.setSession("user",state.user);
+  },
+
+
+
   //只能同步的函数
   [types.TOGGLE_DEVICE] (state, isMobile) {
     state.device.isMobile = isMobile

@@ -3,7 +3,7 @@
     <vue-progress-bar></vue-progress-bar>
     <imp-header></imp-header>
     <side-menu :show="sidebar.opened && !sidebar.hidden"></side-menu>
-    <div class="content-wrapper">
+    <div class="content-wrapper" id="main-container">
       <section class="content">
         <transition mode="out-in" enter-active-class="fadeIn" leave-active-class="fadeOut" appear>
           <router-view></router-view>

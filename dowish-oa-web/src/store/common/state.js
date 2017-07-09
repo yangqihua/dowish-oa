@@ -2,10 +2,13 @@
  * Created by yangqihua on 2017/7/7.
  */
 
-
+//全局状态
 export default {
+  user:{},
+  menuList:[],
+
   loading: false,
-  menuList: {},
+  // menuList: {},
   sidebar: {
     opened: true
   },

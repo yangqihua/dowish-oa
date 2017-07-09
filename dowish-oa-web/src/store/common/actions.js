@@ -1,7 +1,21 @@
+/**
+ * Created by yangqihua on 2017/7/7.
+ */
+
 import Vue from "vue";
 import * as types from './mutation-types';
 import defaultMenu from "./default-menu";
 import * as api from "../../utils/api";
+
+import ajax from '../../utils/ajax/ajax'
+
+const loginAction= ({commit},params)=>
+{
+  params.scb = response=>{
+    commit(types.LOGIN,response);
+  };
+  ajax(params);
+};
 
 
 const toggleSidebar = ({commit}, opened) => commit(types.TOGGLE_SIDEBAR, opened)
@@ -32,11 +46,13 @@ const loadMenuList= ({commit})=>
 };
 
 export default {
+  loginAction,
+
   toggleSidebar,
   toggleDevice,
   expandMenu,
   switchEffect,
   toggleLoading,
-  loadMenuList
+  loadMenuList,
 }
 

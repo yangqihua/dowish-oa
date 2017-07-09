@@ -45,13 +45,15 @@
   import  auth from '../../utils/auth'
   import {mapGetters, mapActions, mapMutations} from 'vuex'
 
+  import ajax from '../../utils/ajax/ajax';
+
   export default {
     name: 'login',
     data() {
       return {
         form: {
-          username: '',
-          password: ''
+          username: 'admin',
+          password: 'admin'
         }
       }
     },
@@ -61,22 +63,29 @@
         setUserInfo: types.SET_USER_INFO
       }),
       ...mapActions({
-        loadMenuList: 'loadMenuList' // 映射 this.load() 为 this.$store.dispatch('loadMenuList')
+        loadMenuList: 'loadMenuList', // 映射 this.load() 为 this.$store.dispatch('loadMenuList')
+        loginAction:'loginAction',
       }),
       login(){
-        var redirectUrl = '/index';
-        if (this.$route.query && this.$route.query != null && this.$route.query.redirect && this.$route.query.redirect != null) {
-          redirectUrl = this.$route.query.redirect;
-        }
-        this.$http.get(api.TEST_DATA, this.form).then(res => {
-          res.data = res.data.loginInfo;
-          auth.login(res.data.sid);
-          window.sessionStorage.setItem("user-info", JSON.stringify(res.data.user));
-          this.setUserInfo(res.data.user);
-          this.$http.defaults.headers.common['authSid'] = res.data.sid;
-          this.loadMenuList();
-          this.$router.push({path: redirectUrl});
-        })
+          let params = {
+          	type:'post',
+            data: this.form,
+            url:'sys/login',
+          };
+          this.loginAction(params);
+//        var redirectUrl = '/index';
+//        if (this.$route.query && this.$route.query != null && this.$route.query.redirect && this.$route.query.redirect != null) {
+//          redirectUrl = this.$route.query.redirect;
+//        }
+//        this.$http.get(api.TEST_DATA, this.form).then(res => {
+//          res.data = res.data.loginInfo;
+//          auth.login(res.data.sid);
+//          window.sessionStorage.setItem("user-info", JSON.stringify(res.data.user));
+//          this.setUserInfo(res.data.user);
+//          this.$http.defaults.headers.common['authSid'] = res.data.sid;
+//          this.loadMenuList();
+//          this.$router.push({path: redirectUrl});
+//        })
       }
     }
   }
