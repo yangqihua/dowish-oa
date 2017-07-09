@@ -19,6 +19,8 @@ import ImpPanel from "./components/panel.vue";
 
 import stringUtils from './utils/string-utils';
 import localStore from './utils/localStore'
+import * as types from './store/common/mutation-types'
+
 // import interceptor from './utils/ajax/interceptor';
 
 Vue.use(Element);
@@ -60,33 +62,41 @@ const router = new VueRouter({
 
 const {state} = store
 router.beforeEach((route, redirect, next) => {
-  if (state.common.device.isMobile && state.common.sidebar.opened) {
-    store.commit(TOGGLE_SIDEBAR, false)
+
+  // if (state.common.device.isMobile && state.common.sidebar.opened) {
+  //   store.commit(TOGGLE_SIDEBAR, false)
+  // }
+
+  let user = state.common.user;
+  if (stringUtils.isEmptyObject(user)) {
+    user = localStore.getSession("user");
   }
-  if (!auth.loggedIn() && route.path !== '/login') {
+  if (!user && route.path !== '/login') {
     next({
       path: '/login',
       query: {redirect: route.fullPath}
     })
   } else {
+    store.commit(types.SET_USER,user);
     next()
   }
-})
 
+});
 
-// console.log(router,state);
 
 axios.interceptors.request.use(
   config => {
     let url = config.url.substring(config.baseURL.length, config.url.length);
     if (stringUtils.useTokenApi(url)) {
       // 没有设置token
-      if(!(config.headers.hasOwnProperty('Authorization') && config.headers.Authorization.indexOf("Bearer")>-1)){
+      if (!(config.headers.hasOwnProperty('Authorization') && config.headers.Authorization.indexOf("Bearer") > -1)) {
         let user = state.common.user;
         if (stringUtils.isEmptyObject(user)) {
           user = localStore.getSession("user");
         }
         if (user) {  // 判断是否存在token，如果存在的话，则每个http header都加上token
+          // config.headers.Authorization = `Bearer ${user.token}`;
+          store.commit(types.SET_USER,user);
           config.headers.Authorization = `Bearer ${user.token}`;
         } else {
           localStore.deleteSession("user");
@@ -104,11 +114,11 @@ axios.interceptors.request.use(
 // http response 拦截器
 axios.interceptors.response.use(
   response => {
-    // if (response.data && response.data.code) {
-    //   if (response.data.code === '2001') {
-    //     auth.logout()
-    //   }
-    // }
+    if (response.data && response.data.code) {
+      if (response.data.code === '500') {
+        Message({message: '服务器异常！', type: 'warning', showClose: true});
+      }
+    }
     return response;
   },
   error => {

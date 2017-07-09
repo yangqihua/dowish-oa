@@ -9,14 +9,28 @@ import * as api from "../../utils/api";
 
 import ajax from '../../utils/ajax/ajax'
 
-const loginAction= ({commit},params)=>
-{
-  params.scb = response=>{
-    commit(types.LOGIN,response);
+const loginAction = ({dispatch,commit, state}, params) => {
+  params.scb = response => {
+    commit(types.LOGIN, response);
+    if(params.hasOwnProperty('cb')){
+      dispatch('getMenuList',{url: '/sys/menu/user',cb:params.cb});
+    }else {
+      dispatch('getMenuList',{url: '/sys/menu/user'});
+    }
   };
   ajax(params);
 };
 
+const getMenuList = ({dispatch,commit, state}, params) => {
+  params.scb = response => {
+    commit(types.GET_MENU_LIST, response);
+    //回调跳转到首页
+    if(params.hasOwnProperty('cb')){
+      params.cb(response);
+    };
+  };
+  ajax(params);
+};
 
 const toggleSidebar = ({commit}, opened) => commit(types.TOGGLE_SIDEBAR, opened)
 
@@ -38,8 +52,7 @@ const switchEffect = ({commit}, effectItem) => {
 //异步的函数
 const toggleLoading = ({commit}) => commit(types.TOGGLE_LOADING);
 
-const loadMenuList= ({commit})=>
-{
+const loadMenuList = ({commit}) => {
   Vue.axios.get(api.TEST_DATA).then(res => {
     commit(types.LOAD_MENU, res.data.menuList);
   }).catch(exp => commit(types.LOAD_MENU, defaultMenu));
@@ -47,6 +60,7 @@ const loadMenuList= ({commit})=>
 
 export default {
   loginAction,
+  getMenuList,
 
   toggleSidebar,
   toggleDevice,

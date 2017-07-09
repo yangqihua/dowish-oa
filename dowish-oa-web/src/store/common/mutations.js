@@ -4,15 +4,24 @@
 
 import * as types from "./mutation-types";
 import localStore from '../../utils/localStore'
+
+//mutations必须是同步函数
+
 const mutations = {
 
   [types.LOGIN](state,response){
-    console.log("res:",response);
     state.user = response.user;
     state.user['token'] = response.token;
     localStore.setSession("user",state.user);
   },
 
+  [types.GET_MENU_LIST](state,response){
+    state.menuList = response.menuList;
+  },
+
+  [types.SET_USER](state,user){
+    state.user = user;
+  },
 
 
   //只能同步的函数

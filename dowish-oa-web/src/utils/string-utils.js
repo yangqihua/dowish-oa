@@ -36,8 +36,23 @@ const isEmptyObject= (obj)=>{
   for (t in obj)
     return !1;
   return !0
+};
+const getBeforeDate = (n)=>{
+  var list = [];
+  var d = new Date(); // 这个算法能自动处理闰年和非闰年。2012年是闰年，所以2月有29号
+  var s = '';
+  var i = 0;
+  while (i < n) {
+    d.setDate(d.getDate() - 1);
+    var year = d.getFullYear();
+    var mon = d.getMonth() + 1;
+    var day = d.getDate();
+    list.push(year + "-" + (mon < 10 ? ('0' + mon) : mon) + "-" + (day < 10 ? ('0' + day) : day));
+    i++;
+  }
+  return list.reverse();
 }
 
 export default {
-  trim, subString, getBaseUrl,createUniqueString,useTokenApi,isEmptyObject
+  trim, subString, getBaseUrl,createUniqueString,useTokenApi,isEmptyObject,getBeforeDate
 }

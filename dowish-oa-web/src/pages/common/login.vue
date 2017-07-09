@@ -30,7 +30,7 @@
         <div class="login-register">
           <div class="card-block">
             <h2>注册</h2>
-            <p>平台暂时只支持使用公司邮箱注册.</p>
+            <p></p>
             <el-button type="info" class="btn btn-primary active m-t-1"> 马上注册</el-button>
           </div>
         </div>
@@ -71,8 +71,15 @@
           	type:'post',
             data: this.form,
             url:'sys/login',
+
+            //跳转到首页的回调，在mutation中不能调用router
+            cb:(res)=>{
+          		console.log(this.$router)
+              this.$router.push({path: '/index'});
+            }
           };
           this.loginAction(params);
+//          this.getBeforeDate();
 //        var redirectUrl = '/index';
 //        if (this.$route.query && this.$route.query != null && this.$route.query.redirect && this.$route.query.redirect != null) {
 //          redirectUrl = this.$route.query.redirect;

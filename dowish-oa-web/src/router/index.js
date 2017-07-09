@@ -11,10 +11,10 @@ import resetPwd from "../pages/common/resetPwd.vue";
 // Routes
 const routes = [
   {
-    path: '/login', component: login
+    name:'login',path:'/login', component: login
   },
   {
-    path: '/test', component: frame,
+    name:'test',path: '/test', component: frame,
     children: [
       {
         path: '*', component: NotFoundView

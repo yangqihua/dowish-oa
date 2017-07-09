@@ -38,12 +38,11 @@ const ajax = ({type = 'get', url, data = {}, showLoading = true, loadingDom = 'm
       }
     }).catch((err) => {
       //处理错误
-      ElementUI.Message({message: "网络异常，异常原因："+err, type: 'warning', showClose: true});
+      ElementUI.Message({message: "客户端异常，异常原因：" + err, type: 'warning', showClose: true});
       if (showLoading) {
         loadingInstance.close();
       }
     });
-  }
-  ;
+  };
 
 export default ajax;

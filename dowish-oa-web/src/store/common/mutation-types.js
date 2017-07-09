@@ -5,6 +5,8 @@
 
 
 export const LOGIN = 'LOGIN';
+export const SET_USER = 'SET_USER';
+export const GET_MENU_LIST = 'GET_MENU_LIST';
 
 
 

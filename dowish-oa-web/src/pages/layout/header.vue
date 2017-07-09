@@ -106,7 +106,7 @@
         this.$http.get(api.TEST_DATA)
           .then(res => {
             auth.logout();
-            this.$http.defaults.headers.common['authSid'] = '';
+            this.$http.defaults.headers.common['Authorization'] = '';
             this.$router.push({path: '/login'});
           })
       },
