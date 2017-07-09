@@ -2,6 +2,7 @@ package net.dowish.modules.sys.service.impl;
 
 import net.dowish.common.utils.Apis;
 import net.dowish.modules.sys.dao.SysUserTokenDao;
+import net.dowish.modules.sys.entity.SysUserEntity;
 import net.dowish.modules.sys.entity.SysUserTokenEntity;
 import net.dowish.modules.sys.service.SysUserTokenService;
 import net.dowish.modules.sys.oauth2.TokenGenerator;
@@ -39,7 +40,9 @@ public class SysUserTokenServiceImpl implements SysUserTokenService {
 	}
 
 	@Override
-	public Apis createToken(long userId) {
+	public Apis createToken(SysUserEntity user) {
+		long userId = user.getUserId();
+
 		//生成一个token
 		String token = TokenGenerator.generateValue();
 
@@ -68,7 +71,9 @@ public class SysUserTokenServiceImpl implements SysUserTokenService {
 			update(tokenEntity);
 		}
 
-		Apis apis = Apis.ok().put("token", token).put("expire", EXPIRE);
+		user.setPassword(null);
+		user.setSalt(null);
+		Apis apis = Apis.ok().put("token", token).put("expire", EXPIRE).put("user",user);
 
 		return apis;
 	}

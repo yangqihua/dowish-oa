@@ -13,7 +13,7 @@ import java.util.Map;
  */
 public class Apis extends HashMap<String, Object> {
 	private static final long serialVersionUID = 1L;
-	
+
 	public Apis() {
 		put("code", 0);
 	}
@@ -36,17 +36,21 @@ public class Apis extends HashMap<String, Object> {
 	public static Apis ok(String msg) {
 		Apis apis = new Apis();
 		apis.put("msg", msg);
+		apis.put("code",HttpStatus.SC_OK);
 		return apis;
 	}
 	
 	public static Apis ok(Map<String, Object> map) {
 		Apis apis = new Apis();
 		apis.putAll(map);
+		apis.put("code",HttpStatus.SC_OK);
 		return apis;
 	}
 	
 	public static Apis ok() {
-		return new Apis();
+		Apis apis= new Apis();
+		apis.put("code",HttpStatus.SC_OK);
+		return apis;
 	}
 
 	public Apis put(String key, Object value) {

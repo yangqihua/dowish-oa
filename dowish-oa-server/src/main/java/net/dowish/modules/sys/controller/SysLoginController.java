@@ -2,6 +2,7 @@ package net.dowish.modules.sys.controller;
 
 import com.google.code.kaptcha.Constants;
 import com.google.code.kaptcha.Producer;
+import lombok.extern.slf4j.Slf4j;
 import net.dowish.common.utils.Apis;
 import net.dowish.common.utils.ShiroUtils;
 import net.dowish.modules.sys.entity.SysUserEntity;
@@ -11,13 +12,13 @@ import org.apache.commons.io.IOUtils;
 import org.apache.shiro.crypto.hash.Sha256Hash;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RequestMethod;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.ui.ModelMap;
+import org.springframework.web.bind.annotation.*;
 
 import javax.imageio.ImageIO;
 import javax.servlet.ServletException;
 import javax.servlet.ServletOutputStream;
+import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import java.awt.image.BufferedImage;
 import java.io.IOException;
@@ -29,6 +30,7 @@ import java.util.Map;
  *
  */
 @RestController
+@Slf4j
 public class SysLoginController {
 	@Autowired
 	private Producer producer;
@@ -62,13 +64,16 @@ public class SysLoginController {
 	 * 登录
 	 */
 	@RequestMapping(value = "/sys/login", method = RequestMethod.POST)
-	public Map<String, Object> login(String username, String password, String captcha)throws IOException {
+	public Map<String, Object> login(@RequestBody Map<String,String> map)throws IOException {
 //		String kaptcha = ShiroUtils.getKaptcha(Constants.KAPTCHA_SESSION_KEY);
 //		if(!"dev".equals(env)) {
 //			if (!captcha.equalsIgnoreCase(kaptcha)) {
 //				return Apis.error("验证码不正确");
 //			}
 //		}
+		String username = map.get("username");
+		String password = map.get("password");
+		log.info("username : {}",map.get("username"));
 
 		//用户信息
 		SysUserEntity user = sysUserService.queryByUserName(username);
@@ -84,7 +89,7 @@ public class SysLoginController {
 		}
 
 		//生成token，并保存到数据库
-		Apis apis = sysUserTokenService.createToken(user.getUserId());
+		Apis apis = sysUserTokenService.createToken(user);
 		return apis;
 	}
 	
