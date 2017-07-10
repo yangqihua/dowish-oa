@@ -128,18 +128,18 @@
     },
     created(){
       let item = window.sessionStorage.getItem("user-info");
-      if (!!item){
-          this.setUserInfo(JSON.parse(item));
+      if (!!item) {
+        this.setUserInfo(JSON.parse(item));
       }
       this.count = 0;
       this.list = [];
       this.$http.get(api.TEST_DATA)
         .then(res => {
-            res.data = res.data.messageList;
-            if (res.data && res.data.length>0){
-                this.count = res.data.length;
-                this.list = res.data;
-            }
+          res.data = res.data.messageList;
+          if (res.data && res.data.length > 0) {
+            this.count = res.data.length;
+            this.list = res.data;
+          }
         })
     },
     mounted() {

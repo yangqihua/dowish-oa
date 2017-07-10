@@ -12,22 +12,17 @@ import ajax from '../../utils/ajax/ajax'
 const loginAction = ({dispatch,commit, state}, params) => {
   params.scb = response => {
     commit(types.LOGIN, response);
-    if(params.hasOwnProperty('cb')){
-      dispatch('getMenuList',{url: '/sys/menu/user',cb:params.cb});
-    }else {
-      dispatch('getMenuList',{url: '/sys/menu/user'});
-    }
-  };
-  ajax(params);
-};
-
-const getMenuList = ({dispatch,commit, state}, params) => {
-  params.scb = response => {
-    commit(types.GET_MENU_LIST, response);
     //回调跳转到首页
     if(params.hasOwnProperty('cb')){
       params.cb(response);
     };
+  };
+  ajax(params);
+};
+
+const getMenuListAction = ({dispatch,commit, state}, params) => {
+  params.scb = response => {
+    commit(types.GET_MENU_LIST, response);
   };
   ajax(params);
 };
@@ -60,7 +55,7 @@ const loadMenuList = ({commit}) => {
 
 export default {
   loginAction,
-  getMenuList,
+  getMenuListAction,
 
   toggleSidebar,
   toggleDevice,

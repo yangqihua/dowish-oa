@@ -1,6 +1,6 @@
 <template>
   <footer class="main-footer">
-    <!--Copyright &copy; 2016-2017 <a href="https://github.com/yangqihua">yangqihua</a>. All rights reserved.-->
+    Copyright &copy; 2016-2017 <a href="https://github.com/yangqihua">yangqihua</a>. All rights reserved.
   </footer>
 </template>
 <script>

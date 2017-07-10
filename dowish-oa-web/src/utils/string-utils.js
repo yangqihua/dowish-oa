@@ -3,7 +3,7 @@
  * @param  {[string]} string [字符串]
  * @return {string}        [返回处理后数据]
  */
-import urls from '../config/unUseTokenUrl'
+import urls from '../config/un-use-token-urls'
 
 const trim = (string) => {
   return string.toString().replace();
@@ -17,7 +17,7 @@ const subString = (value, length = 10) => {
 }
 
 const getBaseUrl = (url) => {
-  var reg = /^((\w+):\/\/([^\/:]*)(?::(\d+))?)(.*)/;
+  let reg = /^((\w+):\/\/([^\/:]*)(?::(\d+))?)(.*)/;
   reg.exec(url);
   return RegExp.$1;
 }
@@ -38,15 +38,15 @@ const isEmptyObject= (obj)=>{
   return !0
 };
 const getBeforeDate = (n)=>{
-  var list = [];
-  var d = new Date(); // 这个算法能自动处理闰年和非闰年。2012年是闰年，所以2月有29号
-  var s = '';
-  var i = 0;
+  let list = [];
+  let d = new Date(); // 这个算法能自动处理闰年和非闰年。2012年是闰年，所以2月有29号
+  let s = '';
+  let i = 0;
   while (i < n) {
     d.setDate(d.getDate() - 1);
-    var year = d.getFullYear();
-    var mon = d.getMonth() + 1;
-    var day = d.getDate();
+    let year = d.getFullYear();
+    let mon = d.getMonth() + 1;
+    let day = d.getDate();
     list.push(year + "-" + (mon < 10 ? ('0' + mon) : mon) + "-" + (day < 10 ? ('0' + day) : day));
     i++;
   }

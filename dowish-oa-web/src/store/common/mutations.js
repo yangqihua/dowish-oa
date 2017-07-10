@@ -9,17 +9,21 @@ import localStore from '../../utils/localStore'
 
 const mutations = {
 
-  [types.LOGIN](state,response){
+  [types.LOGIN](state, response){
     state.user = response.user;
     state.user['token'] = response.token;
-    localStore.setSession("user",state.user);
+    localStore.setSession("user", state.user);
   },
 
-  [types.GET_MENU_LIST](state,response){
+  [types.GET_MENU_LIST](state, response){
+
+    setMenuList(response.menuList);
     state.menuList = response.menuList;
+    state.permissions = response.permissions;
   },
 
-  [types.SET_USER](state,user){
+
+  [types.SET_USER](state, user){
     state.user = user;
   },
 
@@ -42,4 +46,15 @@ const mutations = {
     state.sidebar.opened = open;
   }
 };
+const setMenuList = (menuList) => {
+  menuList.forEach(menu => {
+    if (menu.url === null) {
+      menu.url = menu.name+"_"+menu.menuId
+      // menu.menuId = menu.menuId+''
+    }
+    if (menu.list) {
+      setMenuList(menu.list)
+    }
+  })
+}
 export default mutations;

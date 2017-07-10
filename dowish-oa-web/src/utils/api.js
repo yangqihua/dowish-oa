@@ -1,4 +1,5 @@
-export const CONTEXT = '';
+// export const CONTEXT = '';
+export const CONTEXT = "http://"+location.hostname+":"+location.port;
 // export const CONTEXT = './dowish-oa';
 
 export const LOGIN = CONTEXT + '/login';

@@ -32,19 +32,21 @@
         return this.$route.path;
       },
       onRouteKeys(){
-        const getParentArray = (path, ms, kas = []) => {
-          if (ms && ms.length > 0) {
-            for (let k = 0, length = ms.length; k < length; k++) {
-              if (path == ms[k].href) {
-                kas.push(ms[k].href);
+//        当前打开的submenu的 key 数组
+        const getParentArray = (path, menuList, kas = []) => {
+          if (menuList && menuList.length > 0) {
+            for (let k = 0, length = menuList.length; k < length; k++) {
+              if (path == menuList[k].url) {
+                kas.push(menuList[k].url);
                 break;
               }
               let i = kas.length;
-              if (ms[k].children && ms[k].children.length > 0) {
-                getParentArray(path, ms[k].children, kas);
+              if (menuList[k].list && menuList[k].list.length > 0) {
+                getParentArray(path, menuList[k].list, kas);
               }
+              //如果是递归添加到子menu，则将父menu加入路径中
               if (i < kas.length) {
-                kas.push(ms[k].href);
+                kas.push(menuList[k].url);
               }
             }
           }
@@ -65,11 +67,11 @@
 //      }
     },
     created: function () {
-      this.load();
+      this.getMenuList({url:'/sys/menu/user',showLoading:false});
     },
     methods: {
       ...mapActions({
-        load: 'loadMenuList' // 映射 this.load() 为 this.$store.dispatch('loadMenuList')
+        getMenuList: 'getMenuListAction' // 映射 this.load() 为 this.$store.dispatch('loadMenuList')
       })
     }
   }

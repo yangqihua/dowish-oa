@@ -71,10 +71,8 @@
           	type:'post',
             data: this.form,
             url:'sys/login',
-
             //跳转到首页的回调，在mutation中不能调用router
             cb:(res)=>{
-          		console.log(this.$router)
               this.$router.push({path: '/index'});
             }
           };

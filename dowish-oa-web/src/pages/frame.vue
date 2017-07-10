@@ -1,6 +1,6 @@
 <template>
   <div class="wrapper fixed">
-    <vue-progress-bar></vue-progress-bar>
+    <!--<vue-progress-bar></vue-progress-bar>-->
     <imp-header></imp-header>
     <side-menu :show="sidebar.opened && !sidebar.hidden"></side-menu>
     <div class="content-wrapper" id="main-container">
@@ -71,32 +71,9 @@
     },
     mounted () {
       //  [frame.vue specific] When frame.vue is finish loading finish the progress bar
-      this.$Progress.finish()
+//      this.$Progress.finish()
     },
     created () {
-      //  [frame.vue specific] When frame.vue is first loaded start the progress bar
-      this.$Progress.start()
-      //  hook the progress bar to start before we move router-view
-      this.$router.beforeEach((to, from, next) => {
-        //  does the page we want to go to have a meta.progress object
-//        if (to.meta.progress !== undefined) {
-//          let meta = to.meta.progress
-//          // parse meta tags
-//          this.$Progress.parseMeta(meta)
-//        }
-        //  start the progress bar
-        this.$Progress.start()
-        //  continue to next page
-        next()
-      })
-      //  hook the progress bar to finish after we've finished moving router-view
-      this.$router.afterEach((to, from) => {
-        //  finish the progress bar
-//        console.log(JSON.stringify())
-        this.$Progress.finish()
-      })
-
-//      this.$router.push('/activePublic');
     }
   }
 

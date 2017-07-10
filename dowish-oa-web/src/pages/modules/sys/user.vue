@@ -1,6 +1,6 @@
 <template>
 
-  <imp-panel>
+  <content-panel>
     <h3 class="box-title" slot="header" style="width: 100%;">
       <el-row style="width: 100%;">
         <el-col :span="12">
@@ -107,17 +107,17 @@
     </div>
 
 
-  </imp-panel>
+  </content-panel>
 </template>
 
 <script>
   import panel from "../../../components/panel.vue"
   import * as api from "../../../utils/api"
-  import testData from "../../../../static/data/data.json"
+  //  import testData from "../../../../static/data/data.json"
 
   export default {
     components: {
-      'imp-panel': panel
+      'content-panel': panel
     },
     data(){
       return {
@@ -154,7 +154,7 @@
         this.currentRow = row;
         this.dialogVisible = true;
         if (this.roleTree.length <= 0) {
-          this.$http.get( api.TEST_DATA + "?selectChildren=true")
+          this.$http.get(api.TEST_DATA + "?selectChildren=true")
             .then(res => {
               this.roleTree = res.data.roleList
             })
@@ -166,10 +166,10 @@
       },
       configUserRoles(){
         let checkedKeys = this.$refs.roleTree.getCheckedKeys();
-          this.$http.get(api.SYS_SET_USER_ROLE + "?userId=" + this.currentRow.id + "&roleIds="+checkedKeys.join(','))
+        this.$http.get(api.SYS_SET_USER_ROLE + "?userId=" + this.currentRow.id + "&roleIds=" + checkedKeys.join(','))
           .then(res => {
-              this.$message('修改成功');
-              this.dialogVisible = false;
+            this.$message('修改成功');
+            this.dialogVisible = false;
           })
       },
       handleSizeChange(val) {
@@ -189,11 +189,27 @@
         });
       },
       loadData(){
-        var d = {"offset":0,"limit":2147483647,"total":1,"size":10,"pages":1,"current":1,"searchCount":true,"optimizeCount":false,"orderByField":null,"records":[
-            {"id":1,"delFlag":0,"companyId":1,"officeId":2,"loginName":"admin","password":"",
-              "no":"0001","name":"系统管理员","email":"lanux@foxmail.com","phone":"731","mobile":"13769999998",
-              "userType":"1","photo":null,"loginIp":"127.0.0.1","loginDate":1453188598000,"loginFlag":"1",
-              "remarks":"最高管理员","status":1,"token":null}],"condition":{},"asc":true,"offsetCurrent":0};
+        var d = {
+          "offset": 0,
+          "limit": 2147483647,
+          "total": 1,
+          "size": 10,
+          "pages": 1,
+          "current": 1,
+          "searchCount": true,
+          "optimizeCount": false,
+          "orderByField": null,
+          "records": [
+            {
+              "id": 1, "delFlag": 0, "companyId": 1, "officeId": 2, "loginName": "admin", "password": "",
+              "no": "0001", "name": "系统管理员", "email": "lanux@foxmail.com", "phone": "731", "mobile": "13769999998",
+              "userType": "1", "photo": null, "loginIp": "127.0.0.1", "loginDate": 1453188598000, "loginFlag": "1",
+              "remarks": "最高管理员", "status": 1, "token": null
+            }],
+          "condition": {},
+          "asc": true,
+          "offsetCurrent": 0
+        };
         this.tableData.rows = d.records;
 //      this.tableData.pagination.total = d.total;
         //        this.$http.get(api.SYS_USER_PAGE + "?key=" + this.searchKey + "&pageSize=" + this.tableData.pagination.pageSize + "&pageNo=" + this.tableData.pagination.pageNo)

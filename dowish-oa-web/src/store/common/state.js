@@ -6,6 +6,7 @@
 export default {
   user:{},
   menuList:[],
+  permissions:[],
 
   loading: false,
   // menuList: {},

@@ -1,4 +1,4 @@
-import dashboard from "../pages/common/dashboard.vue";
+import index from "../pages/common/dashboard.vue";
 import NotFoundView from "../components/404.vue";
 import menuList from "../pages/modules/sys/menu.vue";
 import role from "../pages/modules/sys/role.vue";
@@ -27,16 +27,16 @@ const routes = [
         path: '/resetPwd', component: resetPwd
       },
       {
-        path: '/index', component: dashboard
+        path: '/index', component: index
       },
       {
-        path: '/sys/menuList', component: menuList
+        path: '/sys/menu', component: menuList
       },
       {
-        path: '/sys/roleList', component: role
+        path: '/sys/role', component: role
       },
       {
-        path: '/sys/userList', component: sysUser
+        path: '/sys/user', component: sysUser
       },
       {
         path: '/sys/userAdd', component: userAdd

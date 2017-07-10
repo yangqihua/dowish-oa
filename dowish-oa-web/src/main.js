@@ -63,9 +63,9 @@ const router = new VueRouter({
 const {state} = store
 router.beforeEach((route, redirect, next) => {
 
-  // if (state.common.device.isMobile && state.common.sidebar.opened) {
-  //   store.commit(TOGGLE_SIDEBAR, false)
-  // }
+  if (state.common.device.isMobile && state.common.sidebar.opened) {
+    store.commit(TOGGLE_SIDEBAR, false)
+  }
 
   let user = state.common.user;
   if (stringUtils.isEmptyObject(user)) {

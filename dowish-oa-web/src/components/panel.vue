@@ -28,6 +28,15 @@
       footer: {
         type: String
       }
+    },
+    methods:{
+    	autoFixHeight(){
+        let contentHeight = $(window).height()
+        $('.box').css('min-height',contentHeight);
+      }
+    },
+    mounted(){
+    	this.autoFixHeight()
     }
   }
 </script>
@@ -46,6 +55,7 @@
     margin-bottom: 20px;
     width: 100%;
     box-shadow: 0 1px 1px rgba(0, 0, 0, 0.1);
+    /*min-height: 720px;*/
   }
 
   .box .overlay.dark,
