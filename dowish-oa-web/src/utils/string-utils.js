@@ -1,3 +1,7 @@
+/*
+* Created by yangqihua on 2017/7/7.
+*/
+
 /**
  * 去除首尾空格
  * @param  {[string]} string [字符串]
@@ -26,18 +30,35 @@ const createUniqueString = () => {
   const randomNum = parseInt((1 + Math.random()) * 65536) + '';
   return (+(randomNum + timestamp)).toString(32);
 }
-const useTokenApi = (url)=>{
-  return !urls.find(u=>u===url);
+const useTokenApi = (url) => {
+  return !urls.find(u => u === url);
 }
 
 
-const isEmptyObject= (obj)=>{
+const isEmptyObject = (obj) => {
   let t;
   for (t in obj)
     return !1;
   return !0
 };
-const getBeforeDate = (n)=>{
+
+const resetObject = (obj) => {
+  for (let k in obj) {
+    if (obj[k] instanceof Object) {
+      resetObject(obj[k])
+    } else if (obj[k] instanceof Boolean) {
+      obj[k] = false
+    } else if (obj[k] instanceof Number) {
+      obj[k] = 0;
+    }else if(obj[k] == null || obj[k] == 'undefined'){
+      continue;
+    }
+    else {
+      obj[k] = '';
+    }
+  }
+}
+const getBeforeDate = (n) => {
   let list = [];
   let d = new Date(); // 这个算法能自动处理闰年和非闰年。2012年是闰年，所以2月有29号
   let s = '';
@@ -54,5 +75,5 @@ const getBeforeDate = (n)=>{
 }
 
 export default {
-  trim, subString, getBaseUrl,createUniqueString,useTokenApi,isEmptyObject,getBeforeDate
+  trim, subString, getBaseUrl, createUniqueString, useTokenApi, isEmptyObject, resetObject, getBeforeDate
 }

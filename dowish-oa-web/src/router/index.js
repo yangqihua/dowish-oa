@@ -5,7 +5,7 @@ import role from "../pages/modules/sys/role.vue";
 import resource from "../pages/modules/sys/resource.vue";
 import login from "../pages/common/login.vue";
 import frame from "../pages/frame.vue";
-import sysUser from "../pages/modules/sys/user.vue";
+import User from "../pages/modules/sys/user/";
 import userAdd from "../pages/modules/sys/userAdd.vue";
 import resetPwd from "../pages/common/resetPwd.vue";
 // Routes
@@ -36,10 +36,10 @@ const routes = [
         path: '/sys/role', component: role
       },
       {
-        path: '/sys/user', component: sysUser
+        path: '/sys/user', component: User
       },
       {
-        path: '/sys/userAdd', component: userAdd
+        path: '/sys/user/add', component: userAdd
       },
       {
         path: '/sys/resource', component: resource

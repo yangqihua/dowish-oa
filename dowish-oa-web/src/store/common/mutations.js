@@ -50,9 +50,8 @@ const setMenuList = (menuList) => {
   menuList.forEach(menu => {
     if (menu.url === null) {
       menu.url = menu.name+"_"+menu.menuId
-      // menu.menuId = menu.menuId+''
     }
-    if (menu.list) {
+    if (menu.list!=null) {
       setMenuList(menu.list)
     }
   })

@@ -52,7 +52,9 @@
           }
           return kas.reverse();
         }
-        return getParentArray(this.$route.path, this.menuList);
+
+//        console.log(this.$route.path,getParentArray(this.$route.path, this.menuList))
+        return getParentArray(this.$route.path, this.menuList)
       },
       // 使用对象展开运算符将 getters 混入 computed 对象中
       ...mapGetters([
@@ -61,7 +63,7 @@
     },
     mounted () {
       let route = this.$route
-//      console.log(route)
+//      console.log(this.onRouteKeys)
 //      if (route.name) {
 //        this.shouldExpandMatchItem(route)
 //      }
@@ -71,7 +73,7 @@
     },
     methods: {
       ...mapActions({
-        getMenuList: 'getMenuListAction' // 映射 this.load() 为 this.$store.dispatch('loadMenuList')
+        getMenuList: 'getMenuListAction'
       })
     }
   }
