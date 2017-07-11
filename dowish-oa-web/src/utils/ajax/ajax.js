@@ -26,7 +26,12 @@ const ajax = ({type = 'get', url, data = {}, showLoading = true, loadingDom = 'm
     };
   }
   Vue.axios[type](url, params).then((response) => {
-    console.log(response.data);
+    if (response.data.code === 401) {
+      ElementUI.Message({message: response.data.msg, type: 'warning', showClose: true});
+      return
+    }
+
+    console.log(response);
     //要么就没有code，如果有code一定要等于200才算成功。
     if (response.data.hasOwnProperty('code')) {
       if (response.data.code === 200) {

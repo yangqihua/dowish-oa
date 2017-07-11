@@ -8,15 +8,18 @@
 
     </h3>
     <el-row slot="body">
-      <el-col :span="6" >
-          <h3 class="roleListHead">角色列表</h3>
-          <ul class="list-group" v-if="roleList.length>0">
-              <a v-for="(role,index) in roleList" href="javascript:;" class="list-group-item">{{role.roleName}}</a>
-          </ul>
-          <div v-else class="noMesg">
-            暂无角色信息
-            <el-button type="text" @click="newAdd">点击新增</el-button>
-          </div>
+      <el-col :span="6">
+        <h3 class="roleListHead">角色列表</h3>
+        <ul class="list-group" v-if="roleList.length>0">
+          <a v-for="(role,index) in roleList" @click="loadRoleInfo(role)"
+             href="javascript:;"
+             class="list-group-item"
+             :class="activeRole.roleId==role.roleId?'list-group-item-active':''">{{role.roleName}}</a>
+        </ul>
+        <div v-else class="noMesg">
+          暂无角色信息
+          <el-button type="text" @click="newAdd">点击新增</el-button>
+        </div>
       </el-col>
 
       <el-col :span="18">
@@ -37,22 +40,23 @@
               </el-form-item>
 
               <el-form-item label="权限" :label-width="formLabelWidth">
-                <el-tree v-if="roleTree"
-                         :data="roleTree"
+                <el-tree v-if="menuList"
+                         :data="menuList"
                          ref="roleTree"
                          show-checkbox
                          highlight-current
-                         :render-content="renderContent"
-                         @node-click="handleNodeClick" clearable node-key="id" :props="defaultProps">
+                         @node-click="handleNodeClick"
+                         clearable
+                         :default-expanded-keys="defaultExpandedKeys"
+                         :default-checked-keys="defaultCheckedKeys"
+                         node-key="menuId"
+                         :props="defaultProps">
 
                 </el-tree>
               </el-form-item>
 
               <el-form-item label="" :label-width="formLabelWidth">
                 <el-button type="primary" @click="onSubmit" v-text="form.id?'修改':'新增'"></el-button>
-                <el-button type="info" @click="settingResource($event,form.id)" icon="setting"
-                           v-show="form.id && form.id!=null">配置资源
-                </el-button>
                 <el-button type="danger" @click="deleteSelected" icon="delete" v-show="form.id && form.id!=null">删除
                 </el-button>
               </el-form-item>
@@ -100,8 +104,6 @@
 
   import * as api from "../../../../utils/api"
 
-//  import $ from 'jquery'
-
   export default {
     mixins: [treeter],
     components: {
@@ -113,22 +115,32 @@
         dialogLoading: false,
         dialogVisible: false,
         formLabelWidth: '100px',
-        defaultProps: {
-          children: 'children',
-          label: 'name',
-          id: "id",
-        },
+
         roleTree: [],
         resourceTree: [],
         maxId: 700000,
 
+
         roleList: [],
-        menuList:[],
+
+        //tree相关
+        defaultExpandedKeys: [],
+        defaultCheckedKeys: [],
+        menuList: [],
+        defaultProps: {
+          children: 'list',
+          label: 'name',
+          id: "menuId",
+        },
+
+        roleInfo: {},
+        activeRole:{},
+
         form: {
           roleId: null,
           roleName: null,
-          remark:'',
-          menuIdList:[],
+          remark: '',
+          menuIdList: [],
         }
       }
     },
@@ -140,9 +152,6 @@
             this.$message('修改成功');
             this.dialogVisible = false;
           })
-      },
-      handleNodeClick(data){
-        this.form = data;
       },
       newAdd(){
         this.form = {
@@ -214,17 +223,10 @@
           this.newAdd();
         })
       },
-      renderContent(h, {node, data, store}) {
-        return (
-          <span>
-          <span>
-          <span>{node.label}</span>
-          </span>
-          <span class="render-content">
-            <i class="fa fa-wrench" title="配置资源" on-click={(e)=>this.settingResource(e,data.id)}></i>
-          <i class="fa fa-trash" on-click={ () => this.deleteSelected(data.id) }></i>
-          </span>
-          </span>);
+
+      handleNodeClick(data){
+        this.form = data;
+        console.log("data = ", data)
       },
       settingResource(event, id){
         event.stopPropagation();
@@ -257,9 +259,54 @@
         }
         ajax(params)
       },
+      loadMenuList(){
+        let params = {
+          url: 'sys/menu/perms',
+          scb: (response) => {
+            this.menuList = response.menuList
+            if (this.menuList.length > 0) {
+              this.defaultExpandedKeys.push(this.menuList[0].menuId)
+            }
+          }
+        }
+        ajax(params)
+      },
+      loadRoleInfo(role){
+        this.activeRole =role
+        let params = {
+          url: 'sys/role/info/' + role.roleId,
+          scb: (response) => {
+            this.roleInfo = response.role
+            let tempIdList = [];
+            this.roleInfo.menuIdList.forEach(menuId=>{
+            	if(!this.isParentMenuId(menuId,this.menuList)){
+                tempIdList.push(menuId)
+              }
+            })
+            this.$refs.roleTree.setCheckedKeys(tempIdList);
+          }
+        }
+        ajax(params)
+      },
+      isParentMenuId(menuId,menuList){
+        for(let key in menuList) {
+          if (menuList[key].parentId == menuId) {
+            return true
+          } else if(menuList[key].list!=null) {
+            return this.isParentMenuId(menuId,menuList[key].list);
+          }else{
+          	return false
+          }
+        }
+      },
     },
+
+    computed:{
+    }
+    ,
     created(){
       this.loadData();
+      this.loadMenuList();
     }
   }
 </script>
@@ -269,6 +316,7 @@
     padding-left: 0;
     margin: 15px 20px 0 10px;
   }
+
   .list-group-item {
     position: relative;
     display: block;
@@ -278,10 +326,12 @@
     border: 1px solid #ddd;
     /*text-align: center;*/
   }
+
   .list-group-item:first-child {
     border-top-left-radius: 4px;
     border-top-right-radius: 4px;
   }
+
   .list-group-item:last-child {
     margin-bottom: 0;
     border-bottom-right-radius: 4px;
@@ -292,12 +342,15 @@
     color: #555;
     text-decoration: none;
   }
+
   a.list-group-item .list-group-item-heading {
     text-decoration: none;
     color: #333;
   }
-  a.list-group-item:hover,
-  a.list-group-item:focus {
+
+  a.list-group-item:hover
+  /*a.list-group-item:focus*/
+  {
     background: #4db3ff;
     border-color: #4db3ff;
     color: #fff;
@@ -306,16 +359,24 @@
     /*background-color: #f5f5f5;*/
   }
 
-  .roleListHead{
+  a.list-group-item-active {
+    background: #4db3ff;
+    border-color: #4db3ff;
+    color: #fff;
+    /*color: #555;*/
+    text-decoration: none;
+    /*background-color: #f5f5f5;*/
+  }
+
+  .roleListHead {
     text-align: center;
     margin: 0 20px 0 10px;
   }
 
-  .noMesg{
+  .noMesg {
     text-align: center;
     margin-top: 25px;
   }
-
 
   .render-content {
     float: right;

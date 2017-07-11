@@ -100,7 +100,7 @@ axios.interceptors.request.use(
           config.headers.Authorization = `Bearer ${user.token}`;
         } else {
           localStore.deleteSession("user");
-          router.replace('sys/login');
+          router.replace('/login');
         }
       }
     }
