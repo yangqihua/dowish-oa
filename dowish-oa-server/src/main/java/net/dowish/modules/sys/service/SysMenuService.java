@@ -40,7 +40,7 @@ public interface SysMenuService {
 	/**
 	 * 获取用户菜单列表
 	 */
-//	List<SysMenuEntity> getUserMenuList(Long userId);
+	List<SysMenuEntity> getUserAllTreeMenuList(Long userId);
 	
 	/**
 	 * 查询菜单

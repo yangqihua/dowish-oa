@@ -15,6 +15,7 @@ import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
+import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Set;
@@ -71,9 +72,10 @@ public class SysMenuController extends AbstractController {
 	@RequiresPermissions("sys:menu:perms")
 	public Apis perms(){
 		//查询列表数据
-		List<SysMenuEntity> menuList = null;
+//		List<SysMenuEntity> menuList = sysMenuService.getUserAllTreeMenuList(getUserId());
 		
 		//只有超级管理员，才能查看所有管理员列表
+		List<SysMenuEntity> menuList = new ArrayList<>();
 		if(getUserId() == Constant.SUPER_ADMIN){
 			menuList = sysMenuService.queryList(new HashMap<>());
 		}else{

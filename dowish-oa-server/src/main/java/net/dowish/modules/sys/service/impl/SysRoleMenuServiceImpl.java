@@ -43,6 +43,7 @@ public class SysRoleMenuServiceImpl implements SysRoleMenuService {
 
 	@Override
 	public List<Long> queryMenuIdList(Long roleId) {
+
 		return sysRoleMenuDao.queryMenuIdList(roleId);
 	}
 

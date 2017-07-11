@@ -61,7 +61,24 @@ public class SysMenuServiceImpl implements SysMenuService {
 		List<Long> menuIdList = sysUserService.queryAllMenuId(userId);
 		return getAllMenuList(menuIdList,menuTypes);
 	}
-	
+
+	@Override
+	public List<SysMenuEntity> getUserAllTreeMenuList(Long userId) {
+		//仅仅查询目录，菜单有三种类型
+		ArrayList<Constant.MenuType> menuTypes = new ArrayList<>();
+		menuTypes.add(Constant.MenuType.CATALOG);
+		menuTypes.add(Constant.MenuType.MENU);
+
+		//系统管理员，拥有最高权限
+		if(userId == Constant.SUPER_ADMIN){
+			return getAllMenuList(null,menuTypes);
+		}
+
+		//用户菜单列表
+		List<Long> menuIdList = sysUserService.queryAllMenuId(userId);
+		return getAllMenuList(menuIdList,menuTypes);
+	}
+
 	@Override
 	public SysMenuEntity queryObject(Long menuId) {
 		return sysMenuDao.queryObject(menuId);
