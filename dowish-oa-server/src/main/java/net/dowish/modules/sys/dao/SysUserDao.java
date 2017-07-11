@@ -8,9 +8,6 @@ import java.util.Map;
 
 /**
  * 系统用户
- * 
- *
- * @date 2016年9月18日 上午9:34:11
  */
 @Mapper
 public interface SysUserDao extends BaseDao<SysUserEntity> {

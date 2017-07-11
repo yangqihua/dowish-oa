@@ -36,6 +36,11 @@ public interface SysMenuService {
 	 * 获取用户菜单列表
 	 */
 	List<SysMenuEntity> getUserMenuList(Long userId);
+
+	/**
+	 * 获取用户菜单列表
+	 */
+//	List<SysMenuEntity> getUserMenuList(Long userId);
 	
 	/**
 	 * 查询菜单

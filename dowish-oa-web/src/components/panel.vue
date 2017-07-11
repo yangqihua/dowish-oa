@@ -32,7 +32,7 @@
     methods:{
     	autoFixHeight(){
         let contentHeight = $(window).height()
-        $('.box').css('min-height',contentHeight);
+        $('.box-body').css('min-height',contentHeight);
       }
     },
     mounted(){

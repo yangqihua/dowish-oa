@@ -18,7 +18,7 @@ import "element-ui/lib/theme-default/index.css";
 import ImpPanel from "./components/panel.vue";
 
 import stringUtils from './utils/string-utils';
-import localStore from './utils/localStore'
+import localStore from './utils/local-store'
 import * as types from './store/common/mutation-types'
 
 // import interceptor from './utils/ajax/interceptor';

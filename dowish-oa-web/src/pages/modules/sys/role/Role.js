@@ -164,7 +164,9 @@ export default {
         })
     },
     resetForm() {
+      console.log('改变前：',this.form);
       stringUtils.resetObject(this.form)
+      console.log('改变后：',this.form);
     }
     // loadData(){
     //   if (this.$route.query && this.$route.query != null && this.$route.query.id && this.$route.query.id != null) {

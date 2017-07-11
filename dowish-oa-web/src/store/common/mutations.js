@@ -3,7 +3,7 @@
  */
 
 import * as types from "./mutation-types";
-import localStore from '../../utils/localStore'
+import localStore from '../../utils/local-store'
 
 //mutations必须是同步函数
 

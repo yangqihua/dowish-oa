@@ -44,10 +44,16 @@ public class SysRoleController extends AbstractController {
 		
 		//查询列表数据
 		Query query = new Query(params);
-		List<SysRoleEntity> list = sysRoleService.queryList(query);
+		List<SysRoleEntity> roleList = sysRoleService.queryList(query);
+
+//		roleList.forEach(role->{
+//			List<Long> menuIdList = sysRoleMenuService.queryMenuIdList(role.getRoleId());
+//			role.setMenuIdList(menuIdList);
+//		});
+
 		int total = sysRoleService.queryTotal(query);
 		
-		PageUtils pageUtil = new PageUtils(list, total, query.getLimit(), query.getPage());
+		PageUtils pageUtil = new PageUtils(roleList, total, query.getLimit(), query.getPage());
 		
 		return Apis.ok().put("page", pageUtil);
 	}

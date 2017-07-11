@@ -1,7 +1,7 @@
 {
-  "name": "image-front-project",
+  "name": "dowish-oa-web",
   "version": "1.0.0",
-  "description": "A Vue.js project",
+  "description": "dowish-oa-web",
   "author": "yangqihua",
   "private": true,
   "scripts": {

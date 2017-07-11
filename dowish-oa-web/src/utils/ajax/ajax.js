@@ -6,11 +6,15 @@ import ElementUI from 'element-ui';
 Vue.use(VueAxios, axios);
 
 import settings from '../../config/settings.js';
+import $ from 'jquery'
 
 Vue.axios.defaults.baseURL = settings.baseUrl;
 
 const ajax = ({type = 'get', url, data = {}, showLoading = true, loadingDom = 'main-container', scb, ecb}) => {
+  // console.log('loadingId',loadingDom);
+
   loadingDom = document.getElementById(loadingDom);
+
   let loadingInstance;
   if (showLoading) {
     loadingInstance = ElementUI.Loading.service({text: '加载中...', target: loadingDom});

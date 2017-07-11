@@ -33,6 +33,7 @@ public class SysUserEntity implements Serializable {
 	/**
 	 * 密码
 	 */
+	@JsonIgnore
 	@NotBlank(message="密码不能为空", groups = AddGroup.class)
 	private String password;
 

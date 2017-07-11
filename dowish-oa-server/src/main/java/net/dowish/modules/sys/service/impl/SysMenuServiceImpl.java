@@ -47,14 +47,19 @@ public class SysMenuServiceImpl implements SysMenuService {
 
 	@Override
 	public List<SysMenuEntity> getUserMenuList(Long userId) {
+
+		//仅仅查询目录，菜单有三种类型
+		ArrayList<Constant.MenuType> menuTypes = new ArrayList<>();
+		menuTypes.add(Constant.MenuType.CATALOG);
+
 		//系统管理员，拥有最高权限
 		if(userId == Constant.SUPER_ADMIN){
-			return getAllMenuList(null);
+			return getAllMenuList(null,menuTypes);
 		}
 		
 		//用户菜单列表
 		List<Long> menuIdList = sysUserService.queryAllMenuId(userId);
-		return getAllMenuList(menuIdList);
+		return getAllMenuList(menuIdList,menuTypes);
 	}
 	
 	@Override
@@ -64,6 +69,7 @@ public class SysMenuServiceImpl implements SysMenuService {
 
 	@Override
 	public List<SysMenuEntity> queryList(Map<String, Object> map) {
+
 		return sysMenuDao.queryList(map);
 	}
 
@@ -96,28 +102,29 @@ public class SysMenuServiceImpl implements SysMenuService {
 	/**
 	 * 获取所有菜单列表
 	 */
-	private List<SysMenuEntity> getAllMenuList(List<Long> menuIdList){
+	private List<SysMenuEntity> getAllMenuList(List<Long> menuIdList,List<Constant.MenuType> menuTypes){
 		//查询根菜单列表
 		List<SysMenuEntity> menuList = queryListParentId(0L, menuIdList);
 		//递归获取子菜单
-		getMenuTreeList(menuList, menuIdList);
+		getMenuTreeList(menuList, menuIdList,menuTypes);
 		
 		return menuList;
 	}
 
 	/**
-	 * 递归
+	 * 递归出某一种类型的menu下的子菜单，第一级为0，第二级为1，按钮级别为3
 	 */
-	private List<SysMenuEntity> getMenuTreeList(List<SysMenuEntity> menuList, List<Long> menuIdList){
-		List<SysMenuEntity> subMenuList = new ArrayList<SysMenuEntity>();
+	private List<SysMenuEntity> getMenuTreeList(List<SysMenuEntity> menuList, List<Long> menuIdList,List<Constant.MenuType> menuTypes){
+		List<SysMenuEntity> subMenuList = new ArrayList<>();
 		
 		for(SysMenuEntity entity : menuList){
-			if(entity.getType() == Constant.MenuType.CATALOG.getValue()){//目录
-				entity.setList(getMenuTreeList(queryListParentId(entity.getMenuId(), menuIdList), menuIdList));
+			if(menuTypes.stream().anyMatch(menuType -> entity.getType()==menuType.getValue())){  //判断类型是否在list里面
+				entity.setList(getMenuTreeList(queryListParentId(entity.getMenuId(), menuIdList), menuIdList,menuTypes));
 			}
 			subMenuList.add(entity);
 		}
 		
 		return subMenuList;
 	}
+
 }

@@ -75,7 +75,7 @@ public class SysMenuController extends AbstractController {
 		
 		//只有超级管理员，才能查看所有管理员列表
 		if(getUserId() == Constant.SUPER_ADMIN){
-			menuList = sysMenuService.queryList(new HashMap<String, Object>());
+			menuList = sysMenuService.queryList(new HashMap<>());
 		}else{
 			menuList = sysMenuService.queryUserList(getUserId());
 		}
