@@ -45,12 +45,18 @@ const isEmptyObject = (obj) => {
 const resetObject = (obj) => {
   for (let k in obj) {
     if (obj[k] instanceof Object) {
-      resetObject(obj[k])
+      if(obj[k] instanceof Array){
+        obj[k] = []
+      }else if(obj[k] instanceof Date){
+        obj[k] = null
+      }else{
+        resetObject(obj[k])
+      }
     } else if (obj[k] instanceof Boolean) {
       obj[k] = false
     } else if (obj[k] instanceof Number) {
       obj[k] = 0;
-    }else if(obj[k] == null || obj[k] == 'undefined'){
+    }else if(obj[k] === null || obj[k] === 'undefined'||obj[k] === ''){
       continue;
     }
     else {
