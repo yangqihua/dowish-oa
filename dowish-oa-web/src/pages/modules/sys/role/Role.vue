@@ -3,9 +3,7 @@
 
   <imp-panel>
     <h3 class="box-title" slot="header" style="width: 100%;">
-      <el-button type="primary" icon="plus" @click="newAdd">新增</el-button>
-      <el-button type="danger" icon="delete" @click="batchDelete">删除</el-button>
-
+      <el-button type="primary" icon="plus" @click="newAdd" style="margin-left: 6px">新增</el-button>
     </h3>
     <el-row slot="body">
       <el-col :span="6">
@@ -24,11 +22,12 @@
 
       <el-col :span="18">
 
-        <el-card class="box-card" style="margin: 40px 15px;">
+        <h3 class="roleListHead">{{title}}</h3>
+        <el-card class="box-card" style="margin: 15px 15px;">
           <div class="text item">
             <el-form :model="form" ref="form">
-              <el-form-item label="名称" :label-width="formLabelWidth">
-                <el-input v-model="form.name" auto-complete="off"></el-input>
+              <el-form-item label="角色名称" :label-width="formLabelWidth">
+                <el-input v-model="form.roleName" auto-complete="off" placeholder="请输入内容"></el-input>
               </el-form-item>
               <el-form-item label="角色描述" :label-width="formLabelWidth">
                 <el-input
@@ -56,9 +55,11 @@
               </el-form-item>
 
               <el-form-item label="" :label-width="formLabelWidth">
-                <el-button type="primary" @click="onSubmit" v-text="form.id?'修改':'新增'"></el-button>
-                <el-button type="danger" @click="deleteSelected" icon="delete" v-show="form.id && form.id!=null">删除
-                </el-button>
+                <el-button type="primary" @click="onSubmit" v-if="!form.roleId">新增</el-button>
+                <template v-else>
+                  <el-button type="success" @click="onUpdate">保存</el-button>
+                  <el-button type="danger" @click="deleteRole" icon="delete">删除</el-button>
+                </template>
               </el-form-item>
             </el-form>
           </div>
@@ -112,6 +113,7 @@
     },
     data(){
       return {
+        title: '新增',
         dialogLoading: false,
         dialogVisible: false,
         formLabelWidth: '100px',
@@ -134,13 +136,16 @@
         },
 
         roleInfo: {},
-        activeRole:{},
+        activeRole: {},
 
+        menuIdList: [],
         form: {
+          createTime: null,
+          createUserId: null,
+          menuIdList: [],
+          remark: null,
           roleId: null,
           roleName: null,
-          remark: '',
-          menuIdList: [],
         }
       }
     },
@@ -154,74 +159,31 @@
           })
       },
       newAdd(){
-        this.form = {
-          id: null,
-          parentId: null,
-          name: '',
-          enName: '',
-          sort: 0,
-          usable: '1',
-          remarks: ''
-        };
+        stringUtils.resetObject(this.form)
+        this.menuIdList = []
+        this.$refs.roleTree.setCheckedKeys(this.menuIdList)
+        this.activeRole = {}
+        this.title = '新增'
       },
-      batchDelete(){
-        var checkKeys = this.$refs.roleTree.getCheckedKeys();
-        if (checkKeys == null || checkKeys.length <= 0) {
-          this.$message.warning('请选择要删除的资源');
-          return;
-        }
+
+      deleteRole(id){
         this.$confirm('确定删除?', '提示', {
           confirmButtonText: '确定',
           cancelButtonText: '取消',
           type: 'warning'
         }).then(() => {
-          this.$http.get(api.SYS_ROLE_DELETE + "?roleIds=" + checkKeys.join(','))
-            .then(res => {
-              this.$message('操作成功');
-              this.loadData();
-            }).catch(e => {
-            this.$message('操作成功');
-            console.log(checkKeys);
-            this.batchDeleteFromTree(this.roleTree, checkKeys);
-          })
-        });
-
-      },
-      onSubmit(){
-        this.form.parentId = this.form.parentId;
-        this.$http.post(api.SYS_ROLE_ADD, this.form)
-          .then(res => {
-            this.form.id = res.data.id;
-            this.appendTreeNode(this.roleTree, res.data);
-          }).catch(e => {
-          this.maxId += 1;
-          this.$message('操作成功');
-          this.form.id = this.maxId;
-          var ddd = {
-            id: this.form.id,
-            name: this.form.name,
-            sort: this.form.sort,
-            enName: this.form.enName,
-            parentId: this.form.parentId,
-            usable: this.form.usable,
-            children: []
+          let params = {
+            url: 'sys/role/delete',
+            type: 'post',
+            data: [this.form.roleId],
+            scb: (res) => {
+              this.$message.success('删除成功');
+              this.newAdd()
+              this.loadData()
+            }
           }
-          this.appendTreeNode(this.roleTree, ddd);
-          this.roleTree.push({});
-          this.roleTree.pop();
-        })
-      },
-      deleteSelected(id){
-        this.$http.get(api.SYS_ROLE_DELETE + "?roleIds=" + id)
-          .then(res => {
-            this.$message('操作成功');
-            this.deleteFromTree(this.roleTree, id);
-            this.newAdd();
-          }).catch(e => {
-          this.$message('操作成功');
-          this.deleteFromTree(this.roleTree, id);
-          this.newAdd();
-        })
+          ajax(params)
+        }).catch(()=>{})
       },
 
       handleNodeClick(data){
@@ -247,6 +209,56 @@
             this.$refs.resourceTree.setCheckedKeys(res.data);
           })
       },
+
+      onUpdate(){
+        let leafMenuIdList = this.$refs.roleTree.getCheckedKeys()
+        let menuIdList = new Set()
+        let rootMenu = {list: this.menuList, menuId: -1}
+        let path = new Set()
+        leafMenuIdList.forEach(leafMenuId => {
+          this.setParentMenuId(leafMenuId, rootMenu, path)
+          path.delete(-1)  //构造的root节点要删除掉
+          path.forEach(p => menuIdList.add(p))
+          path.clear()
+        })
+        this.form['menuIdList'] = menuIdList
+        let params = {
+          url: 'sys/role/update',
+          type: 'post',
+          data: this.form,
+          scb: (res) => {
+            this.$message.success('修改成功');
+          }
+        }
+        ajax(params)
+
+      },
+
+      onSubmit(){
+        let leafMenuIdList = this.$refs.roleTree.getCheckedKeys()
+        let menuIdList = new Set()
+        let rootMenu = {list: this.menuList, menuId: -1}
+        let path = new Set()
+        leafMenuIdList.forEach(leafMenuId => {
+          this.setParentMenuId(leafMenuId, rootMenu, path)
+          path.delete(-1)  //构造的root节点要删除掉
+          path.forEach(p => menuIdList.add(p))
+          path.clear()
+        })
+        this.form['menuIdList'] = menuIdList
+        let params = {
+          url: 'sys/role/save',
+          type: 'post',
+          data: this.form,
+          scb: (res) => {
+            this.$message.success('添加成功');
+            this.loadData()
+          }
+        }
+        ajax(params)
+
+      },
+
       loadData(){
         let params = {
           url: 'sys/role/list',
@@ -262,6 +274,7 @@
       loadMenuList(){
         let params = {
           url: 'sys/menu/perms',
+          showLoading: false,
           scb: (response) => {
             this.menuList = response.menuList
             if (this.menuList.length > 0) {
@@ -272,38 +285,52 @@
         ajax(params)
       },
       loadRoleInfo(role){
-        this.activeRole =role
+        this.title = '加载中...'
+        this.activeRole = role
         let params = {
           url: 'sys/role/info/' + role.roleId,
+          showLoading: false,
           scb: (response) => {
-            this.roleInfo = response.role
-            let tempIdList = [];
-            this.roleInfo.menuIdList.forEach(menuId=>{
-            	if(!this.isParentMenuId(menuId,this.menuList)){
-                tempIdList.push(menuId)
+            this.title = '修改'
+            this.form = response.role
+            this.menuIdList = [];
+            this.form.menuIdList.forEach(menuId => {
+              if (!this.isParentMenuId(menuId, this.menuList)) {
+                this.menuIdList.push(menuId)
               }
             })
-            this.$refs.roleTree.setCheckedKeys(tempIdList);
+            this.$refs.roleTree.setCheckedKeys(this.menuIdList);
           }
         }
         ajax(params)
       },
-      isParentMenuId(menuId,menuList){
-        for(let key in menuList) {
+      isParentMenuId(menuId, menuList){
+        for (let key in menuList) {
           if (menuList[key].parentId == menuId) {
             return true
-          } else if(menuList[key].list!=null) {
-            return this.isParentMenuId(menuId,menuList[key].list);
-          }else{
-          	return false
+          } else if (menuList[key].list != null) {
+            return this.isParentMenuId(menuId, menuList[key].list);
+          } else {
+            return false
           }
         }
       },
+      setParentMenuId(menuId, rootMenu, path = new Set()){
+        path.add(rootMenu.menuId)
+        if (rootMenu.menuId == menuId) {
+          return true
+        }
+        if (rootMenu.list != null) {
+          for (let key in rootMenu.list) {
+            if (this.setParentMenuId(menuId, rootMenu.list[key], path)) {
+              return true
+            }
+          }
+        }
+        path.delete(rootMenu.menuId)
+        return false
+      },
     },
-
-    computed:{
-    }
-    ,
     created(){
       this.loadData();
       this.loadMenuList();
@@ -349,7 +376,7 @@
   }
 
   a.list-group-item:hover
-  /*a.list-group-item:focus*/
+    /*a.list-group-item:focus*/
   {
     background: #4db3ff;
     border-color: #4db3ff;
