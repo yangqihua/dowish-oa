@@ -3,7 +3,7 @@
 
 <mapper namespace="net.dowish.modules.sys.dao.SysUserDao">
 	<select id="queryObject" resultType="net.dowish.modules.sys.entity.SysUserEntity">
-		select * from sys_user where user_id = #{value}
+		select * from sys_user where user_id = #{userId}
 	</select>
 	
 	<select id="queryList" resultType="net.dowish.modules.sys.entity.SysUserEntity">

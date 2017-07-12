@@ -69,16 +69,24 @@ public class SysUserController extends AbstractController {
 	 */
 	@SysLog("修改密码")
 	@RequestMapping("/password")
-	public Apis password(String password, String newPassword){
+	public Apis password(@RequestBody Map<String,Object> map ){
+		String password= (String) map.get("password");
+		String newPassword = (String) map.get("newPassword");
 		Assert.isBlank(newPassword, "新密码不为能空");
+		SysUserEntity userEntity = getUser();
+		if(map.get("userId")!=null){
+			// TODO : map不能直接转Long?
+			Integer userId = (Integer) map.get("userId");
+			userEntity = sysUserService.queryObject(userId.longValue());
+		}
 		
 		//sha256加密
-		password = new Sha256Hash(password, getUser().getSalt()).toHex();
+		password = new Sha256Hash(password, userEntity.getSalt()).toHex();
 		//sha256加密
-		newPassword = new Sha256Hash(newPassword, getUser().getSalt()).toHex();
+		newPassword = new Sha256Hash(newPassword, userEntity.getSalt()).toHex();
 				
 		//更新密码
-		int count = sysUserService.updatePassword(getUserId(), password, newPassword);
+		int count = sysUserService.updatePassword(userEntity.getUserId(), password, newPassword);
 		if(count == 0){
 			return Apis.error("原密码不正确");
 		}
@@ -107,7 +115,8 @@ public class SysUserController extends AbstractController {
 	@SysLog("保存用户")
 	@RequestMapping("/save")
 	@RequiresPermissions("sys:user:save")
-	public Apis save(@RequestBody SysUserEntity user){
+	public Apis save(@RequestBody SysUserEntity user,@RequestParam String password){
+		user.setPassword(password);
 		ValidatorUtils.validateEntity(user, AddGroup.class);
 		
 		user.setCreateUserId(getUserId());

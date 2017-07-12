@@ -4,7 +4,7 @@
     <h3 class="box-title" slot="header" style="width: 100%;">
       <el-row style="width: 100%;">
         <el-col :span="12">
-          <el-button type="primary" icon="plus" @click.once="showList = !showList;resetForm()">新增</el-button>
+          <el-button type="primary" icon="plus" @click.once="addNew()">新增</el-button>
         </el-col>
         <el-col :span="12">
           <div class="el-input" style="width: 300px; float: right;">
@@ -31,11 +31,6 @@
         <el-table-column
           prop="username"
           label="用户名">
-        </el-table-column>
-
-        <el-table-column
-          prop="name"
-          label="角色">
         </el-table-column>
         <el-table-column
           prop="mobile"
@@ -68,7 +63,7 @@
               size="small"
               type="info"
               icon="setting"
-              @click="handleRoleConfig(scope.$index, scope.row)">配置角色
+              @click="handleResetPwd(scope.$index, scope.row)">重置密码
             </el-button>
             <el-button
               size="small"
@@ -90,29 +85,22 @@
         :total="tableData.pagination.total">
       </el-pagination>
 
-      <el-dialog title="配置用户角色" v-model="dialogVisible" size="tiny">
-        <div class="select-tree">
-          <el-scrollbar
-            tag="div"
-            class='is-empty'
-            wrap-class="el-select-dropdown__wrap"
-            view-class="el-select-dropdown__list">
-            <el-tree
-              ref="roleTree"
-              :data="roleTree"
-              show-checkbox
-              check-strictly
-              node-key="id" v-loading="dialogLoading"
-              :props="defaultProps">
-            </el-tree>
-          </el-scrollbar>
+      <el-dialog title="重置密码" v-model="resetPwdFormVisible">
+        <el-form :model="pwdForm" ref="resetPwdForm" :rules="resetPwdRules" label-width="120px">
+          <el-form-item label="旧密码" >
+            <el-input type="password" v-model="pwdForm.password" auto-complete="off"></el-input>
+          </el-form-item>
+          <el-form-item label="新密码" prop="newPassword">
+            <el-input type="password" v-model="pwdForm.newPassword" auto-complete="off"></el-input>
+          </el-form-item>
+        </el-form>
+        <div slot="footer" class="dialog-footer">
+          <el-button @click="resetPwdFormVisible = false">取 消</el-button>
+          <el-button type="primary" @click="onResetPwd">确 定</el-button>
         </div>
-        <span slot="footer" class="dialog-footer">
-          <el-button @click="dialogVisible = false">取 消</el-button>
-          <el-button type="primary" @click="configUserRoles">确 定</el-button>
-          </span>
       </el-dialog>
     </div>
+
   </content-panel>
 
 
@@ -123,15 +111,19 @@
         <el-form-item label="用户名" prop="username">
           <el-input v-model="form.username"></el-input>
         </el-form-item>
+        <el-form-item label="密码" v-if="!form.userId">
+          <el-input v-model="form.password"></el-input>
+        </el-form-item>
         <el-form-item label="手机">
           <el-input v-model="form.mobile"></el-input>
         </el-form-item>
         <el-form-item label="邮箱">
           <el-input v-model="form.email"></el-input>
         </el-form-item>
+
         <el-form-item label="状态">
           <el-switch
-            v-model="form.boolStatus"
+            v-model="boolStatus"
             on-color="#13ce66"
             off-color="#ff4949"
             on-text="正常"
@@ -139,17 +131,17 @@
           >
           </el-switch>
         </el-form-item>
-        <el-form-item label="用户类型">
-          <el-radio-group v-model="form.userType">
-            <el-radio label="0">注册用户</el-radio>
-            <el-radio label="1">后台配置用户</el-radio>
-          </el-radio-group>
+
+        <el-form-item label="用户角色">
+          <el-checkbox-group v-model="form.roleIdList">
+            <el-checkbox v-for="item in roleList" :key="item.roleId" :label="item.roleId">{{item.roleName}}</el-checkbox>
+          </el-checkbox-group>
         </el-form-item>
         <el-form-item>
-          <el-button type="info" @click="onEditSubmit" v-if="form.id" class="el-icon-check"> 保存</el-button>
-          <el-button type="primary" @click="onSubmit" class="el-icon-circle-check" v-else> 立即创建</el-button>
-          <el-button type="primary" @click="resetForm()" class="el-icon-arrow-left"> 重置</el-button>
-          <el-button type="success" @click="showList = !showList;resetForm()" class="el-icon-arrow-left"> 返回</el-button>
+          <el-button type="success" @click="onUpdate" v-if="form.userId" class="el-icon-circle-check"> 保存</el-button>
+          <el-button type="success" @click="onSubmit" class="el-icon-circle-check" v-else> 立即创建</el-button>
+          <el-button type="primary" @click="resetForm()" class="el-icon-circle-close"> 重置</el-button>
+          <el-button type="primary" @click="showList = !showList;resetForm()" class="el-icon-arrow-left"> 返回</el-button>
         </el-form-item>
       </el-form>
     </div>
