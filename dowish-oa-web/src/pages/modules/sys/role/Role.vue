@@ -3,11 +3,11 @@
 
   <imp-panel>
     <h3 class="box-title" slot="header" style="width: 100%;">
-      <el-button type="primary" icon="plus" @click="newAdd" style="margin-left: 6px">新增</el-button>
+      <el-button type="primary" icon="plus" @click="newAdd">新增</el-button>
     </h3>
     <el-row slot="body">
       <el-col :span="6">
-        <h3 class="roleListHead">角色列表</h3>
+        <h3 class="listHead">角色列表</h3>
         <ul class="list-group" v-if="roleList.length>0">
           <a v-for="(role,index) in roleList" @click="loadRoleInfo(role)"
              href="javascript:;"
@@ -22,7 +22,7 @@
 
       <el-col :span="18">
 
-        <h3 class="roleListHead">{{title}}</h3>
+        <h3 class="listHead">{{title}}</h3>
         <el-card class="box-card" style="margin: 15px 15px;">
           <div class="text item">
             <el-form :model="form" ref="form">
@@ -44,7 +44,6 @@
                          ref="roleTree"
                          show-checkbox
                          highlight-current
-                         @node-click="handleNodeClick"
                          clearable
                          :default-expanded-keys="defaultExpandedKeys"
                          :default-checked-keys="defaultCheckedKeys"
@@ -65,29 +64,6 @@
           </div>
         </el-card>
 
-        <el-dialog title="配置资源" v-model="dialogVisible" size="tiny">
-          <div class="select-tree">
-            <el-scrollbar
-              tag="div"
-              class='is-empty'
-              wrap-class="el-select-dropdown__wrap"
-              view-class="el-select-dropdown__list">
-              <el-tree
-                :data="resourceTree"
-                ref="resourceTree"
-                show-checkbox
-                check-strictly
-                node-key="id"
-                v-loading="dialogLoading"
-                :props="defaultProps">
-              </el-tree>
-            </el-scrollbar>
-          </div>
-          <span slot="footer" class="dialog-footer">
-          <el-button @click="dialogVisible = false">取 消</el-button>
-          <el-button type="primary" @click="configRoleResources">确 定</el-button>
-          </span>
-        </el-dialog>
       </el-col>
     </el-row>
   </imp-panel>

@@ -15,16 +15,11 @@ import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
-import java.util.ArrayList;
-import java.util.HashMap;
-import java.util.List;
-import java.util.Set;
+import java.util.*;
 
 /**
  * 系统菜单
  * 
- *
- * @date 2016年10月27日 下午9:58:15
  */
 @RestController
 @RequestMapping("/sys/menu")
@@ -131,7 +126,8 @@ public class SysMenuController extends AbstractController {
 	@SysLog("删除菜单")
 	@RequestMapping("/delete")
 	@RequiresPermissions("sys:menu:delete")
-	public Apis delete(long menuId){
+	public Apis delete(@RequestBody Map<String ,Long> map){
+		Long menuId = map.get("menuId");
 		if(menuId <= 30){
 			return Apis.error("系统菜单，不能删除");
 		}

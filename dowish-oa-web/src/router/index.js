@@ -1,6 +1,6 @@
 import index from "../pages/common/index.vue";
 import NotFoundView from "../components/404.vue";
-import menuList from "../pages/modules/sys/menu.vue";
+import menuList from "../pages/modules/sys/menu/";
 import role from "../pages/modules/sys/role/";
 import resource from "../pages/modules/sys/resource.vue";
 import login from "../pages/common/login.vue";

@@ -18,11 +18,6 @@ export default {
       dialogVisible: false,
       formLabelWidth: '100px',
 
-      roleTree: [],
-      resourceTree: [],
-      maxId: 700000,
-
-
       roleList: [],
 
       //tree相关
@@ -35,7 +30,6 @@ export default {
         id: "menuId",
       },
 
-      roleInfo: {},
       activeRole: {},
 
       menuIdList: [],
@@ -50,14 +44,6 @@ export default {
     }
   },
   methods: {
-    configRoleResources(){
-      let checkedKeys = this.$refs.resourceTree.getCheckedKeys();
-      this.$http.get(api.SYS_SET_ROLE_RESOURCE + "?roleId=" + this.form.id + "&resourceIds=" + checkedKeys.join(','))
-        .then(res => {
-          this.$message('修改成功');
-          this.dialogVisible = false;
-        })
-    },
     newAdd(){
       stringUtils.resetObject(this.form)
       this.menuIdList = []
@@ -66,7 +52,7 @@ export default {
       this.title = '新增'
     },
 
-    deleteRole(id){
+    deleteRole(){
       this.$confirm('确定删除?', '提示', {
         confirmButtonText: '确定',
         cancelButtonText: '取消',
@@ -84,30 +70,6 @@ export default {
         }
         ajax(params)
       }).catch(()=>{})
-    },
-
-    handleNodeClick(data){
-      this.form = data;
-      console.log("data = ", data)
-    },
-    settingResource(event, id){
-      event.stopPropagation();
-      this.dialogVisible = true;
-      if (this.resourceTree == null || this.resourceTree.length <= 0) {
-        this.dialogLoading = true;
-        this.$http.get(api.TEST_DATA)
-          .then(res => {
-            this.dialogLoading = false;
-            this.resourceTree = res.data.resourceList;
-          }).catch((error) => {
-          console.log(error)
-          this.dialogLoading = false;
-        })
-      }
-      this.$http.get(api.SYS_ROLE_RESOURCE + "?id=" + id)
-        .then(res => {
-          this.$refs.resourceTree.setCheckedKeys(res.data);
-        })
     },
 
     onUpdate(){
@@ -165,6 +127,7 @@ export default {
         data: {
           page: 1, limit: 100
         },
+        showLoading:false,
         scb: (response) => {
           this.roleList = response.page.list
         }

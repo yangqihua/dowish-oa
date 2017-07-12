@@ -44,17 +44,19 @@ const isEmptyObject = (obj) => {
 
 const resetObject = (obj) => {
   for (let k in obj) {
-    if (obj[k] instanceof Object) {
-      if(obj[k] instanceof Array){
+    if (typeof obj[k] == 'object') {
+      if(Array.isArray(obj[k])){
         obj[k] = []
-      }else if(obj[k] instanceof Date){
-        obj[k] = null
-      }else{
+      }
+      // else if(obj[k] instanceof Date){
+      //   obj[k] = null
+      // }
+      else{
         resetObject(obj[k])
       }
-    } else if (obj[k] instanceof Boolean) {
+    } else if (typeof obj[k] == 'boolean') {
       obj[k] = false
-    } else if (obj[k] instanceof Number) {
+    } else if (typeof obj[k] == 'number') {
       obj[k] = 0;
     }else if(obj[k] === null || obj[k] === 'undefined'||obj[k] === ''){
       continue;
@@ -80,6 +82,34 @@ const getBeforeDate = (n) => {
   return list.reverse();
 }
 
+const isParentMenuId = (menuId, menuList)=>{
+  for (let key in menuList) {
+    if (menuList[key].parentId == menuId) {
+      return true
+    } else if (menuList[key].list != null) {
+      return isParentMenuId(menuId, menuList[key].list);
+    } else {
+      return false
+    }
+  }
+}
+const setParentMenuId = (menuId, rootMenu, path = new Set())=>{
+  path.add(rootMenu.menuId)
+  if (rootMenu.menuId == menuId) {
+    return true
+  }
+  if (rootMenu.list != null) {
+    for (let key in rootMenu.list) {
+      if (setParentMenuId(menuId, rootMenu.list[key], path)) {
+        return true
+      }
+    }
+  }
+  path.delete(rootMenu.menuId)
+  return false
+}
+
 export default {
-  trim, subString, getBaseUrl, createUniqueString, useTokenApi, isEmptyObject, resetObject, getBeforeDate
+  trim, subString, getBaseUrl, createUniqueString, useTokenApi, isEmptyObject, resetObject, getBeforeDate,
+  isParentMenuId,setParentMenuId
 }
