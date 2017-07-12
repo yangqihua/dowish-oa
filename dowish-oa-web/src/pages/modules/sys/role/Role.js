@@ -1,184 +1,238 @@
-/**
- * Created by yangqihua on 2017/7/10.
- */
 
-
-import * as api from "../../../../utils/api"
 import panel from "../../../../components/panel.vue"
+import selectTree from "../../../../components/selectTree.vue"
+import treeter from "../../../../components/treeter"
 import ajax from '../../../../utils/ajax/ajax.js'
 import stringUtils from '../../../../utils/string-utils.js'
 
 export default {
+  mixins: [treeter],
   components: {
-    'content-panel': panel
+    'imp-panel': panel,
+    'el-select-tree': selectTree,
   },
   data(){
     return {
-      //list部分
-      currentRow: {},
-      dialogVisible: false,
+      title: '新增',
       dialogLoading: false,
-      defaultProps: {
-        children: 'children',
-        label: 'name',
-        id: "id",
-      },
+      dialogVisible: false,
+      formLabelWidth: '100px',
+
       roleTree: [],
+      resourceTree: [],
+      maxId: 700000,
 
 
-      showList: true,  //显示用户列表div
-      searchKey: '',  //搜索的用户名
-      tableData: {
-        pagination: {
-          total: 0,
-          pageNo: 1,
-          pageSize: 10,
-        },
-        rows: []
+      roleList: [],
+
+      //tree相关
+      defaultExpandedKeys: [],
+      defaultCheckedKeys: [],
+      menuList: [],
+      defaultProps: {
+        children: 'list',
+        label: 'name',
+        id: "menuId",
       },
 
-      // edit 部分
+      roleInfo: {},
+      activeRole: {},
+
+      menuIdList: [],
       form: {
-        id: null,
-        username: '',
-        email: '',
-        mobile: '',
-        status: '',
-        boolStatus: false,
-        userType: '1',
-      },
-      rules: {
-        username: [
-          {required: true, message: '请输入用户名', trigger: 'blur'},
-          {min: 3, message: '用户名大于 3 个字符', trigger: 'blur'}
-        ],
+        createTime: null,
+        createUserId: null,
+        menuIdList: [],
+        remark: null,
+        roleId: null,
+        roleName: null,
       }
-
     }
   },
   methods: {
-
-    handleSelectionChange(val){
-
-    },
-    handleRoleConfig(index, row){
-      this.currentRow = row;
-      this.dialogVisible = true;
-      if (this.roleTree.length <= 0) {
-        this.$http.get(api.TEST_DATA + "?selectChildren=true")
-          .then(res => {
-            this.roleTree = res.data.roleList
-          })
-      }
-      this.$http.get(api.SYS_USER_ROLE + "?id=" + row.id)
-        .then(res => {
-          this.$refs.roleTree.setCheckedKeys(res.data);
-        })
-    },
-    configUserRoles(){
-      let checkedKeys = this.$refs.roleTree.getCheckedKeys();
-      this.$http.get(api.SYS_SET_USER_ROLE + "?userId=" + this.currentRow.id + "&roleIds=" + checkedKeys.join(','))
+    configRoleResources(){
+      let checkedKeys = this.$refs.resourceTree.getCheckedKeys();
+      this.$http.get(api.SYS_SET_ROLE_RESOURCE + "?roleId=" + this.form.id + "&resourceIds=" + checkedKeys.join(','))
         .then(res => {
           this.$message('修改成功');
           this.dialogVisible = false;
         })
     },
-    handleSizeChange(val) {
-      this.tableData.pagination.pageSize = val;
-      this.loadData();
-    },
-    handleCurrentChange(val) {
-      this.tableData.pagination.pageNo = val;
-      this.loadData();
+    newAdd(){
+      stringUtils.resetObject(this.form)
+      this.menuIdList = []
+      this.$refs.roleTree.setCheckedKeys(this.menuIdList)
+      this.activeRole = {}
+      this.title = '新增'
     },
 
+    deleteRole(id){
+      this.$confirm('确定删除?', '提示', {
+        confirmButtonText: '确定',
+        cancelButtonText: '取消',
+        type: 'warning'
+      }).then(() => {
+        let params = {
+          url: 'sys/role/delete',
+          type: 'post',
+          data: [this.form.roleId],
+          scb: (res) => {
+            this.$message.success('删除成功');
+            this.newAdd()
+            this.loadData()
+          }
+        }
+        ajax(params)
+      }).catch(()=>{})
+    },
 
-    handleEdit(index, row){
+    handleNodeClick(data){
+      this.form = data;
+      console.log("data = ", data)
+    },
+    settingResource(event, id){
+      event.stopPropagation();
+      this.dialogVisible = true;
+      if (this.resourceTree == null || this.resourceTree.length <= 0) {
+        this.dialogLoading = true;
+        this.$http.get(api.TEST_DATA)
+          .then(res => {
+            this.dialogLoading = false;
+            this.resourceTree = res.data.resourceList;
+          }).catch((error) => {
+          console.log(error)
+          this.dialogLoading = false;
+        })
+      }
+      this.$http.get(api.SYS_ROLE_RESOURCE + "?id=" + id)
+        .then(res => {
+          this.$refs.resourceTree.setCheckedKeys(res.data);
+        })
+    },
 
-      this.showList = !this.showList
-      this.form = row
-      this.form['boolStatus'] = this.form.status === 1
-      // this.$router.push({path: 'userAdd', query: {id: row.id}})
+    onUpdate(){
+      let leafMenuIdList = this.$refs.roleTree.getCheckedKeys()
+      let menuIdList = new Set()
+      let rootMenu = {list: this.menuList, menuId: -1}
+      let path = new Set()
+      leafMenuIdList.forEach(leafMenuId => {
+        this.setParentMenuId(leafMenuId, rootMenu, path)
+        path.delete(-1)  //构造的root节点要删除掉
+        path.forEach(p => menuIdList.add(p))
+        path.clear()
+      })
+      this.form['menuIdList'] = menuIdList
+      let params = {
+        url: 'sys/role/update',
+        type: 'post',
+        data: this.form,
+        scb: (res) => {
+          this.$message.success('修改成功');
+        }
+      }
+      ajax(params)
 
     },
-    handleDelete(index, row){
-      this.$http.get(api.SYS_USER_DELETE + "?userIds=" + row.id).then(res => {
-        this.loadData();
-      });
+
+    onSubmit(){
+      let leafMenuIdList = this.$refs.roleTree.getCheckedKeys()
+      let menuIdList = new Set()
+      let rootMenu = {list: this.menuList, menuId: -1}
+      let path = new Set()
+      leafMenuIdList.forEach(leafMenuId => {
+        this.setParentMenuId(leafMenuId, rootMenu, path)
+        path.delete(-1)  //构造的root节点要删除掉
+        path.forEach(p => menuIdList.add(p))
+        path.clear()
+      })
+      this.form['menuIdList'] = menuIdList
+      let params = {
+        url: 'sys/role/save',
+        type: 'post',
+        data: this.form,
+        scb: (res) => {
+          this.$message.success('添加成功');
+          this.loadData()
+        }
+      }
+      ajax(params)
+
     },
+
     loadData(){
       let params = {
-        url: 'sys/user/list',
+        url: 'sys/role/list',
         data: {
-          username: this.searchKey,
-          page: this.tableData.pagination.pageNo,
-          limit: this.tableData.pagination.pageSize
+          page: 1, limit: 100
         },
-        loadingDom: 'userTableId',
         scb: (response) => {
-          console.log("response", response)
-          this.tableData.rows = response.page.list
-          this.tableData.pagination.total = response.page.totalCount
+          this.roleList = response.page.list
         }
       }
       ajax(params)
     },
-
-
-    //edit部分
-
-    //save
-    onSubmit(){
-      this.$refs['form'].validate((valid) => {
-        if (valid) {
-          this.form.status = this.form.boolStatus==true?'1':'0'
-          console.log(this.form)
-          // this.$http.post(api.SYS_USER_ADD, this.form)
-          //   .then(res => {
-          //     this.form = res.data;
-          //     this.$confirm('添加成功, 是否返回列表?', '提示', {
-          //       confirmButtonText: '确定',
-          //       cancelButtonText: '取消',
-          //       type: 'success'
-          //     }).then(() => {
-          //       this.$router.push({path: 'userList'})
-          //     })
-          //   })
-        } else {
-
+    loadMenuList(){
+      let params = {
+        url: 'sys/menu/perms',
+        showLoading: false,
+        scb: (response) => {
+          this.menuList = response.menuList
+          if (this.menuList.length > 0) {
+            this.defaultExpandedKeys.push(this.menuList[0].menuId)
+          }
         }
-      })
+      }
+      ajax(params)
     },
-    //edit
-    onEditSubmit(){
-      this.$http.post(api.SYS_USER_UPDATE, this.form)
-        .then(res => {
-          this.form = res.data;
-          this.$confirm('修改成功, 是否返回列表?', '提示', {
-            confirmButtonText: '确定',
-            cancelButtonText: '取消',
-            type: 'success'
-          }).then(() => {
-            this.$router.push({path: 'userList'})
+    loadRoleInfo(role){
+      this.title = '加载中...'
+      this.activeRole = role
+      let params = {
+        url: 'sys/role/info/' + role.roleId,
+        showLoading: false,
+        scb: (response) => {
+          this.title = '修改'
+          this.form = response.role
+          this.menuIdList = [];
+          this.form.menuIdList.forEach(menuId => {
+            if (!this.isParentMenuId(menuId, this.menuList)) {
+              this.menuIdList.push(menuId)
+            }
           })
-        })
+          this.$refs.roleTree.setCheckedKeys(this.menuIdList);
+        }
+      }
+      ajax(params)
     },
-    resetForm() {
-      console.log('改变前：',this.form);
-      stringUtils.resetObject(this.form)
-      console.log('改变后：',this.form);
-    }
-    // loadData(){
-    //   if (this.$route.query && this.$route.query != null && this.$route.query.id && this.$route.query.id != null) {
-    //     this.form.id = this.$route.query.id;
-    //     this.$http.get(api.SYS_USER_GET + "?id=" + this.form.id)
-    //       .then(res => {
-    //         this.form = res.data;
-    //       })
-    //   }
-    // }
+    isParentMenuId(menuId, menuList){
+      for (let key in menuList) {
+        if (menuList[key].parentId == menuId) {
+          return true
+        } else if (menuList[key].list != null) {
+          return this.isParentMenuId(menuId, menuList[key].list);
+        } else {
+          return false
+        }
+      }
+    },
+    setParentMenuId(menuId, rootMenu, path = new Set()){
+      path.add(rootMenu.menuId)
+      if (rootMenu.menuId == menuId) {
+        return true
+      }
+      if (rootMenu.list != null) {
+        for (let key in rootMenu.list) {
+          if (this.setParentMenuId(menuId, rootMenu.list[key], path)) {
+            return true
+          }
+        }
+      }
+      path.delete(rootMenu.menuId)
+      return false
+    },
   },
   created(){
     this.loadData();
+    this.loadMenuList();
   }
 }
