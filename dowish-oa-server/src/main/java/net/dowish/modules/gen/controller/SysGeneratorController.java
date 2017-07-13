@@ -29,7 +29,7 @@ public class SysGeneratorController {
 	 * 列表
 	 */
 	@RequestMapping("/list")
-	@RequiresPermissions("sys:generator:list")
+	@RequiresPermissions("gen:primary:list")
 	public Apis list(@RequestParam Map<String, Object> params){
 		//查询列表数据
 		Query query = new Query(params);
@@ -45,7 +45,7 @@ public class SysGeneratorController {
 	 * 生成代码
 	 */
 	@RequestMapping("/code")
-	@RequiresPermissions("sys:generator:code")
+	@RequiresPermissions("gen:primary:code")
 	public Apis code(HttpServletRequest request, HttpServletResponse response) throws IOException{
 //		String[] tableNames = new String[]{};
 		//获取表名，不进行xss过滤
