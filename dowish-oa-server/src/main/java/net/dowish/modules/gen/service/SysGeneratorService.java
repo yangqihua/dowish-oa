@@ -1,4 +1,4 @@
-package net.dowish.modules.sys.service;
+package net.dowish.modules.gen.service;
 
 import java.util.List;
 import java.util.Map;
@@ -23,5 +23,5 @@ public interface SysGeneratorService {
 	/**
 	 * 生成代码
 	 */
-	byte[] generatorCode(String[] tableNames);
+	String generatorCode(String tableName,boolean isReplaceFile);
 }

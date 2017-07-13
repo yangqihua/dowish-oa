@@ -1,12 +1,12 @@
 package net.dowish.common.utils;
 
+import lombok.extern.slf4j.Slf4j;
 import net.dowish.common.exception.RRException;
-import net.dowish.modules.sys.entity.ColumnEntity;
-import net.dowish.modules.sys.entity.TableEntity;
+import net.dowish.modules.gen.entity.ColumnEntity;
+import net.dowish.modules.gen.entity.TableEntity;
 import org.apache.commons.configuration.Configuration;
 import org.apache.commons.configuration.ConfigurationException;
 import org.apache.commons.configuration.PropertiesConfiguration;
-import org.apache.commons.io.IOUtils;
 import org.apache.commons.lang.StringUtils;
 import org.apache.commons.lang.WordUtils;
 import org.apache.velocity.Template;
@@ -14,11 +14,8 @@ import org.apache.velocity.VelocityContext;
 import org.apache.velocity.app.Velocity;
 
 import java.io.File;
-import java.io.IOException;
 import java.io.StringWriter;
 import java.util.*;
-import java.util.zip.ZipEntry;
-import java.util.zip.ZipOutputStream;
 
 /**
  * 代码生成器   工具类
@@ -26,6 +23,7 @@ import java.util.zip.ZipOutputStream;
  * @author yangqihua
  * @email 904693433@qq.com
  */
+@Slf4j
 public class GenUtils {
 
 	public static List<String> getTemplates(){
@@ -45,8 +43,8 @@ public class GenUtils {
 	/**
 	 * 生成代码
 	 */
-	public static void generatorCode(Map<String, String> table,
-			List<Map<String, String>> columns, ZipOutputStream zip){
+	public static String generatorCode(Map<String, String> table,
+			List<Map<String, String>> columns,boolean isReplaceFile){
 		//配置信息
 		Configuration config = getConfig();
 		
@@ -110,7 +108,9 @@ public class GenUtils {
 		map.put("email", config.getString("email"));
 		map.put("datetime", DateUtils.format(new Date(), DateUtils.DATE_TIME_PATTERN));
         VelocityContext context = new VelocityContext(map);
-        
+
+
+		StringBuilder result = new StringBuilder();
         //获取模板列表
 		List<String> templates = getTemplates();
 		for(String template : templates){
@@ -118,17 +118,25 @@ public class GenUtils {
 			StringWriter sw = new StringWriter();
 			Template tpl = Velocity.getTemplate(template, "UTF-8");
 			tpl.merge(context, sw);
-			
-			try {
-				//添加到zip
-				zip.putNextEntry(new ZipEntry(getFileName(template, tableEntity.getClassName(), config.getString("package"))));  
-				IOUtils.write(sw.toString(), zip, "UTF-8");
-				IOUtils.closeQuietly(sw);
-				zip.closeEntry();
-			} catch (IOException e) {
-				throw new RRException("渲染模板失败，表名：" + tableEntity.getTableName(), e);
+
+			String fileName = SystemPathUtils.getServerMainDir()+getFileName(template, tableEntity.getClassName(), config.getString("package"));
+
+//			log.info("fileName : {}",fileName);
+//			 如果选择替换文件，则删除原文件
+			if (isReplaceFile){
+				FileUtils.deleteFile(fileName);
+			}
+
+			// 创建并写入文件
+			if (FileUtils.createFile(fileName)){
+				FileUtils.writeToFile(fileName, sw.toString(), true);
+				result.append("创建 ").append(fileName).append(" 文件成功<br/>");
+			}else{
+				result.append("创建 ").append(fileName).append(" 文件失败<br/>");
+				log.debug(" file fail to create === " + fileName);
 			}
 		}
+		return result.toString();
 	}
 	
 	
@@ -190,21 +198,20 @@ public class GenUtils {
 		}
 
 		if(template.contains("Dao.xml.vm")){
-			return "main" + File.separator + "resources" + File.separator + "mapper" + File.separator + className + "Dao.xml";
+//			return "main" + File.separator + "resources" + File.separator + "mapper" + File.separator + className + "Dao.xml";
+			return packagePath + "static" + File.separator + className + "Dao.xml";
 		}
 
 		if(template.contains("list.html.vm")){
-			return "main" + File.separator + "resources" + File.separator + "static" + File.separator
-					+ "generator" + File.separator + className.toLowerCase() + ".html";
+			return packagePath + "static" + File.separator + className.toLowerCase() + ".html";
 		}
 		
 		if(template.contains("list.js.vm")){
-			return "main" + File.separator + "resources" + File.separator + "static" + File.separator + "public" + File.separator
-					+ "js" + File.separator + "generator" + File.separator + className.toLowerCase() + ".js";
+			return packagePath + "static" + File.separator+ className.toLowerCase() + ".js";
 		}
 
 		if(template.contains("menu.sql.vm")){
-			return className.toLowerCase() + "_menu.sql";
+			return packagePath + "static" + File.separator+className.toLowerCase() + "_menu.sql";
 		}
 		
 		return null;

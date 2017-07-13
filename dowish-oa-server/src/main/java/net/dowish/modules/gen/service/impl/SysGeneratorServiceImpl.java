@@ -1,16 +1,13 @@
-package net.dowish.modules.sys.service.impl;
+package net.dowish.modules.gen.service.impl;
 
 import net.dowish.common.utils.GenUtils;
 import net.dowish.modules.sys.dao.SysGeneratorDao;
-import net.dowish.modules.sys.service.SysGeneratorService;
-import org.apache.commons.io.IOUtils;
+import net.dowish.modules.gen.service.SysGeneratorService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
-import java.io.ByteArrayOutputStream;
 import java.util.List;
 import java.util.Map;
-import java.util.zip.ZipOutputStream;
 
 @Service("sysGeneratorService")
 public class SysGeneratorServiceImpl implements SysGeneratorService {
@@ -38,20 +35,14 @@ public class SysGeneratorServiceImpl implements SysGeneratorService {
 	}
 
 	@Override
-	public byte[] generatorCode(String[] tableNames) {
-		ByteArrayOutputStream outputStream = new ByteArrayOutputStream();
-		ZipOutputStream zip = new ZipOutputStream(outputStream);
-		
-		for(String tableName : tableNames){
-			//查询表信息
-			Map<String, String> table = queryTable(tableName);
-			//查询列信息
-			List<Map<String, String>> columns = queryColumns(tableName);
-			//生成代码
-			GenUtils.generatorCode(table, columns, zip);
-		}
-		IOUtils.closeQuietly(zip);
-		return outputStream.toByteArray();
+	public String generatorCode(String tableName,boolean isReplaceFile) {
+		//查询表信息
+		Map<String, String> table = queryTable(tableName);
+		//查询列信息
+		List<Map<String, String>> columns = queryColumns(tableName);
+		//生成代码
+		String mesg = GenUtils.generatorCode(table, columns,isReplaceFile);
+		return mesg;
 	}
 
 }

@@ -1,19 +1,16 @@
-package net.dowish.modules.sys.controller;
+package net.dowish.modules.gen.controller;
 
 import net.dowish.common.utils.Apis;
 import net.dowish.common.utils.PageUtils;
 import net.dowish.common.utils.Query;
 import net.dowish.common.xss.XssHttpServletRequestWrapper;
-import net.dowish.modules.sys.service.SysGeneratorService;
+import net.dowish.modules.gen.service.SysGeneratorService;
 import org.apache.shiro.authz.annotation.RequiresPermissions;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.stereotype.Controller;
-import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RequestParam;
-import org.springframework.web.bind.annotation.ResponseBody;
+import org.springframework.web.bind.annotation.*;
 
 import javax.servlet.http.HttpServletRequest;
+import javax.servlet.http.HttpServletResponse;
 import java.io.IOException;
 import java.util.List;
 import java.util.Map;
@@ -22,7 +19,7 @@ import java.util.Map;
  * 代码生成器
  * 
  */
-@Controller
+@RestController
 @RequestMapping("/sys/generator")
 public class SysGeneratorController {
 	@Autowired
@@ -31,7 +28,6 @@ public class SysGeneratorController {
 	/**
 	 * 列表
 	 */
-	@ResponseBody
 	@RequestMapping("/list")
 	@RequiresPermissions("sys:generator:list")
 	public Apis list(@RequestParam Map<String, Object> params){
@@ -48,23 +44,16 @@ public class SysGeneratorController {
 	/**
 	 * 生成代码
 	 */
-	@PostMapping("/code")
+	@RequestMapping("/code")
 	@RequiresPermissions("sys:generator:code")
-	public Apis code(HttpServletRequest request) throws IOException{
-		String[] tableNames = new String[]{};
+	public Apis code(HttpServletRequest request, HttpServletResponse response) throws IOException{
+//		String[] tableNames = new String[]{};
 		//获取表名，不进行xss过滤
 		HttpServletRequest orgRequest = XssHttpServletRequestWrapper.getOrgRequest(request);
-		String tables = orgRequest.getParameter("tables");
-//		tableNames = JSON.parseArray(tables).toArray(tableNames);
-		
-//		byte[] data = sysGeneratorService.generatorCode(tableNames);
-//
-//		response.reset();
-//        response.setHeader("Content-Disposition", "attachment; filename=\"dowish.zip\"");
-//        response.addHeader("Content-Length", "" + data.length);
-//        response.setContentType("application/octet-stream; charset=UTF-8");
-//
-//        IOUtils.write(data, response.getOutputStream());
-		return Apis.ok();
+		String table = orgRequest.getParameter("table");
+
+		boolean isReplaceFile = true;
+		String message = sysGeneratorService.generatorCode(table,isReplaceFile);
+		return Apis.ok(message);
 	}
 }

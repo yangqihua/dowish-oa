@@ -1,4 +1,4 @@
-package net.dowish.modules.sys.entity;
+package net.dowish.modules.gen.entity;
 
 import lombok.Data;
 

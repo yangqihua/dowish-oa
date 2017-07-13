@@ -1,4 +1,4 @@
-package net.dowish.modules.sys.entity;
+package net.dowish.modules.gen.entity;
 
 import lombok.Data;
 
@@ -6,10 +6,7 @@ import java.util.List;
 
 /**
  * 表数据
- * 
  * @author yangqihua
- * @email 904693433@qq.com
- * @date 2017-07-05 上午12:02:55
  */
 
 @Data
