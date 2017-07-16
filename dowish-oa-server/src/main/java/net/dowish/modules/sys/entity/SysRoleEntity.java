@@ -4,6 +4,7 @@ package net.dowish.modules.sys.entity;
 import lombok.Data;
 import org.hibernate.validator.constraints.NotBlank;
 
+import javax.validation.constraints.NotNull;
 import java.io.Serializable;
 import java.util.Date;
 import java.util.List;
@@ -45,5 +46,18 @@ public class SysRoleEntity implements Serializable {
 	 * 创建时间
 	 */
 	private Date createTime;
+
+	/**
+	 * 部门ID
+	 */
+	@NotNull(message="部门不能为空")
+	private Long deptId;
+
+	/**
+	 * 部门名称
+	 */
+	private String deptName;
+
+	private List<Long> deptIdList;
 
 }

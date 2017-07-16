@@ -1,6 +1,7 @@
 import index from "../pages/common/index.vue";
 import NotFoundView from "../components/404.vue";
-import menuList from "../pages/modules/sys/menu/";
+import Menu from "../pages/modules/sys/menu/";
+import Dept from "../pages/modules/sys/dept/";
 import role from "../pages/modules/sys/role/";
 import resource from "../pages/modules/sys/resource.vue";
 import login from "../pages/common/login.vue";
@@ -33,7 +34,10 @@ const routes = [
       path: '/index', component: index
     },
     {
-      path: '/sys/menu', component: menuList
+      path: '/sys/menu', component: Menu
+    },
+    {
+      path: '/sys/dept', component: Dept
     },
     {
       path: '/sys/role', component: role

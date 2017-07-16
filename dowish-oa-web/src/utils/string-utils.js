@@ -1,6 +1,6 @@
 /*
-* Created by yangqihua on 2017/7/7.
-*/
+ * Created by yangqihua on 2017/7/7.
+ */
 
 /**
  * 去除首尾空格
@@ -44,13 +44,13 @@ const isEmptyObject = (obj) => {
 
 const resetObject = (obj) => {
   for (let k in obj) {
-    if(obj[k] === null || obj[k] === 'undefined'||obj[k] === '' || obj[k] ===0 || obj[k] === false){
+    if (obj[k] === null || obj[k] === 'undefined' || obj[k] === '' || obj[k] === 0 || obj[k] === false) {
       continue;
-    }else if (typeof obj[k] == 'object') {
-      if(Array.isArray(obj[k])){
+    } else if (typeof obj[k] == 'object') {
+      if (Array.isArray(obj[k])) {
         obj[k] = []
       }
-      else{
+      else {
         resetObject(obj[k])
       }
     } else if (typeof obj[k] == 'boolean') {
@@ -79,7 +79,7 @@ const getBeforeDate = (n) => {
   return list.reverse();
 }
 
-const isParentMenuId = (menuId, menuList)=>{
+const isParentMenuId = (menuId, menuList) => {
   for (let key in menuList) {
     if (menuList[key].parentId == menuId) {
       return true
@@ -90,7 +90,7 @@ const isParentMenuId = (menuId, menuList)=>{
     }
   }
 }
-const setParentMenuId = (menuId, rootMenu, path = new Set())=>{
+const setParentMenuId = (menuId, rootMenu, path = new Set()) => {
   path.add(rootMenu.menuId)
   if (rootMenu.menuId == menuId) {
     return true
@@ -106,7 +106,39 @@ const setParentMenuId = (menuId, rootMenu, path = new Set())=>{
   return false
 }
 
+const arrayToTree = (data, options)=>{
+  options = options || {};
+  let ID_KEY = options.id || 'id';
+  let PARENT_KEY = options.parentId || 'parent';
+  let CHILDREN_KEY = options.childrenKey || 'children';
+
+  let tree = [];
+  let childrenOf = {};
+  let item, id, parentId;
+
+  for (let i = 0, length = data.length; i < length; i++) {
+    item = data[i];
+    id = item[ID_KEY];
+    parentId = item[PARENT_KEY] || 0;
+    // every item may have children
+    childrenOf[id] = childrenOf[id] || [];
+    // init its children
+    item[CHILDREN_KEY] = childrenOf[id];
+    if (parentId != 0) {
+      // init its parent's children object
+      childrenOf[parentId] = childrenOf[parentId] || [];
+      // push it into its parent's children object
+      childrenOf[parentId].push(item);
+    } else {
+      tree.push(item);
+    }
+  }
+  ;
+
+  return tree;
+}
+
 export default {
   trim, subString, getBaseUrl, createUniqueString, useTokenApi, isEmptyObject, resetObject, getBeforeDate,
-  isParentMenuId,setParentMenuId
+  isParentMenuId, setParentMenuId, arrayToTree
 }

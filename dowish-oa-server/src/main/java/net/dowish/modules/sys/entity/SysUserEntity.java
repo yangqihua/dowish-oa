@@ -7,6 +7,7 @@ import net.dowish.common.validator.group.UpdateGroup;
 import org.hibernate.validator.constraints.Email;
 import org.hibernate.validator.constraints.NotBlank;
 
+import javax.validation.constraints.NotNull;
 import java.io.Serializable;
 import java.util.Date;
 import java.util.List;
@@ -73,5 +74,16 @@ public class SysUserEntity implements Serializable {
 	 * 创建时间
 	 */
 	private Date createTime;
+
+	/**
+	 * 部门ID
+	 */
+	@NotNull(message="部门不能为空", groups = {AddGroup.class, UpdateGroup.class})
+	private Long deptId;
+
+	/**
+	 * 部门名称
+	 */
+	private String deptName;
 
 }

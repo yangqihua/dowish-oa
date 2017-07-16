@@ -3,6 +3,7 @@ package net.dowish.modules.sys.controller;
 import net.dowish.common.annotation.SysLog;
 import net.dowish.common.utils.Apis;
 import net.dowish.modules.sys.entity.SysRoleEntity;
+import net.dowish.modules.sys.service.SysRoleDeptService;
 import net.dowish.modules.sys.service.SysRoleMenuService;
 import net.dowish.modules.sys.service.SysRoleService;
 import net.dowish.common.utils.Constant;
@@ -30,6 +31,8 @@ public class SysRoleController extends AbstractController {
 	private SysRoleService sysRoleService;
 	@Autowired
 	private SysRoleMenuService sysRoleMenuService;
+	@Autowired
+	private SysRoleDeptService sysRoleDeptService;
 	
 	/**
 	 * 角色列表
@@ -82,10 +85,14 @@ public class SysRoleController extends AbstractController {
 	@RequiresPermissions("sys:role:info")
 	public Apis info(@PathVariable("roleId") Long roleId){
 		SysRoleEntity role = sysRoleService.queryObject(roleId);
-		
+
 		//查询角色对应的菜单
 		List<Long> menuIdList = sysRoleMenuService.queryMenuIdList(roleId);
 		role.setMenuIdList(menuIdList);
+
+		//查询角色对应的部门
+		List<Long> deptIdList = sysRoleDeptService.queryDeptIdList(roleId);
+		role.setDeptIdList(deptIdList);
 		
 		return Apis.ok().put("role", role);
 	}
