@@ -111,6 +111,7 @@ const arrayToTree = (data, options)=>{
   let ID_KEY = options.id || 'id';
   let PARENT_KEY = options.parentId || 'parent';
   let CHILDREN_KEY = options.childrenKey || 'children';
+  let ROOT_ID = options.rootId || 0;
 
   let tree = [];
   let childrenOf = {};
@@ -124,7 +125,7 @@ const arrayToTree = (data, options)=>{
     childrenOf[id] = childrenOf[id] || [];
     // init its children
     item[CHILDREN_KEY] = childrenOf[id];
-    if (parentId != 0) {
+    if (parentId != ROOT_ID) {
       // init its parent's children object
       childrenOf[parentId] = childrenOf[parentId] || [];
       // push it into its parent's children object

@@ -10,6 +10,7 @@ import java.net.URLEncoder;
 import org.apache.commons.codec.DecoderException;
 import org.apache.commons.codec.binary.Base64;
 import org.apache.commons.codec.binary.Hex;
+import org.apache.commons.lang3.StringEscapeUtils;
 
 /**
  * 封装各种格式的编码解码工具类.
@@ -89,6 +90,36 @@ public class Encodes {
 		}
 		return new String(chars);
 	}
+
+	/**
+	 * Html 转码.
+	 */
+	public static String escapeHtml(String html) {
+		return StringEscapeUtils.escapeHtml4(html);
+	}
+
+	/**
+	 * Html 解码.
+	 */
+	public static String unescapeHtml(String htmlEscaped) {
+		return StringEscapeUtils.unescapeHtml4(htmlEscaped);
+	}
+
+	/**
+	 * Xml 转码.
+	 */
+	public static String escapeXml(String xml) {
+		return StringEscapeUtils.escapeXml(xml);
+	}
+
+	/**
+	 * Xml 解码.
+	 */
+	public static String unescapeXml(String xmlEscaped) {
+		return StringEscapeUtils.unescapeXml(xmlEscaped);
+	}
+
+
 	/**
 	 * URL 编码, Encode默认为UTF-8. 
 	 */

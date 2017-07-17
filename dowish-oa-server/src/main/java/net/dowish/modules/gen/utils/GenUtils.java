@@ -1,7 +1,10 @@
-package net.dowish.common.utils;
+package net.dowish.modules.gen.utils;
 
 import lombok.extern.slf4j.Slf4j;
 import net.dowish.common.exception.RRException;
+import net.dowish.common.utils.DateUtils;
+import net.dowish.common.utils.FileUtils;
+import net.dowish.common.utils.SystemPathUtils;
 import net.dowish.modules.gen.entity.ColumnEntity;
 import net.dowish.modules.gen.entity.TableEntity;
 import org.apache.commons.configuration.Configuration;
@@ -19,9 +22,6 @@ import java.util.*;
 
 /**
  * 代码生成器   工具类
- * 
- * @author yangqihua
- * @email 904693433@qq.com
  */
 @Slf4j
 public class GenUtils {

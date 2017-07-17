@@ -4,7 +4,7 @@ import com.google.gson.Gson;
 import net.dowish.modules.job.entity.ScheduleJobEntity;
 import net.dowish.modules.job.entity.ScheduleJobLogEntity;
 import net.dowish.modules.job.service.ScheduleJobLogService;
-import net.dowish.common.utils.SpringContextUtils;
+import net.dowish.common.utils.SpringContextHolder;
 import org.apache.commons.lang.StringUtils;
 import org.quartz.JobExecutionContext;
 import org.quartz.JobExecutionException;
@@ -34,7 +34,7 @@ public class ScheduleJob extends QuartzJobBean {
 		ScheduleJobEntity scheduleJob = new Gson().fromJson(jsonJob, ScheduleJobEntity.class);
 
 		//获取spring bean
-        ScheduleJobLogService scheduleJobLogService = (ScheduleJobLogService) SpringContextUtils.getBean("scheduleJobLogService");
+        ScheduleJobLogService scheduleJobLogService = (ScheduleJobLogService) SpringContextHolder.getBean("scheduleJobLogService");
         
         //数据库保存执行记录
         ScheduleJobLogEntity log = new ScheduleJobLogEntity();

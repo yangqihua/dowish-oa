@@ -3,7 +3,7 @@ package net.dowish.modules.oss.cloud;
 import net.dowish.modules.sys.service.SysConfigService;
 import net.dowish.common.utils.ConfigConstant;
 import net.dowish.common.utils.Constant;
-import net.dowish.common.utils.SpringContextUtils;
+import net.dowish.common.utils.SpringContextHolder;
 
 /**
  * 文件上传Factory
@@ -14,7 +14,7 @@ public final class OSSFactory {
     private static SysConfigService sysConfigService;
 
     static {
-        OSSFactory.sysConfigService = (SysConfigService) SpringContextUtils.getBean("sysConfigService");
+        OSSFactory.sysConfigService = (SysConfigService) SpringContextHolder.getBean("sysConfigService");
     }
 
     public static CloudStorageService build(){

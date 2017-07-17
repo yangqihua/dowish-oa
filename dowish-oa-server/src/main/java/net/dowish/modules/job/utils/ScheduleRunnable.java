@@ -1,7 +1,7 @@
 package net.dowish.modules.job.utils;
 
 import net.dowish.common.exception.RRException;
-import net.dowish.common.utils.SpringContextUtils;
+import net.dowish.common.utils.SpringContextHolder;
 import org.apache.commons.lang.StringUtils;
 import org.springframework.util.ReflectionUtils;
 
@@ -19,7 +19,7 @@ public class ScheduleRunnable implements Runnable {
 	private String params;
 	
 	public ScheduleRunnable(String beanName, String methodName, String params) throws NoSuchMethodException, SecurityException {
-		this.target = SpringContextUtils.getBean(beanName);
+		this.target = SpringContextHolder.getBean(beanName);
 		this.params = params;
 		
 		if(StringUtils.isNotBlank(params)){

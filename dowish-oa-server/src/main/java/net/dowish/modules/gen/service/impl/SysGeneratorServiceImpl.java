@@ -1,6 +1,6 @@
 package net.dowish.modules.gen.service.impl;
 
-import net.dowish.common.utils.GenUtils;
+import net.dowish.modules.gen.utils.GenUtils;
 import net.dowish.modules.sys.dao.SysGeneratorDao;
 import net.dowish.modules.gen.service.SysGeneratorService;
 import org.springframework.beans.factory.annotation.Autowired;
