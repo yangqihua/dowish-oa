@@ -2,7 +2,7 @@ package net.dowish.modules.sys.controller;
 
 import net.dowish.common.annotation.SysLog;
 import net.dowish.common.utils.Apis;
-import net.dowish.modules.sys.entity.SysConfigEntity;
+import net.dowish.modules.sys.entity.Dict;
 import net.dowish.modules.sys.service.SysConfigService;
 import net.dowish.common.utils.PageUtils;
 import net.dowish.common.utils.Query;
@@ -34,7 +34,7 @@ public class SysConfigController extends AbstractController {
 	public Apis list(@RequestParam Map<String, Object> params){
 		//查询列表数据
 		Query query = new Query(params);
-		List<SysConfigEntity> configList = sysConfigService.queryList(query);
+		List<Dict> configList = sysConfigService.queryList(query);
 		int total = sysConfigService.queryTotal(query);
 		
 		PageUtils pageUtil = new PageUtils(configList, total, query.getLimit(), query.getPage());
@@ -49,7 +49,7 @@ public class SysConfigController extends AbstractController {
 	@RequestMapping("/info/{id}")
 	@RequiresPermissions("sys:config:info")
 	public Apis info(@PathVariable("id") Long id){
-		SysConfigEntity config = sysConfigService.queryObject(id);
+		Dict config = sysConfigService.queryObject(id);
 		
 		return Apis.ok().put("config", config);
 	}
@@ -60,7 +60,7 @@ public class SysConfigController extends AbstractController {
 	@SysLog("保存配置")
 	@RequestMapping("/save")
 	@RequiresPermissions("sys:config:save")
-	public Apis save(@RequestBody SysConfigEntity config){
+	public Apis save(@RequestBody Dict config){
 		ValidatorUtils.validateEntity(config);
 
 		sysConfigService.save(config);
@@ -74,7 +74,7 @@ public class SysConfigController extends AbstractController {
 	@SysLog("修改配置")
 	@RequestMapping("/update")
 	@RequiresPermissions("sys:config:update")
-	public Apis update(@RequestBody SysConfigEntity config){
+	public Apis update(@RequestBody Dict config){
 		ValidatorUtils.validateEntity(config);
 		
 		sysConfigService.update(config);

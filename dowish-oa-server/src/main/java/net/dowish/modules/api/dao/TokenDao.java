@@ -1,7 +1,7 @@
 package net.dowish.modules.api.dao;
 
 import net.dowish.modules.api.entity.TokenEntity;
-import net.dowish.modules.sys.dao.BaseDao;
+import net.dowish.common.base.dao.BaseDao;
 import org.apache.ibatis.annotations.Mapper;
 
 /**

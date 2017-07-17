@@ -1,6 +1,6 @@
 package net.dowish.modules.sys.service;
 
-import net.dowish.modules.sys.entity.SysConfigEntity;
+import net.dowish.modules.sys.entity.Dict;
 
 import java.util.List;
 import java.util.Map;
@@ -16,12 +16,12 @@ public interface SysConfigService {
 	/**
 	 * 保存配置信息
 	 */
-	public void save(SysConfigEntity config);
+	public void save(Dict config);
 	
 	/**
 	 * 更新配置信息
 	 */
-	public void update(SysConfigEntity config);
+	public void update(Dict config);
 	
 	/**
 	 * 根据key，更新value
@@ -36,13 +36,13 @@ public interface SysConfigService {
 	/**
 	 * 获取List列表
 	 */
-	public List<SysConfigEntity> queryList(Map<String, Object> map);
+	public List<Dict> queryList(Map<String, Object> map);
 	/**
 	 * 获取总记录数
 	 */
 	public int queryTotal(Map<String, Object> map);
 	
-	public SysConfigEntity queryObject(Long id);
+	public Dict queryObject(Long id);
 	
 	/**
 	 * 根据key，获取配置的value值

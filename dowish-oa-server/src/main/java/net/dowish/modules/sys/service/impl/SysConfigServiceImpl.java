@@ -2,7 +2,7 @@ package net.dowish.modules.sys.service.impl;
 
 import com.google.gson.Gson;
 import net.dowish.modules.sys.dao.SysConfigDao;
-import net.dowish.modules.sys.entity.SysConfigEntity;
+import net.dowish.modules.sys.entity.Dict;
 import net.dowish.modules.sys.service.SysConfigService;
 import net.dowish.common.exception.RRException;
 import org.apache.commons.lang.StringUtils;
@@ -20,12 +20,12 @@ public class SysConfigServiceImpl implements SysConfigService {
 	
 	@Override
 	@Transactional
-	public void save(SysConfigEntity config) {
+	public void save(Dict config) {
 		sysConfigDao.save(config);
 	}
 
 	@Override
-	public void update(SysConfigEntity config) {
+	public void update(Dict config) {
 		sysConfigDao.update(config);
 	}
 
@@ -40,7 +40,7 @@ public class SysConfigServiceImpl implements SysConfigService {
 	}
 
 	@Override
-	public List<SysConfigEntity> queryList(Map<String, Object> map) {
+	public List<Dict> queryList(Map<String, Object> map) {
 		return sysConfigDao.queryList(map);
 	}
 
@@ -50,7 +50,7 @@ public class SysConfigServiceImpl implements SysConfigService {
 	}
 
 	@Override
-	public SysConfigEntity queryObject(Long id) {
+	public Dict queryObject(Long id) {
 		return sysConfigDao.queryObject(id);
 	}
 

@@ -1,4 +1,4 @@
-package net.dowish.modules.sys.dao;
+package net.dowish.common.base.dao;
 
 import org.apache.ibatis.annotations.Mapper;
 

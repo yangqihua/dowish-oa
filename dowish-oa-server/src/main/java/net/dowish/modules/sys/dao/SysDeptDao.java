@@ -1,5 +1,6 @@
 package net.dowish.modules.sys.dao;
 
+import net.dowish.common.base.dao.BaseDao;
 import net.dowish.modules.sys.entity.SysDeptEntity;
 import org.apache.ibatis.annotations.Mapper;
 

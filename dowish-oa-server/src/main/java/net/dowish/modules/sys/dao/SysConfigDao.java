@@ -1,6 +1,7 @@
 package net.dowish.modules.sys.dao;
 
-import net.dowish.modules.sys.entity.SysConfigEntity;
+import net.dowish.common.base.dao.BaseDao;
+import net.dowish.modules.sys.entity.Dict;
 import org.apache.ibatis.annotations.Mapper;
 import org.apache.ibatis.annotations.Param;
 
@@ -11,7 +12,7 @@ import org.apache.ibatis.annotations.Param;
  * @date 2016年12月4日 下午6:46:16
  */
 @Mapper
-public interface SysConfigDao extends BaseDao<SysConfigEntity> {
+public interface SysConfigDao extends BaseDao<Dict> {
 	
 	/**
 	 * 根据key，查询value

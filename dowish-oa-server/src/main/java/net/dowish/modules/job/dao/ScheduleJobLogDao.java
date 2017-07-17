@@ -1,7 +1,7 @@
 package net.dowish.modules.job.dao;
 
 import net.dowish.modules.job.entity.ScheduleJobLogEntity;
-import net.dowish.modules.sys.dao.BaseDao;
+import net.dowish.common.base.dao.BaseDao;
 import org.apache.ibatis.annotations.Mapper;
 
 /**
