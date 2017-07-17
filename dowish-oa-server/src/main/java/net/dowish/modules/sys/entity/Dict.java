@@ -2,6 +2,7 @@ package net.dowish.modules.sys.entity;
 
 
 import lombok.Data;
+import lombok.Getter;
 import lombok.Setter;
 import org.hibernate.validator.constraints.NotBlank;
 
@@ -14,14 +15,17 @@ import java.io.Serializable;
 @Setter
 public class Dict implements Serializable{
 
-
+	@Getter
 	private Long id;
 
+	@Getter
 	@NotBlank(message="参数名不能为空")
 	private String key;
 
-	@NotBlank(message="参数值不能为空")
+	@Getter
+	private String remark;
 
+	@NotBlank(message="参数值不能为空")
 	private String value;
 
 
@@ -30,17 +34,6 @@ public class Dict implements Serializable{
 
 	private String description;// 描述
 
-
-	private String remark;
-
-
-	public Long getId() {
-		return id;
-	}
-
-	public String getKey() {
-		return key;
-	}
 
 	@XmlAttribute(name="value")
 	public String getValue() {
@@ -55,10 +48,6 @@ public class Dict implements Serializable{
 	@XmlAttribute(name = "description")
 	public String getDescription() {
 		return description;
-	}
-
-	public String getRemark() {
-		return remark;
 	}
 
 }

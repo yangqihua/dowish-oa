@@ -45,7 +45,7 @@ public class GenTableController{
 		GenTable genTable = genTableService.getTableMapper(tableName);
 		GenConfig config = GenUtils.getConfig();
 		return Apis.ok().put("genTable", genTable)
-				   .put("config",config );
+				   .put("genConfig",config );
 	}
 
 

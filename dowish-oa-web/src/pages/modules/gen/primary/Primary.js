@@ -11,6 +11,8 @@ export default {
   },
   data(){
     return {
+
+      activeStep: 0,
       //list部分
       searchKey: '',  //搜索的用户名
       pagination: {
@@ -18,12 +20,48 @@ export default {
         pageNo: 1,
         pageSize: 10,
       },
-      rows: []
+      rows: [],
+
+      allTables:[],
+
+
+      stepTitle:'选择原生数据表',
+      genTable:{},
+      genConfig:{},
+
     }
   },
   methods: {
-    handleMapper(index,row){
 
+    // step1
+    handleMapper(index, row){
+      let params = {
+        url: 'sys/generator/mapper',
+        showLoading: false,
+        data: {
+          tableName: row.tableName,
+        },
+        scb: (response) => {
+          this.genTable = response.genTable
+          this.genConfig = response.genConfig
+
+          this.getAllTable()
+          this.next()
+        }
+      }
+      ajax(params)
+    },
+    next(){
+      if (this.activeStep < 3) {
+        this.activeStep++
+      }
+      if(this.activeStep==1){
+        this.stepTitle='配置数据表到代码Mapper'
+      }else if(this.activeStep==2){
+        this.stepTitle = '生成代码完成';
+      }else{
+        this.stepTitle = '选择原生数据表';
+      }
     },
     handleSizeChange(val) {
       this.pagination.pageSize = val;
@@ -37,11 +75,11 @@ export default {
     loadData(){
       let params = {
         url: 'sys/generator/list',
-        showLoading:false,
-        data:{
-          tableName:this.searchKey,
-          page:this.pagination.pageNo,
-          limit:this.pagination.pageSize
+        showLoading: false,
+        data: {
+          tableName: this.searchKey,
+          page: this.pagination.pageNo,
+          limit: this.pagination.pageSize
         },
         scb: (response) => {
           this.rows = response.page.list
@@ -51,6 +89,32 @@ export default {
       ajax(params)
     },
 
+
+    //step2
+
+    genCode(){
+
+    },
+    backStep(){
+      this.activeStep--
+      this.stepTitle = '选择原生数据表';
+    },
+    getAllTable(){
+      let params = {
+        url: 'sys/generator/list',
+        showLoading: false,
+        data: {
+          page: 1,
+          limit: 1000
+        },
+        scb: (response) => {
+          this.allTables = response.page.list
+        }
+      }
+      ajax(params)
+    },
+
+    //step3
   },
   created(){
     this.loadData();

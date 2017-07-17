@@ -74,6 +74,7 @@ public class SysLoginController {
 		String username = map.get("username");
 		String password = map.get("password");
 		log.info("username : {}",map.get("username"));
+		log.info("password : {}",map.get("password"));
 
 		//用户信息
 		SysUserEntity user = sysUserService.queryByUserName(username);

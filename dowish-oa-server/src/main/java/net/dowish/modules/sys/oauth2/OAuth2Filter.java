@@ -84,7 +84,7 @@ public class OAuth2Filter extends AuthenticatingFilter {
         //从header中获取token
         String token = httpRequest.getHeader("Authorization");
 
-        token = "Bearer 1b380198d141d2097e6fdb54b448e007";
+//        token = "Bearer ac8f8f9c8efeb5f67ab97d41e3e03d53";
         //如果header中不存在token，则从参数中获取token
         if(StringUtils.isBlank(token)){
             token = httpRequest.getParameter("Authorization");

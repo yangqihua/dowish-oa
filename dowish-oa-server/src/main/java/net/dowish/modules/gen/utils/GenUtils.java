@@ -261,22 +261,12 @@ public class GenUtils {
 			}
 			is.close();
 			br.close();
-			log.debug("Read file content: {}", sb.toString());
+//			log.debug("Read file content: {}", sb.toString());
 			return (T) JaxbMapper.fromXml(sb.toString(), clazz);
 		} catch (Exception e) {
 			e.printStackTrace();
 			log.warn("Error file convert: {}", e.getMessage());
 		}
-//		String pathName = StringUtils.replace(getTemplatePath() + "/" + fileName, "/", File.separator);
-//		log.debug("file to object: {}", pathName);
-//		String content = "";
-//		try {
-//			content = FileUtils.readFileToString(new File(pathName), "utf-8");
-//			log.debug("read config content: {}", content);
-//			return (T) JaxbMapper.fromXml(content, clazz);
-//		} catch (IOException e) {
-//			log.warn("error convert: {}", e.getMessage());
-//		}
 		return null;
 	}
 

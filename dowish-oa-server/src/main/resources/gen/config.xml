@@ -24,7 +24,7 @@
 			<template>dao/entity.xml</template>
 			<template>dao/mapper.xml</template>
 		</category>
-		<category value="treeTable" label="树结构表（一体）">
+		<category value="treeTable" label="树结构（左树右属性）">
 			<template>treetable/controller.xml</template>
 			<template>treetable/service.xml</template>
 			<template>treetable/dao.xml</template>

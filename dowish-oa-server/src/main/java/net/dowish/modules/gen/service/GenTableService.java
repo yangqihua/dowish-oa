@@ -6,6 +6,7 @@ package net.dowish.modules.gen.service;
 import java.util.List;
 import java.util.Map;
 
+import net.dowish.common.utils.StringUtils;
 import net.dowish.modules.gen.dao.GenTableDao;
 import net.dowish.modules.gen.entity.GenTable;
 import net.dowish.modules.gen.entity.GenTableColumn;
@@ -54,19 +55,27 @@ public class GenTableService {
 		List<GenTableColumn> columnList = genTableDao.queryColumns(tableName);
 
 		genTable.setColumnList(columnList);
-//		for (GenTableColumn column : columnList){
-//			boolean b = false;
-//			for (GenTableColumn e : genTable.getColumnList()){
-//				if (e.getColumnName().equals(column.getColumnName())){
-//					b = true;
-//				}
-//			}
-//			if (!b){
-//				genTable.getColumnList().add(column);
-//			}
-//		}
 
-		// 获取主键
+		// 设置描述
+		if (StringUtils.isBlank(genTable.getComments())){
+			genTable.setComments(genTable.getTableName());
+		}
+		// 设置类名
+		genTable.setClassName(StringUtils.toCapitalizeCamelCase(genTable.getTableName()));
+
+		// 设置包名
+		genTable.setPackageName("net.dowish.modules");
+
+		// 设置作者
+		genTable.setFunctionAuthor("yangqihua");
+
+		// 设置模块名英文
+		genTable.setModuleName(genTable.getTableName());
+
+		// 设置生成类型
+		genTable.setCategory("curd");
+
+		// 设置主键
 		genTable.setPkList(genTableDao.findTablePK(genTable.getTableName()));
 
 		// 初始化列属性字段
