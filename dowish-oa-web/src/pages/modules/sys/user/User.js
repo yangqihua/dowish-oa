@@ -17,6 +17,15 @@ export default {
   data(){
     return {
       //list部分
+      multipleSelection: [],
+
+      searchForm: {
+        username: '',
+        email: '',
+        mobile: '',
+        deptName: '',
+        status: '',
+      },
 
       showList: true,  //显示用户列表div
       searchKey: '',  //搜索的用户名
@@ -29,16 +38,28 @@ export default {
         rows: []
       },
 
-      resetPwdFormVisible:false,
-      pwdForm:{
-        userId:'',
-        password:'',
-        newPassword:'',
+      resetPwdFormVisible: false,
+      pwdForm: {
+        userId: '',
+        password: '',
+        newPassword: '',
       },
 
       // edit 部分
       roleList: [],
+
+      //级联选择数据源
+      deptTree: [],
+
+      //级联选择属性定义
+      cascaderProps: {
+        value: 'deptId',
+        label: 'name',
+        children: 'list',
+      },
+
       boolStatus: true,
+
       form: {
         userId: null,
         roleName: '',
@@ -46,7 +67,9 @@ export default {
         mobile: '',
         status: '',
         roleIdList: [],
-        password: null
+        password: null,
+        parentIds:[],
+        deptId:'',
       },
       rules: {
         username: [
@@ -64,20 +87,51 @@ export default {
     }
   },
   methods: {
-    handleResetPwd(index,row){
-      this.pwdForm.userId = row.userId
+    handleResetPwd(){
+      this.pwdForm.userId = this.multipleSelection[0].userId
       this.resetPwdFormVisible = true
     },
+    handleEdit(){
+      this.showList = !this.showList
+      let params = {
+        url: 'sys/user/info/' + this.multipleSelection[0].userId,
+        showLoading: false,
+        scb: (response) => {
+          this.form = merge({}, response.user)
+          this.boolStatus = response.user.status === 1
+          this.loadDeptList()
+        }
+      }
+      ajax(params)
 
+    },
+    handleDelete(){
+      this.$confirm('确定删除?', '提示', {
+        confirmButtonText: '确定',
+        cancelButtonText: '取消',
+        type: 'warning'
+      }).then(() => {
+        let userIds = this.multipleSelection.map(item=>{return item.userId})
+        let params = {
+          url: 'sys/user/delete',
+          type:'post',
+          data: userIds,
+          loadingDom: 'userTableId',
+          scb: (response) => {
+            this.loadData()
+          }
+        }
+        ajax(params)
+      }).catch(() => {
+      })
+    },
     addNew(){
       this.showList = !this.showList;
       this.resetForm()
-      this.loadRoleList()
-      console.log('boolStatus :=======', this.boolStatus)
+      this.loadDeptList()
     },
-
     handleSelectionChange(val){
-
+      this.multipleSelection = val
     },
     handleSizeChange(val) {
       this.tableData.pagination.pageSize = val;
@@ -88,34 +142,12 @@ export default {
       this.loadData();
     },
 
-
-    handleEdit(index, row){
-      this.showList = !this.showList
-      let params = {
-        url: 'sys/user/info/' + row.userId,
-        showLoading: false,
-        scb: (response) => {
-          this.form = merge({}, response.user)
-          this.boolStatus = response.user.status === 1
-          this.loadRoleList()
-        }
-      }
-      ajax(params)
-
-    },
-    handleDelete(index, row){
-      this.$http.get(api.SYS_USER_DELETE + "?userIds=" + row.id).then(res => {
-        this.loadData();
-      });
-    },
     loadData(){
+      this.searchForm.page = this.tableData.pagination.pageNo
+      this.searchForm.limit = this.tableData.pagination.pageSize
       let params = {
         url: 'sys/user/list',
-        data: {
-          username: this.searchKey,
-          page: this.tableData.pagination.pageNo,
-          limit: this.tableData.pagination.pageSize
-        },
+        data: this.searchForm,
         loadingDom: 'userTableId',
         scb: (response) => {
           this.tableData.rows = response.page.list
@@ -130,8 +162,24 @@ export default {
         url: 'sys/role/select',
         showLoading: false,
         scb: (response) => {
-          console.log("response", response)
           this.roleList = response.list
+        }
+      }
+      ajax(params)
+    },
+
+    loadDeptList(){
+      let params = {
+        url: '/sys/dept/list',
+        showLoading: false,
+        scb: (res) => {
+          this.deptTree = stringUtils.arrayToTree(res.deptList,{id:"deptId",parentId:"parentId",childrenKey:"list"})
+          let rootDept = {list: this.deptTree, deptId: -1}
+          let path = new Set()
+          stringUtils.setParentId(this.form.deptId,"deptId","parentId", rootDept, path)
+          path.delete(-1)  //构造的root节点要删除掉
+          this.form.parentIds = Array.from(path)
+          this.loadRoleList()
         }
       }
       ajax(params)
@@ -144,8 +192,9 @@ export default {
       this.$refs['form'].validate((valid) => {
         if (valid) {
           this.form.status = this.boolStatus ? '1' : '0'
+          this.form.deptId = this.form.parentIds[this.form.parentIds.length - 1]
           let params = {
-            url: 'sys/user/save?password='+this.form.password,
+            url: 'sys/user/save?password=' + this.form.password,
             type: 'post',
             data: this.form,
             scb: (res) => {
@@ -164,6 +213,7 @@ export default {
       this.$refs['form'].validate((valid) => {
         if (valid) {
           this.form.status = this.boolStatus ? '1' : '0'
+          this.form.deptId = this.form.parentIds[this.form.parentIds.length - 1]
           let params = {
             url: 'sys/user/update',
             type: 'post',
@@ -200,7 +250,19 @@ export default {
     resetForm() {
       this.boolStatus = true
       stringUtils.resetObject(this.form)
+    },
+    resetSearchForm() {
+      stringUtils.resetObject(this.searchForm)
     }
+  },
+  computed: {
+    btnEnable(){
+      return {
+        edit: !(this.multipleSelection.length == 1),
+        delete: !(this.multipleSelection.length >= 1),
+        resetPwd: !(this.multipleSelection.length == 1),
+      }
+    },
   },
   created(){
     this.loadData();

@@ -98,7 +98,7 @@ export default {
       this.form = merge({}, data);
       let rootMenu = {list: this.menuTree, menuId: -1}
       let path = new Set()
-      stringUtils.setParentMenuId(this.form.parentId, rootMenu, path)
+      stringUtils.setParentId(this.form.parentId,"menuId","parentId", rootMenu, path)
       path.delete(-1)  //构造的root节点要删除掉
       this.form.parentIds = Array.from(path)
 

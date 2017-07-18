@@ -2,7 +2,7 @@ package net.dowish.modules.sys.controller;
 
 import net.dowish.modules.sys.entity.SysLogEntity;
 import net.dowish.modules.sys.service.SysLogService;
-import net.dowish.common.utils.PageUtils;
+import net.dowish.common.utils.Page;
 import net.dowish.common.utils.Query;
 import net.dowish.common.utils.Apis;
 import org.apache.shiro.authz.annotation.RequiresPermissions;
@@ -40,7 +40,7 @@ public class SysLogController {
 		List<SysLogEntity> sysLogList = sysLogService.queryList(query);
 		int total = sysLogService.queryTotal(query);
 		
-		PageUtils pageUtil = new PageUtils(sysLogList, total, query.getLimit(), query.getPage());
+		Page pageUtil = new Page(sysLogList, total, query.getLimit(), query.getPage());
 		return Apis.ok().put("page", pageUtil);
 	}
 	

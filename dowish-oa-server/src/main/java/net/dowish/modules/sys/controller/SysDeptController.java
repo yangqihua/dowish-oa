@@ -101,7 +101,7 @@ public class SysDeptController extends AbstractController {
 	 * 保存
 	 */
 	@RequestMapping("/save")
-	@RequiresPermissions("sys:dept:save")
+//	@RequiresPermissions("sys:dept:save")
 	public Apis save(@RequestBody SysDeptEntity dept){
 		sysDeptService.save(dept);
 		
@@ -112,7 +112,7 @@ public class SysDeptController extends AbstractController {
 	 * 修改
 	 */
 	@RequestMapping("/update")
-	@RequiresPermissions("sys:dept:update")
+//	@RequiresPermissions("sys:dept:update")
 	public Apis update(@RequestBody SysDeptEntity dept){
 		sysDeptService.update(dept);
 		
@@ -123,7 +123,7 @@ public class SysDeptController extends AbstractController {
 	 * 删除
 	 */
 	@RequestMapping("/delete")
-	@RequiresPermissions("sys:dept:delete")
+//	@RequiresPermissions("sys:dept:delete")
 	public Apis delete(long deptId){
 		//判断是否有子部门
 		List<Long> deptList = sysDeptService.queryDetpIdList(deptId);

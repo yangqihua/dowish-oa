@@ -7,7 +7,7 @@ import net.dowish.modules.sys.service.SysRoleDeptService;
 import net.dowish.modules.sys.service.SysRoleMenuService;
 import net.dowish.modules.sys.service.SysRoleService;
 import net.dowish.common.utils.Constant;
-import net.dowish.common.utils.PageUtils;
+import net.dowish.common.utils.Page;
 import net.dowish.common.utils.Query;
 import net.dowish.common.validator.ValidatorUtils;
 import org.apache.shiro.authz.annotation.RequiresPermissions;
@@ -56,7 +56,7 @@ public class SysRoleController extends AbstractController {
 
 		int total = sysRoleService.queryTotal(query);
 		
-		PageUtils pageUtil = new PageUtils(roleList, total, query.getLimit(), query.getPage());
+		Page pageUtil = new Page(roleList, total, query.getLimit(), query.getPage());
 		
 		return Apis.ok().put("page", pageUtil);
 	}

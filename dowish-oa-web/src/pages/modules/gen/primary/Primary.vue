@@ -178,7 +178,9 @@
             <el-col :span="2">排序</el-col>
           </el-row>
 
-          <el-row type="flex" justify="space-between" v-for="item in genTable.columnList">
+          <el-row type="flex" justify="space-between"
+                  :key="item.columnName"
+                  v-for="item in genTable.columnList">
             <el-col :span="2">
               <el-input
                 size="small"

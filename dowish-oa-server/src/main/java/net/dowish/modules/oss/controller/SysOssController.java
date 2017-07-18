@@ -53,7 +53,7 @@ public class SysOssController {
 		List<SysOssEntity> sysOssList = sysOssService.queryList(query);
 		int total = sysOssService.queryTotal(query);
 		
-		PageUtils pageUtil = new PageUtils(sysOssList, total, query.getLimit(), query.getPage());
+		Page pageUtil = new Page(sysOssList, total, query.getLimit(), query.getPage());
 		
 		return Apis.ok().put("page", pageUtil);
 	}

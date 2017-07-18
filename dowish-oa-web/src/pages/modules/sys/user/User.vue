@@ -2,18 +2,52 @@
 
   <content-panel id="userListId" v-if="showList">
     <h3 class="box-title" slot="header" style="width: 100%;">
-      <el-row style="width: 100%;">
-        <el-col :span="12">
-          <el-button type="primary" icon="plus" @click.once="addNew()">新增</el-button>
-        </el-col>
-        <el-col :span="12">
-          <div class="el-input" style="width: 300px; float: right;">
-            <i class="el-input__icon el-icon-search"></i>
-            <input type="text" placeholder="输入用户名称" v-model="searchKey" @keyup.enter="loadData"
-                   class="el-input__inner">
+
+      <div class="title-search">
+        <el-form label-width="120px">
+          <el-row>
+            <el-col :span="12">
+              <el-form-item label="用户名">
+                <el-input v-model="searchForm.username" placeholder="用户名"></el-input>
+              </el-form-item>
+            </el-col>
+            <el-col :span="12">
+              <el-form-item label="邮箱">
+                <el-input v-model="searchForm.email" placeholder="邮箱"></el-input>
+              </el-form-item>
+            </el-col>
+
+          </el-row>
+          <el-row>
+            <el-col :span="12">
+              <el-form-item label="电话">
+                <el-input v-model="searchForm.mobile" placeholder="电话"></el-input>
+              </el-form-item>
+            </el-col>
+            <el-col :span="12">
+              <el-form-item label="部门">
+                <el-input v-model="searchForm.deptName" placeholder="部门"></el-input>
+              </el-form-item>
+            </el-col>
+
+          </el-row>
+          <div class="btn-group">
+
+            <el-button @click.native.prevent="handleDelete" icon="delete" type="danger" :disabled="btnEnable.delete">
+              删除
+            </el-button>
+            <el-button @click.native.prevent="handleResetPwd" icon="setting" type="danger"
+                       :disabled="btnEnable.resetPwd">重置密码
+            </el-button>
+            <el-button @click.native.prevent="handleEdit" icon="edit" type="info" :disabled="btnEnable.edit">编辑
+            </el-button>
+
+            <el-button @click.native.prevent="addNew" icon="plus" type="success">新增</el-button>
+            <el-button type="info" @click="resetSearchForm()" class="el-icon-circle-close"> 重置条件</el-button>
+            <el-button @click.native.prevent="loadData" icon="search" type="primary">搜索</el-button>
           </div>
-        </el-col>
-      </el-row>
+        </el-form>
+      </div>
     </h3>
     <div slot="body">
       <el-table
@@ -32,6 +66,12 @@
           prop="username"
           label="用户名">
         </el-table-column>
+
+        <el-table-column
+          prop="deptName"
+          label="部门">
+        </el-table-column>
+
         <el-table-column
           prop="mobile"
           label="手机号">
@@ -51,28 +91,6 @@
             </el-tag>
           </template>
         </el-table-column>
-        <el-table-column label="操作" width="285">
-          <template scope="scope">
-            <el-button
-              size="small"
-              type="default"
-              icon="edit"
-              @click="handleEdit(scope.$index, scope.row)">编辑
-            </el-button>
-            <el-button
-              size="small"
-              type="info"
-              icon="setting"
-              @click="handleResetPwd(scope.$index, scope.row)">重置密码
-            </el-button>
-            <el-button
-              size="small"
-              type="danger"
-              icon="delete"
-              @click="handleDelete(scope.$index, scope.row)">删除
-            </el-button>
-          </template>
-        </el-table-column>
       </el-table>
 
       <el-pagination
@@ -87,7 +105,7 @@
 
       <el-dialog title="重置密码" v-model="resetPwdFormVisible">
         <el-form :model="pwdForm" ref="resetPwdForm" :rules="resetPwdRules" label-width="120px">
-          <el-form-item label="旧密码" >
+          <el-form-item label="旧密码">
             <el-input type="password" v-model="pwdForm.password" auto-complete="off"></el-input>
           </el-form-item>
           <el-form-item label="新密码" prop="newPassword">
@@ -132,11 +150,22 @@
           </el-switch>
         </el-form-item>
 
+        <el-form-item label="所属部门">
+          <el-cascader
+            :props="cascaderProps"
+            :options="deptTree"
+            v-model="form.parentIds"
+            change-on-select>
+          </el-cascader>
+        </el-form-item>
+
         <el-form-item label="用户角色">
           <el-checkbox-group v-model="form.roleIdList">
-            <el-checkbox v-for="item in roleList" :key="item.roleId" :label="item.roleId">{{item.roleName}}</el-checkbox>
+            <el-checkbox v-for="item in roleList" :key="item.roleId" :label="item.roleId">{{item.roleName}}
+            </el-checkbox>
           </el-checkbox-group>
         </el-form-item>
+
         <el-form-item>
           <el-button type="success" @click="onUpdate" v-if="form.userId" class="el-icon-circle-check"> 保存</el-button>
           <el-button type="success" @click="onSubmit" class="el-icon-circle-check" v-else> 立即创建</el-button>

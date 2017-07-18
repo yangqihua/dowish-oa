@@ -78,7 +78,7 @@ export default {
       let rootMenu = {list: this.menuList, menuId: -1}
       let path = new Set()
       leafMenuIdList.forEach(leafMenuId => {
-        this.setParentMenuId(leafMenuId, rootMenu, path)
+        stringUtils.setParentId(leafMenuId,"menuId","parentId", rootMenu, path)
         path.delete(-1)  //构造的root节点要删除掉
         path.forEach(p => menuIdList.add(p))
         path.clear()
@@ -102,7 +102,7 @@ export default {
       let rootMenu = {list: this.menuList, menuId: -1}
       let path = new Set()
       leafMenuIdList.forEach(leafMenuId => {
-        this.setParentMenuId(leafMenuId, rootMenu, path)
+        stringUtils.setParentId(leafMenuId,"menuId","parentId", rootMenu, path)
         path.delete(-1)  //构造的root节点要删除掉
         path.forEach(p => menuIdList.add(p))
         path.clear()
@@ -158,7 +158,7 @@ export default {
           this.form = response.role
           this.menuIdList = [];
           this.form.menuIdList.forEach(menuId => {
-            if (!this.isParentMenuId(menuId, this.menuList)) {
+            if (!stringUtils.isParentId(menuId,"menuId","parentId", this.menuList)) {
               this.menuIdList.push(menuId)
             }
           })
@@ -166,32 +166,6 @@ export default {
         }
       }
       ajax(params)
-    },
-    isParentMenuId(menuId, menuList){
-      for (let key in menuList) {
-        if (menuList[key].parentId == menuId) {
-          return true
-        } else if (menuList[key].list != null) {
-          return this.isParentMenuId(menuId, menuList[key].list);
-        } else {
-          return false
-        }
-      }
-    },
-    setParentMenuId(menuId, rootMenu, path = new Set()){
-      path.add(rootMenu.menuId)
-      if (rootMenu.menuId == menuId) {
-        return true
-      }
-      if (rootMenu.list != null) {
-        for (let key in rootMenu.list) {
-          if (this.setParentMenuId(menuId, rootMenu.list[key], path)) {
-            return true
-          }
-        }
-      }
-      path.delete(rootMenu.menuId)
-      return false
     },
   },
   created(){

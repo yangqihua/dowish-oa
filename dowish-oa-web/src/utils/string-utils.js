@@ -79,30 +79,30 @@ const getBeforeDate = (n) => {
   return list.reverse();
 }
 
-const isParentMenuId = (menuId, menuList) => {
-  for (let key in menuList) {
-    if (menuList[key].parentId == menuId) {
+const isParentId = (id,idName,parentIdName, root) => {
+  for (let key in root) {
+    if (root[key][parentIdName] == id) {
       return true
-    } else if (menuList[key].list != null) {
-      return isParentMenuId(menuId, menuList[key].list);
+    } else if (root[key].list != null) {
+      return isParentId(id,idName,parentIdName, root[key].list);
     } else {
       return false
     }
   }
 }
-const setParentMenuId = (menuId, rootMenu, path = new Set()) => {
-  path.add(rootMenu.menuId)
-  if (rootMenu.menuId == menuId) {
+const setParentId = (id,idName,parentIdName, root, path = new Set()) => {
+  path.add(root[idName])
+  if (root[idName] == id) {
     return true
   }
-  if (rootMenu.list != null) {
-    for (let key in rootMenu.list) {
-      if (setParentMenuId(menuId, rootMenu.list[key], path)) {
+  if (root.list != null) {
+    for (let key in root.list) {
+      if (setParentId(id,idName,parentIdName, root.list[key], path)) {
         return true
       }
     }
   }
-  path.delete(rootMenu.menuId)
+  path.delete(root[idName])
   return false
 }
 
@@ -141,5 +141,5 @@ const arrayToTree = (data, options)=>{
 
 export default {
   trim, subString, getBaseUrl, createUniqueString, useTokenApi, isEmptyObject, resetObject, getBeforeDate,
-  isParentMenuId, setParentMenuId, arrayToTree
+  isParentId, setParentId, arrayToTree
 }

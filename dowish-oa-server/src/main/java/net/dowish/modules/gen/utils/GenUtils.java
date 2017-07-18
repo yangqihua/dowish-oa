@@ -201,8 +201,8 @@ public class GenUtils {
 		map.put("tableName", genTable.getTableName());
 		map.put("comments", genTable.getComments());
 		map.put("pk", genTable.getPkList());
-		map.put("className", StringUtils.uncapitalize(genTable.getClassName()));
-		map.put("ClassName", StringUtils.capitalize(genTable.getClassName()));
+		map.put("classname", StringUtils.uncapitalize(genTable.getClassName()));
+		map.put("className", StringUtils.capitalize(genTable.getClassName()));
 		map.put("pathName", genTable.getClassName().toLowerCase());
 		map.put("columns", genTable.getColumnList());
 		map.put("package", StringUtils.lowerCase(genTable.getPackageName()));
@@ -222,7 +222,7 @@ public class GenUtils {
 			Template tpl = Velocity.getTemplate(template, "UTF-8");
 			tpl.merge(context, sw);
 
-			String fileName = SystemPathUtils.getServerMainDir() + getFileName(template, genTable.getClassName(), genTable.getPackageName()+genTable.getModuleName());
+			String fileName = SystemPathUtils.getServerMainDir() + getFileName(template, genTable.getClassName(), genTable.getPackageName()+File.separator+genTable.getModuleName());
 
 //			log.info("fileName : {}",fileName);
 			// 创建并写入文件

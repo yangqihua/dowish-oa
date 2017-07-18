@@ -7,12 +7,11 @@ blockquote, body, dd, dl, dt, fieldset, figure, h1, h2, h3, h4, h5, h6, hr, html
   padding: 0;
 }
 
-*,:after, :before {
+*, :after, :before {
   -webkit-box-sizing: border-box;
   -moz-box-sizing: border-box;
   box-sizing: border-box;
 }
-
 
 .content-wrapper {
   -webkit-transition: -webkit-transform 0.3s ease-in-out, margin 0.3s ease-in-out;
@@ -25,16 +24,16 @@ blockquote, body, dd, dl, dt, fieldset, figure, h1, h2, h3, h4, h5, h6, hr, html
   min-height: 100%;
   z-index: 800;
 }
+
 @media (max-width: 800px) {
-  .content-wrapper{
+  .content-wrapper {
     margin-left: 0px;
   }
 }
+
 .content-wrapper .content {
   padding: 1.25rem;
 }
-
-
 
 .list-group {
   padding-left: 0;
@@ -94,6 +93,16 @@ a.list-group-item-active {
 
 .listHead {
   text-align: center;
-  margin: 0 0 20px 0 ;
+  margin: 0 0 20px 0;
+}
+
+.box-title .title-search {
+  margin: 18px 150px 0 130px;
+}
+
+.box-title .btn-group {
+  display: flex;
+  justify-content: center;
+  margin: 20px 0;
 }
 

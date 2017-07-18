@@ -3,7 +3,7 @@ package net.dowish.modules.job.controller;
 import net.dowish.common.utils.Apis;
 import net.dowish.modules.job.entity.ScheduleJobLogEntity;
 import net.dowish.modules.job.service.ScheduleJobLogService;
-import net.dowish.common.utils.PageUtils;
+import net.dowish.common.utils.Page;
 import net.dowish.common.utils.Query;
 import org.apache.shiro.authz.annotation.RequiresPermissions;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -38,7 +38,7 @@ public class ScheduleJobLogController {
 		List<ScheduleJobLogEntity> jobList = scheduleJobLogService.queryList(query);
 		int total = scheduleJobLogService.queryTotal(query);
 		
-		PageUtils pageUtil = new PageUtils(jobList, total, query.getLimit(), query.getPage());
+		Page pageUtil = new Page(jobList, total, query.getLimit(), query.getPage());
 		
 		return Apis.ok().put("page", pageUtil);
 	}

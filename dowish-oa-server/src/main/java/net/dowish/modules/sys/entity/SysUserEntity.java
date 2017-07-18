@@ -2,6 +2,7 @@ package net.dowish.modules.sys.entity;
 
 import com.fasterxml.jackson.annotation.JsonIgnore;
 import lombok.Data;
+import net.dowish.common.base.entity.BaseEntity;
 import net.dowish.common.validator.group.AddGroup;
 import net.dowish.common.validator.group.UpdateGroup;
 import org.hibernate.validator.constraints.Email;
@@ -17,9 +18,8 @@ import java.util.List;
  * 
  */
 @Data
-public class SysUserEntity implements Serializable {
-	private static final long serialVersionUID = 1L;
-	
+public class SysUserEntity extends BaseEntity<SysUserEntity> {
+
 	/**
 	 * 用户ID
 	 */

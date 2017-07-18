@@ -4,7 +4,7 @@ import net.dowish.common.annotation.SysLog;
 import net.dowish.common.utils.Apis;
 import net.dowish.modules.sys.entity.Dict;
 import net.dowish.modules.sys.service.SysConfigService;
-import net.dowish.common.utils.PageUtils;
+import net.dowish.common.utils.Page;
 import net.dowish.common.utils.Query;
 import net.dowish.common.validator.ValidatorUtils;
 import org.apache.shiro.authz.annotation.RequiresPermissions;
@@ -37,7 +37,7 @@ public class SysConfigController extends AbstractController {
 		List<Dict> configList = sysConfigService.queryList(query);
 		int total = sysConfigService.queryTotal(query);
 		
-		PageUtils pageUtil = new PageUtils(configList, total, query.getLimit(), query.getPage());
+		Page pageUtil = new Page(configList, total, query.getLimit(), query.getPage());
 		
 		return Apis.ok().put("page", pageUtil);
 	}

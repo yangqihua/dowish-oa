@@ -3,7 +3,7 @@ package net.dowish.modules.job.controller;
 import net.dowish.common.utils.Apis;
 import net.dowish.modules.job.entity.ScheduleJobEntity;
 import net.dowish.modules.job.service.ScheduleJobService;
-import net.dowish.common.utils.PageUtils;
+import net.dowish.common.utils.Page;
 import net.dowish.common.utils.Query;
 import net.dowish.common.annotation.SysLog;
 import net.dowish.common.validator.ValidatorUtils;
@@ -37,7 +37,7 @@ public class ScheduleJobController {
 		List<ScheduleJobEntity> jobList = scheduleJobService.queryList(query);
 		int total = scheduleJobService.queryTotal(query);
 		
-		PageUtils pageUtil = new PageUtils(jobList, total, query.getLimit(), query.getPage());
+		Page pageUtil = new Page(jobList, total, query.getLimit(), query.getPage());
 		
 		return Apis.ok().put("page", pageUtil);
 	}

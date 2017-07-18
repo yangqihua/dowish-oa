@@ -8,11 +8,10 @@ import java.util.List;
 import java.util.Map;
 
 import javax.servlet.http.HttpServletRequest;
-import javax.servlet.http.HttpServletResponse;
 
 import lombok.extern.slf4j.Slf4j;
 import net.dowish.common.utils.Apis;
-import net.dowish.common.utils.PageUtils;
+import net.dowish.common.utils.Page;
 import net.dowish.common.utils.Query;
 import net.dowish.common.xss.XssHttpServletRequestWrapper;
 import net.dowish.modules.gen.entity.GenConfig;
@@ -62,7 +61,7 @@ public class GenTableController{
 		List<GenTable> genTables = genTableService.queryList(query);
 		int total = genTableService.queryTotal(query);
 
-		PageUtils pageUtil = new PageUtils(genTables, total, query.getLimit(), query.getPage());
+		Page pageUtil = new Page(genTables, total, query.getLimit(), query.getPage());
 
 		return Apis.ok().put("page", pageUtil);
 	}

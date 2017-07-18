@@ -3,7 +3,7 @@ package net.dowish.modules.sys.controller;
 import net.dowish.common.annotation.SysLog;
 import net.dowish.common.utils.Apis;
 import net.dowish.common.utils.Constant;
-import net.dowish.common.utils.PageUtils;
+import net.dowish.common.utils.Page;
 import net.dowish.common.utils.Query;
 import net.dowish.common.validator.Assert;
 import net.dowish.common.validator.ValidatorUtils;
@@ -23,9 +23,6 @@ import java.util.Map;
 
 /**
  * 系统用户
- * 
- *
- * @date 2016年10月31日 上午10:40:10
  */
 @RestController
 @RequestMapping("/sys/user")
@@ -51,7 +48,7 @@ public class SysUserController extends AbstractController {
 		List<SysUserEntity> userList = sysUserService.queryList(query);
 		int total = sysUserService.queryTotal(query);
 		
-		PageUtils pageUtil = new PageUtils(userList, total, query.getLimit(), query.getPage());
+		Page pageUtil = new Page(userList, total, query.getLimit(), query.getPage());
 		
 		return Apis.ok().put("page", pageUtil);
 	}
