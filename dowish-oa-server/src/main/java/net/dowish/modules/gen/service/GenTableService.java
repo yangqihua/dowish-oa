@@ -37,15 +37,9 @@ public class GenTableService {
 		return genTableDao.queryTable(tableName);
 	}
 
-	public String generatorCode(GenTable genTable,boolean isReplaceFile) {
-		//查询表信息
-//		GenTable table = queryTable(tableName);
-		//查询列信息
-//		List<GenTableColumn> columns = queryColumns(genTable);
+	public String generatorCode(GenTable genTable) {
 		//生成代码
-//		String mesg = GenUtils.generatorCode(genTable,isReplaceFile);
-		String mesg = "ok";
-		return mesg;
+		return GenUtils.generatorCode(genTable);
 	}
 
 

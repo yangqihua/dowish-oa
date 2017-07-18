@@ -10,6 +10,7 @@ import java.util.Map;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 
+import lombok.extern.slf4j.Slf4j;
 import net.dowish.common.utils.Apis;
 import net.dowish.common.utils.PageUtils;
 import net.dowish.common.utils.Query;
@@ -31,6 +32,7 @@ import org.springframework.web.bind.annotation.RestController;
  * 业务表Controller
  *
  */
+@Slf4j
 @RestController
 @RequestMapping("/sys/generator")
 public class GenTableController{
@@ -69,15 +71,14 @@ public class GenTableController{
 	 * 生成代码
 	 */
 	@RequestMapping("/code")
-	@RequiresPermissions("gen:primary:code")
-	public Apis code(@RequestBody GenTable genTable, HttpServletRequest request, HttpServletResponse response) throws IOException {
-//		String[] tableNames = new String[]{};
+//	@RequiresPermissions("gen:primary:code")
+	public Apis code(@RequestBody GenTable genTable, HttpServletRequest request) throws IOException {
+		log.info("genTable : {}",genTable);
 		//获取表名，不进行xss过滤
 		HttpServletRequest orgRequest = XssHttpServletRequestWrapper.getOrgRequest(request);
 		String table = orgRequest.getParameter("table");
 
-		boolean isReplaceFile = true;
-		String message = genTableService.generatorCode(genTable,isReplaceFile);
+		String message = genTableService.generatorCode(genTable);
 		return Apis.ok(message);
 	}
 

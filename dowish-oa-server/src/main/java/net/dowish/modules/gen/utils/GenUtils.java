@@ -1,16 +1,14 @@
 package net.dowish.modules.gen.utils;
 
+import com.google.common.collect.Lists;
+import com.google.common.collect.Maps;
 import lombok.extern.slf4j.Slf4j;
-import net.dowish.common.exception.RRException;
 import net.dowish.common.utils.DateUtils;
 import net.dowish.common.utils.FileUtils;
 import net.dowish.common.utils.StringUtils;
 import net.dowish.common.utils.SystemPathUtils;
 import net.dowish.common.utils.mapper.JaxbMapper;
 import net.dowish.modules.gen.entity.*;
-import org.apache.commons.configuration.Configuration;
-import org.apache.commons.configuration.ConfigurationException;
-import org.apache.commons.configuration.PropertiesConfiguration;
 import org.apache.commons.lang.WordUtils;
 import org.apache.velocity.Template;
 import org.apache.velocity.VelocityContext;
@@ -20,6 +18,7 @@ import org.springframework.core.io.Resource;
 
 import java.io.*;
 import java.util.*;
+import java.util.stream.Collectors;
 
 /**
  * 代码生成器   工具类
@@ -27,19 +26,19 @@ import java.util.*;
 @Slf4j
 public class GenUtils {
 
-	public static List<String> getTemplates() {
-		List<String> templates = new ArrayList<String>();
-		templates.add("gen/Entity.java.vm");
-		templates.add("gen/Dao.java.vm");
-		templates.add("gen/Dao.xml.vm");
-		templates.add("gen/Service.java.vm");
-		templates.add("gen/ServiceImpl.java.vm");
-		templates.add("gen/Controller.java.vm");
-		templates.add("gen/list.html.vm");
-		templates.add("gen/list.js.vm");
-		templates.add("gen/menu.sql.vm");
-		return templates;
-	}
+//	public static List<String> getTemplates() {
+//		List<String> templates = new ArrayList<String>();
+//		templates.add("gen/curd/Entity.java.vm");
+//		templates.add("gen/curd/Dao.java.vm");
+//		templates.add("gen/curd/Dao.xml.vm");
+//		templates.add("gen/curd/Service.java.vm");
+//		templates.add("gen/curd/ServiceImpl.java.vm");
+//		templates.add("gen/curd/Controller.java.vm");
+//		templates.add("gen/curd/list.html.vm");
+//		templates.add("gen/curd/list.js.vm");
+//		templates.add("gen/curd/menu.sql.vm");
+//		return templates;
+//	}
 
 
 	public static void initColumnField(GenTable genTable) {
@@ -54,13 +53,16 @@ public class GenUtils {
 					|| StringUtils.startsWithIgnoreCase(column.getJdbcType(), "VARCHAR")
 					|| StringUtils.startsWithIgnoreCase(column.getJdbcType(), "NARCHAR")) {
 				column.setJavaType("String");
+				column.setShowType("input");
 			} else if (StringUtils.startsWithIgnoreCase(column.getJdbcType(), "DATETIME")
 					|| StringUtils.startsWithIgnoreCase(column.getJdbcType(), "DATE")
 					|| StringUtils.startsWithIgnoreCase(column.getJdbcType(), "TIMESTAMP")) {
 				column.setJavaType("java.util.Date");
 				column.setShowType("dateselect");
 			} else if (StringUtils.startsWithIgnoreCase(column.getJdbcType(), "BIGINT")
-					|| StringUtils.startsWithIgnoreCase(column.getJdbcType(), "NUMBER")) {
+					|| StringUtils.startsWithIgnoreCase(column.getJdbcType(), "NUMBER")
+					|| StringUtils.startsWithIgnoreCase(column.getJdbcType(), "TINYINT")
+					) {
 				// 如果是浮点型
 				String[] ss = StringUtils.split(StringUtils.substringBetween(column.getJdbcType(), "(", ")"), ",");
 				if (ss != null && ss.length == 2 && Integer.parseInt(ss[1]) > 0) {
@@ -74,41 +76,80 @@ public class GenUtils {
 				else {
 					column.setJavaType("Long");
 				}
+				column.setShowType("input");
 			}
 
 			// 设置java字段名
 			column.setJavaField(StringUtils.toCamelCase(column.getColumnName()));
 
 			// 是否是主键
-			column.setIsPk(genTable.getPkList().contains(column.getColumnName()) ? "1" : "0");
+			column.setIsPk(genTable.getPkList().contains(column.getColumnName()));
 
 			// 插入字段
-			column.setIsInsert("1");
+			column.setIsInsert(true);
 
 			// 编辑字段
-			column.setIsEdit("1");
+			column.setIsEdit(true);
 
 			// 列表字段
-			column.setIsList("1");
+			column.setIsList(true);
 
 			// 查询字段
-			column.setIsQuery("1");
+			column.setIsQuery(true);
 
 			// 查询字段类型
-			column.setQueryType("like");
+			column.setQueryType("=");
 
 		}
 	}
 
+	public static List<String> getTemplateList(GenConfig config, String category){
+		List<String> templateList = Lists.newArrayList();
+		if (config !=null && config.getCategoryList() != null && category !=  null){
+			for (GenCategory e : config.getCategoryList()){
+				if (category.equals(e.getValue())){
+					templateList = e.getTemplate();
+					final String path = e.getPath();
+					templateList = templateList.stream().map(template->path+template).collect(Collectors.toList());
+					break;
+				}
+			}
+		}
+		return templateList;
+	}
+
+
+	/**
+	 * 获取数据模型
+	 * @param genTable
+	 * @param genTable
+	 * @return
+	 */
+	public static Map<String, Object> getDataModel(GenTable genTable){
+		Map<String, Object> model = Maps.newHashMap();
+
+		model.put("packageName", StringUtils.lowerCase(genTable.getPackageName()));
+		model.put("lastPackageName", StringUtils.substringAfterLast((String)model.get("packageName"),"."));
+		model.put("moduleName", StringUtils.lowerCase(genTable.getModuleName()));
+		model.put("className", StringUtils.uncapitalize(genTable.getClassName()));
+		model.put("ClassName", StringUtils.capitalize(genTable.getClassName()));
+
+		model.put("functionAuthor", StringUtils.isNotBlank(genTable.getFunctionAuthor())?genTable.getFunctionAuthor():"yangqihua");
+		model.put("functionVersion", DateUtils.getDate());
+		return model;
+	}
 
 	/**
 	 * 生成代码
 	 */
-	public static String generatorCode(Map<String, String> table,
-									   List<Map<String, String>> columns, boolean isReplaceFile) {
+	public static String generatorCode(GenTable genTable) {
 		//配置信息
 		GenConfig config = getConfig();
+		List<String> templateList = getTemplateList(config,genTable.getCategory());
 
+		Map<String, Object> dataModel = getDataModel(genTable);
+
+		log.info("templateList:{}",templateList);
 		//表信息
 //		GenTableEntity genTableEntity = new GenTableEntity();
 //		genTableEntity.setTableName(table.get("tableName"));
@@ -151,54 +192,49 @@ public class GenUtils {
 //		}
 //
 //		//设置velocity资源加载器
-//		Properties prop = new Properties();
-//		prop.put("file.resource.loader.class", "org.apache.velocity.runtime.resource.loader.ClasspathResourceLoader");
-//		Velocity.init(prop);
+		Properties prop = new Properties();
+		prop.put("file.resource.loader.class", "org.apache.velocity.runtime.resource.loader.ClasspathResourceLoader");
+		Velocity.init(prop);
+
+		//封装模板数据
+		Map<String, Object> map = new HashMap<>();
+		map.put("tableName", genTable.getTableName());
+		map.put("comments", genTable.getComments());
+		map.put("pk", genTable.getPkList());
+		map.put("className", StringUtils.uncapitalize(genTable.getClassName()));
+		map.put("ClassName", StringUtils.capitalize(genTable.getClassName()));
+		map.put("pathName", genTable.getClassName().toLowerCase());
+		map.put("columns", genTable.getColumnList());
+		map.put("package", StringUtils.lowerCase(genTable.getPackageName()));
+		map.put("author", StringUtils.isNotBlank(genTable.getFunctionAuthor())?genTable.getFunctionAuthor():"yangqihua");
+		map.put("email", "904693433@qq.com");
+		map.put("datetime", DateUtils.format(new Date(), DateUtils.DATE_TIME_PATTERN));
+
+		VelocityContext context = new VelocityContext(map);
 //
-//		//封装模板数据
-//		Map<String, Object> map = new HashMap<>();
-//		map.put("tableName", genTableEntity.getTableName());
-//		map.put("comments", genTableEntity.getComments());
-//		map.put("pk", genTableEntity.getPk());
-//		map.put("className", genTableEntity.getClassName());
-//		map.put("classname", genTableEntity.getCamelClassName());
-//		map.put("pathName", genTableEntity.getCamelClassName().toLowerCase());
-//		map.put("columns", genTableEntity.getColumns());
-//		map.put("package", config.getString("package"));
-//		map.put("author", config.getString("author"));
-//		map.put("email", config.getString("email"));
-//		map.put("datetime", DateUtils.format(new Date(), DateUtils.DATE_TIME_PATTERN));
-//		VelocityContext context = new VelocityContext(map);
 //
-//
-//		StringBuilder result = new StringBuilder();
-//		//获取模板列表
-//		List<String> templates = getTemplates();
-//		for (String template : templates) {
-//			//渲染模板
-//			StringWriter sw = new StringWriter();
-//			Template tpl = Velocity.getTemplate(template, "UTF-8");
-//			tpl.merge(context, sw);
-//
-//			String fileName = SystemPathUtils.getServerMainDir() + getFileName(template, genTableEntity.getClassName(), config.getString("package"));
-//
-////			log.info("fileName : {}",fileName);
-////			 如果选择替换文件，则删除原文件
-//			if (isReplaceFile) {
-//				FileUtils.deleteFile(fileName);
-//			}
-//
-//			// 创建并写入文件
-//			if (FileUtils.createFile(fileName)) {
-//				FileUtils.writeToFile(fileName, sw.toString(), true);
-//				result.append("创建 ").append(fileName).append(" 文件成功<br/>");
-//			} else {
-//				result.append("创建 ").append(fileName).append(" 文件失败<br/>");
-//				log.debug(" file fail to create === " + fileName);
-//			}
-//		}
-//		return result.toString();
-		return null;
+		StringBuilder result = new StringBuilder();
+		//获取模板列表
+//		List<String> templates = getTemplate();
+		for (String template : templateList) {
+			//渲染模板
+			StringWriter sw = new StringWriter();
+			Template tpl = Velocity.getTemplate(template, "UTF-8");
+			tpl.merge(context, sw);
+
+			String fileName = SystemPathUtils.getServerMainDir() + getFileName(template, genTable.getClassName(), genTable.getPackageName()+genTable.getModuleName());
+
+//			log.info("fileName : {}",fileName);
+			// 创建并写入文件
+			if (FileUtils.createFile(fileName)) {
+				FileUtils.writeToFile(fileName, sw.toString(), true);
+				result.append("创建 ").append(fileName).append(" 文件成功<br/>");
+			} else {
+				result.append("创建 ").append(fileName).append(" 文件失败<br/>");
+				log.debug(" file fail to create === " + fileName);
+			}
+		}
+		return result.toString();
 	}
 
 

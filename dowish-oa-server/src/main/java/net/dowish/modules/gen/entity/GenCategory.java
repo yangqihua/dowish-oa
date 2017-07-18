@@ -9,6 +9,7 @@ import net.dowish.modules.sys.entity.Dict;
 
 import java.util.List;
 
+import javax.xml.bind.annotation.XmlAttribute;
 import javax.xml.bind.annotation.XmlElement;
 import javax.xml.bind.annotation.XmlElementWrapper;
 import javax.xml.bind.annotation.XmlRootElement;
@@ -20,15 +21,17 @@ import javax.xml.bind.annotation.XmlRootElement;
 @Setter
 public class GenCategory extends Dict {
 
-	private static final long serialVersionUID = 1L;
-	public static String CATEGORY_REF = "category-ref:";
-
-
 	private List<String> template;
-
 
 	private List<String> childTableTemplate;
 
+	private String path;
+
+	// 根路径
+	@XmlAttribute(name = "path")
+	public String getPath() {
+		return path;
+	}
 
 	// 主表模板
 	@XmlElement(name = "template")

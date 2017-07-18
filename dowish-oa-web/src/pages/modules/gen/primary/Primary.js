@@ -12,7 +12,7 @@ export default {
   data(){
     return {
 
-      activeStep: 0,
+      activeStep: 1,
       //list部分
       searchKey: '',  //搜索的用户名
       pagination: {
@@ -37,7 +37,6 @@ export default {
     handleMapper(index, row){
       let params = {
         url: 'sys/generator/mapper',
-        showLoading: false,
         data: {
           tableName: row.tableName,
         },
@@ -52,12 +51,12 @@ export default {
       ajax(params)
     },
     next(){
-      if (this.activeStep < 3) {
+      if (this.activeStep < 4) {
         this.activeStep++
       }
-      if(this.activeStep==1){
+      if(this.activeStep==2){
         this.stepTitle='配置数据表到代码Mapper'
-      }else if(this.activeStep==2){
+      }else if(this.activeStep==3){
         this.stepTitle = '生成代码完成';
       }else{
         this.stepTitle = '选择原生数据表';
@@ -93,11 +92,25 @@ export default {
     //step2
 
     genCode(){
-
+      let params = {
+        url: 'sys/generator/code',
+        type:'post',
+        data: this.genTable,
+        scb: (response) => {
+          // this.next();
+        }
+      }
+      ajax(params)
     },
     backStep(){
       this.activeStep--
-      this.stepTitle = '选择原生数据表';
+      if(this.activeStep==2){
+        this.stepTitle='配置数据表到代码Mapper'
+      }else if(this.activeStep==3){
+        this.stepTitle = '生成代码完成';
+      }else{
+        this.stepTitle = '选择原生数据表';
+      }
     },
     getAllTable(){
       let params = {
@@ -115,6 +128,10 @@ export default {
     },
 
     //step3
+    goStep1(){
+      this.activeStep =1;
+      this.stepTitle = '选择原生数据表';
+    }
   },
   created(){
     this.loadData();

@@ -25,7 +25,7 @@
     </h3>
 
     <div slot="body">
-      <div v-if="activeStep==0">
+      <div v-if="activeStep==1">
         <el-table
           :data="rows"
           border
@@ -71,7 +71,7 @@
         </el-pagination>
       </div>
 
-      <div v-if="activeStep==1">
+      <div v-if="activeStep==2">
         <div style="margin: 18px 150px 0 130px;">
           <el-form label-width="120px">
             <el-row>
@@ -194,16 +194,19 @@
             </el-col>
             <el-col :span="2">
               <el-input
-              size="small"
-              v-model="item.jdbcType" :disabled="true">
-            </el-input>
+                size="small"
+                v-model="item.jdbcType" :disabled="true">
+              </el-input>
             </el-col>
             <el-col :span="2">
-              <el-input
-                size="small"
-                placeholder="Java类型"
-                v-model="item.javaType">
-              </el-input>
+              <el-select v-model="item.javaType" placeholder="表单类型">
+                <el-option
+                  v-for="item in genConfig.javaTypeList"
+                  :key="item.value"
+                  :label="item.label"
+                  :value="item.value">
+                </el-option>
+              </el-select>
             </el-col>
             <el-col :span="2">
               <el-input
@@ -213,7 +216,7 @@
               </el-input>
             </el-col>
             <el-col :span="1">
-              <el-checkbox v-model="item.isPk"></el-checkbox>
+              <el-checkbox v-model="item.isPk" :disabled="true"></el-checkbox>
             </el-col>
             <el-col :span="1">
               <el-checkbox v-model="item.isNull"></el-checkbox>
@@ -251,7 +254,7 @@
               <el-input
                 size="small"
                 placeholder="排序"
-                v-model="item.sort">
+                v-model="item.sort" :disabled="true">
               </el-input>
             </el-col>
           </el-row>
@@ -266,8 +269,13 @@
         </div>
       </div>
 
-      <div v-if="activeStep==2">
+      <div v-if="activeStep==3">
+        <div style="float: right;margin: 30px 20px 20px 0;">
+          <el-button @click.native.prevent="goStep1" type="primary">返回第一步</el-button>
+          <el-button @click.native.prevent="backStep" type="info">返回上一步</el-button>
+          </el-button>
 
+        </div>
       </div>
     </div>
 
