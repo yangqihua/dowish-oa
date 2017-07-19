@@ -1,6 +1,7 @@
 package net.dowish.modules.sys.controller;
 
 import net.dowish.common.annotation.SysLog;
+import net.dowish.common.base.controller.BaseController;
 import net.dowish.common.exception.RRException;
 import net.dowish.common.utils.Apis;
 import net.dowish.common.utils.Constant;
@@ -23,7 +24,7 @@ import java.util.*;
  */
 @RestController
 @RequestMapping("/sys/menu")
-public class SysMenuController extends AbstractController {
+public class SysMenuController extends BaseController {
 	@Autowired
 	private SysMenuService sysMenuService;
 	@Autowired

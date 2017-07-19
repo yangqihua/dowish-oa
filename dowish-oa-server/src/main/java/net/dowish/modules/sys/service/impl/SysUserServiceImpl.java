@@ -1,5 +1,7 @@
 package net.dowish.modules.sys.service.impl;
 
+import lombok.extern.slf4j.Slf4j;
+import net.dowish.common.base.service.BaseService;
 import net.dowish.common.exception.RRException;
 import net.dowish.common.utils.Constant;
 import net.dowish.modules.sys.dao.SysUserDao;
@@ -29,7 +31,8 @@ import java.util.Map;
  * @date 2016年9月18日 上午9:46:09
  */
 @Service("sysUserService")
-public class SysUserServiceImpl implements SysUserService {
+@Slf4j
+public class SysUserServiceImpl extends BaseService implements SysUserService {
 	@Autowired
 	private SysUserDao sysUserDao;
 	@Autowired
@@ -59,6 +62,8 @@ public class SysUserServiceImpl implements SysUserService {
 
 	@Override
 	public List<SysUserEntity> queryList(Map<String, Object> map){
+		map.put("sqlFilter",dataScopeFilter("sys_user","u"));
+		log.info("map : {}",map);
 		return sysUserDao.queryList(map);
 	}
 	

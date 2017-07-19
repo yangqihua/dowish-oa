@@ -1,6 +1,7 @@
 package net.dowish.modules.sys.controller;
 
 import net.dowish.common.annotation.SysLog;
+import net.dowish.common.base.controller.BaseController;
 import net.dowish.common.utils.Apis;
 import net.dowish.common.utils.Constant;
 import net.dowish.common.utils.Page;
@@ -26,7 +27,7 @@ import java.util.Map;
  */
 @RestController
 @RequestMapping("/sys/user")
-public class SysUserController extends AbstractController {
+public class SysUserController extends BaseController {
 	@Autowired
 	private SysUserService sysUserService;
 	@Autowired

@@ -1,6 +1,7 @@
 package net.dowish.modules.sys.controller;
 
 import net.dowish.common.annotation.SysLog;
+import net.dowish.common.base.controller.BaseController;
 import net.dowish.common.utils.Apis;
 import net.dowish.modules.sys.entity.Dict;
 import net.dowish.modules.sys.service.SysConfigService;
@@ -22,7 +23,7 @@ import java.util.Map;
  */
 @RestController
 @RequestMapping("/sys/config")
-public class SysConfigController extends AbstractController {
+public class SysConfigController extends BaseController {
 	@Autowired
 	private SysConfigService sysConfigService;
 	

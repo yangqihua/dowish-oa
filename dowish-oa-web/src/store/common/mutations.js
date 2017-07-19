@@ -28,6 +28,9 @@ const mutations = {
   },
 
 
+
+
+
   //只能同步的函数
   [types.TOGGLE_DEVICE] (state, isMobile) {
     state.device.isMobile = isMobile

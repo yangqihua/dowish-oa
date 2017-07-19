@@ -1,5 +1,6 @@
 package net.dowish.modules.sys.controller;
 
+import net.dowish.common.base.controller.BaseController;
 import net.dowish.common.utils.Apis;
 import net.dowish.common.utils.Constant;
 import net.dowish.modules.sys.entity.SysDeptEntity;
@@ -22,7 +23,7 @@ import java.util.Map;
  */
 @RestController
 @RequestMapping("/sys/dept")
-public class SysDeptController extends AbstractController {
+public class SysDeptController extends BaseController {
 	@Autowired
 	private SysDeptService sysDeptService;
 	

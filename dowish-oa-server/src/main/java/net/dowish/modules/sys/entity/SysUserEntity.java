@@ -3,6 +3,7 @@ package net.dowish.modules.sys.entity;
 import com.fasterxml.jackson.annotation.JsonIgnore;
 import lombok.Data;
 import net.dowish.common.base.entity.BaseEntity;
+import net.dowish.common.utils.Constant;
 import net.dowish.common.validator.group.AddGroup;
 import net.dowish.common.validator.group.UpdateGroup;
 import org.hibernate.validator.constraints.Email;
@@ -86,4 +87,8 @@ public class SysUserEntity extends BaseEntity<SysUserEntity> {
 	 */
 	private String deptName;
 
+
+	public boolean isAdmin() {
+		return userId == Constant.SUPER_ADMIN;
+	}
 }

@@ -2,6 +2,7 @@ package net.dowish.common.base.entity;
 
 import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.google.common.collect.Maps;
+import lombok.Setter;
 import net.dowish.common.utils.Page;
 import net.dowish.modules.api.entity.UserEntity;
 import net.dowish.modules.sys.entity.SysUserEntity;
@@ -20,6 +21,7 @@ public abstract class BaseEntity<T> implements Serializable {
 	/**
 	 * 当前用户
 	 */
+	@Setter
 	protected SysUserEntity currentUser;
 
 	/**
@@ -31,10 +33,6 @@ public abstract class BaseEntity<T> implements Serializable {
 	 * 当前实体分页对象
 	 */
 //	protected Page<T> page;
-
-	public void setCurrentUser(SysUserEntity currentUser) {
-		this.currentUser = currentUser;
-	}
 
 //	@JsonIgnore
 //	@XmlTransient

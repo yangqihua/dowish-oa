@@ -4,6 +4,7 @@ import lombok.Data;
 
 import java.io.Serializable;
 import java.util.List;
+import java.util.regex.Pattern;
 
 /**
  * 分页工具类
@@ -36,5 +37,16 @@ public class Page implements Serializable {
 		this.pageSize = pageSize;
 		this.currPage = currPage;
 		this.totalPage = (int)Math.ceil((double)totalCount/pageSize);
+	}
+
+	// SQL过滤，防止注入
+	public String sqlFilter(String params) {
+		String reg = "(?:')|(?:--)|(/\\*(?:.|[\\n\\r])*?\\*/)|"
+				+ "(\\b(select|update|and|or|delete|insert|trancate|char|into|substr|ascii|declare|exec|count|master|into|drop|execute)\\b)";
+		Pattern sqlPattern = Pattern.compile(reg, Pattern.CASE_INSENSITIVE);
+		if (sqlPattern.matcher(params).find()) {
+			return "";
+		}
+		return params;
 	}
 }

@@ -1,6 +1,7 @@
 package net.dowish.modules.sys.controller;
 
 import net.dowish.common.annotation.SysLog;
+import net.dowish.common.base.controller.BaseController;
 import net.dowish.common.utils.Apis;
 import net.dowish.modules.sys.entity.SysRoleEntity;
 import net.dowish.modules.sys.service.SysRoleDeptService;
@@ -26,7 +27,7 @@ import java.util.Map;
  */
 @RestController
 @RequestMapping("/sys/role")
-public class SysRoleController extends AbstractController {
+public class SysRoleController extends BaseController {
 	@Autowired
 	private SysRoleService sysRoleService;
 	@Autowired

@@ -63,7 +63,7 @@
         setUserInfo: types.SET_USER_INFO
       }),
       ...mapActions({
-        loadMenuList: 'loadMenuList', // 映射 this.load() 为 this.$store.dispatch('loadMenuList')
+        loadMenuList: 'loadMenuList',
         loginAction:'loginAction',
       }),
       login(){
@@ -77,20 +77,6 @@
             }
           };
           this.loginAction(params);
-//          this.getBeforeDate();
-//        var redirectUrl = '/index';
-//        if (this.$route.query && this.$route.query != null && this.$route.query.redirect && this.$route.query.redirect != null) {
-//          redirectUrl = this.$route.query.redirect;
-//        }
-//        this.$http.get(api.TEST_DATA, this.form).then(res => {
-//          res.data = res.data.loginInfo;
-//          auth.login(res.data.sid);
-//          window.sessionStorage.setItem("user-info", JSON.stringify(res.data.user));
-//          this.setUserInfo(res.data.user);
-//          this.$http.defaults.headers.common['authSid'] = res.data.sid;
-//          this.loadMenuList();
-//          this.$router.push({path: redirectUrl});
-//        })
       }
     }
   }
