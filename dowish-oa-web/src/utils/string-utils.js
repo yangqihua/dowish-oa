@@ -79,25 +79,25 @@ const getBeforeDate = (n) => {
   return list.reverse();
 }
 
-const isParentId = (id,idName,parentIdName, root) => {
+const isParentId = (id, idName, parentIdName, root) => {
   for (let key in root) {
     if (root[key][parentIdName] == id) {
       return true
     } else if (root[key].list != null) {
-      return isParentId(id,idName,parentIdName, root[key].list);
+      return isParentId(id, idName, parentIdName, root[key].list);
     } else {
       return false
     }
   }
 }
-const setParentId = (id,idName,parentIdName, root, path = new Set()) => {
+const setParentId = (id, idName, parentIdName, root, path = new Set()) => {
   path.add(root[idName])
   if (root[idName] == id) {
     return true
   }
   if (root.list != null) {
     for (let key in root.list) {
-      if (setParentId(id,idName,parentIdName, root.list[key], path)) {
+      if (setParentId(id, idName, parentIdName, root.list[key], path)) {
         return true
       }
     }
@@ -106,12 +106,26 @@ const setParentId = (id,idName,parentIdName, root, path = new Set()) => {
   return false
 }
 
-const arrayToTree = (data, options)=>{
+const arrayToTree = (data, options) => {
+
   options = options || {};
   let ID_KEY = options.id || 'id';
-  let PARENT_KEY = options.parentId || 'parent';
-  let CHILDREN_KEY = options.childrenKey || 'children';
+  let PARENT_KEY = options.parentId || 'parentId';
+  let CHILDREN_KEY = options.childrenKey || 'list';
   let ROOT_ID = options.rootId || 0;
+  // 如果没有设置的话，就去数组中最小的那个parentId;
+  if (!options.rootId) {
+    if (Array.isArray(data)) {
+      if (data.length > 0) {
+        ROOT_ID = data[0][PARENT_KEY]
+      }
+      data.forEach(d => {
+        if (ROOT_ID > d[PARENT_KEY]) {
+          ROOT_ID = d[PARENT_KEY]
+        }
+      })
+    }
+  }
 
   let tree = [];
   let childrenOf = {};
@@ -139,7 +153,7 @@ const arrayToTree = (data, options)=>{
   return tree;
 }
 
-const deleteEmptyProperty = (object)=>{
+const deleteEmptyProperty = (object) => {
   for (let i in object) {
     let value = object[i];
     if (typeof value === 'object') {
@@ -153,7 +167,7 @@ const deleteEmptyProperty = (object)=>{
       deleteEmptyProperty(value);
       if (isEmptyObject(value)) {
         delete object[i];
-        console.log('delete a empty object:',i, value);
+        console.log('delete a empty object:', i, value);
       }
     } else {
       if (value === '' || value === null || value === undefined) {
@@ -167,5 +181,5 @@ const deleteEmptyProperty = (object)=>{
 
 export default {
   trim, subString, getBaseUrl, createUniqueString, useTokenApi, isEmptyObject, resetObject, getBeforeDate,
-  isParentId, setParentId, arrayToTree,deleteEmptyProperty
+  isParentId, setParentId, arrayToTree, deleteEmptyProperty
 }

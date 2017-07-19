@@ -59,8 +59,8 @@ export default {
         <span>
         <span>
         <span>&nbsp;{node.label}</span>
-      </span>
-      </span>);
+        </span>
+        </span>);
     },
     //点击新增，重置表单数据
     newAdd(){
@@ -92,26 +92,34 @@ export default {
       this.form = merge({}, data);
       let rootDept = {list: this.deptTree, deptId: -1}
       let path = new Set()
+      console.log("this.deptTree:",this.deptTree)
       stringUtils.setParentId(this.form.parentId,"deptId","parentId", rootDept, path)
       path.delete(-1)  //构造的root节点要删除掉
       this.form.parentIds = Array.from(path)
+      console.log("this.form.parentIds:",this.form.parentIds)
       this.title = "修改"
     },
     //修改某个树节点的属性回调
     onUpdate(){
-      if (this.form.parentIds.length > 0) {
-        this.form.parentId = this.form.parentIds[this.form.parentIds.length - 1]
-      }
-      let params = {
-        url: 'sys/dept/update',
-        type: 'post',
-        data: this.form,
-        scb: (res) => {
-          this.$message.success('修改成功')
-          this.loadData()
+      this.$confirm('确定更改信息?', '提示', {
+        confirmButtonText: '确定',
+        cancelButtonText: '取消',
+        type: 'warning'
+      }).then(() => {
+        if (this.form.parentIds.length > 0) {
+          this.form.parentId = this.form.parentIds[this.form.parentIds.length - 1]
         }
-      }
-      ajax(params)
+        let params = {
+          url: 'sys/dept/update',
+          type: 'post',
+          data: this.form,
+          scb: (res) => {
+            this.$message.success('修改成功')
+            this.loadData()
+          }
+        }
+        ajax(params)
+      }).catch(() => {})
     },
     //新增某个树节点的回调
     onSubmit(){
@@ -132,7 +140,7 @@ export default {
     //初始化获取树的数据源
     loadData(){
       let params = {
-        url: '/sys/dept/select',
+        url: '/sys/dept/list',
         showLoading: false,
         scb: (res) => {
           this.deptTree = stringUtils.arrayToTree(
@@ -140,7 +148,6 @@ export default {
               id:"deptId",
               parentId:"parentId",
               childrenKey:"list",
-              rootId:0,
             }
             )
           console.log("this.deptTree:",this.deptTree)

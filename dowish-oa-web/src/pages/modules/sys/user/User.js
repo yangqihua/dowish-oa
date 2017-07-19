@@ -87,12 +87,6 @@ export default {
     }
   },
   methods: {
-    onItemChange(val) {
-      console.log("val:",val)
-      if(val.list==null){
-        delete val.list
-      }
-    },
     handleResetPwd(){
       this.pwdForm.userId = this.multipleSelection[0].userId
       this.resetPwdFormVisible = true
@@ -179,15 +173,21 @@ export default {
         url: '/sys/dept/list',
         showLoading: false,
         scb: (res) => {
+
+          console.log("res.deptList=====",res.deptList)
           this.deptTree = stringUtils.arrayToTree(res.deptList,{id:"deptId",parentId:"parentId",childrenKey:"list"})
           // 把空属性去掉，不然获取不到叶子节点的值
           stringUtils.deleteEmptyProperty(this.deptTree)
+
 
           let rootDept = {list: this.deptTree, deptId: -1}
           let path = new Set()
           stringUtils.setParentId(this.form.deptId,"deptId","parentId", rootDept, path)
           path.delete(-1)  //构造的root节点要删除掉
           this.form.parentIds = Array.from(path)
+
+          console.log("this.form:",this.form)
+          console.log("this.deptTree：",this.deptTree)
           this.loadRoleList()
         }
       }

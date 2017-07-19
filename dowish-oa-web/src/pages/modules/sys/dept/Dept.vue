@@ -30,7 +30,8 @@
                   :props="cascaderProps"
                   :options="deptTree"
                   v-model="form.parentIds"
-                  change-on-select>
+                  change-on-select
+                >
                 </el-cascader>
               </el-form-item>
               <el-form-item label="名称">

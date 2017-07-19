@@ -48,7 +48,7 @@ public class SysMenuServiceImpl implements SysMenuService {
 	@Override
 	public List<SysMenuEntity> getUserMenuList(Long userId) {
 
-		//仅仅查询目录，菜单有三种类型
+		//仅仅查询目录的下级菜单，菜单有三种类型
 		ArrayList<Constant.MenuType> menuTypes = new ArrayList<>();
 		menuTypes.add(Constant.MenuType.CATALOG);
 

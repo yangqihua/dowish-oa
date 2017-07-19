@@ -155,7 +155,6 @@
             :props="cascaderProps"
             :options="deptTree"
             v-model="form.parentIds"
-            @change="onItemChange"
           >
           </el-cascader>
         </el-form-item>

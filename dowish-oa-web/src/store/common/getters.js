@@ -11,6 +11,8 @@ export default {
     }
   },
 
+
+
   loading: state => state.loading,
   sidebar: state => state.sidebar,
   userInfo: state => state.userInfo,
