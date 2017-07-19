@@ -6,10 +6,7 @@ import net.dowish.modules.sys.entity.SysDeptEntity;
 import net.dowish.modules.sys.service.SysDeptService;
 import org.apache.shiro.authz.annotation.RequiresPermissions;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.web.bind.annotation.PathVariable;
-import org.springframework.web.bind.annotation.RequestBody;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.bind.annotation.*;
 
 import java.util.HashMap;
 import java.util.List;
@@ -49,7 +46,7 @@ public class SysDeptController extends AbstractController {
 	 * 选择部门(添加、修改菜单)
 	 */
 	@RequestMapping("/select")
-	@RequiresPermissions("sys:dept:select")
+//	@RequiresPermissions("sys:dept:select")
 	public Apis select(){
 		Map<String, Object> map = new HashMap<>();
 		//如果不是超级管理员，则只能查询本部门及子部门数据
@@ -124,7 +121,7 @@ public class SysDeptController extends AbstractController {
 	 */
 	@RequestMapping("/delete")
 //	@RequiresPermissions("sys:dept:delete")
-	public Apis delete(long deptId){
+	public Apis delete(@RequestParam long deptId){
 		//判断是否有子部门
 		List<Long> deptList = sysDeptService.queryDetpIdList(deptId);
 		if(deptList.size() > 0){

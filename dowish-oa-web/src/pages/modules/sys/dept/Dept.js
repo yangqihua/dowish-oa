@@ -76,9 +76,8 @@ export default {
         type: 'warning'
       }).then(() => {
         let params = {
-          url: 'sys/dept/delete',
+          url: 'sys/dept/delete?deptId='+this.form.deptId,
           type: 'post',
-          data: {deptId: this.form.deptId},
           scb: (res) => {
             this.$message.success('删除成功')
             this.newAdd()
@@ -133,10 +132,18 @@ export default {
     //初始化获取树的数据源
     loadData(){
       let params = {
-        url: '/sys/dept/list',
+        url: '/sys/dept/select',
         showLoading: false,
         scb: (res) => {
-          this.deptTree = stringUtils.arrayToTree(res.deptList,{id:"deptId",parentId:"parentId",childrenKey:"list"})
+          this.deptTree = stringUtils.arrayToTree(
+            res.deptList,{
+              id:"deptId",
+              parentId:"parentId",
+              childrenKey:"list",
+              rootId:0,
+            }
+            )
+          console.log("this.deptTree:",this.deptTree)
           if (this.deptTree.length > 0) {
             this.defaultExpandedKeys.push(this.deptTree[0].deptId)
           }

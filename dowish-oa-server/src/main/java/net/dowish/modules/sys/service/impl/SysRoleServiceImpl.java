@@ -2,10 +2,7 @@ package net.dowish.modules.sys.service.impl;
 
 import net.dowish.modules.sys.dao.SysRoleDao;
 import net.dowish.modules.sys.entity.SysRoleEntity;
-import net.dowish.modules.sys.service.SysRoleMenuService;
-import net.dowish.modules.sys.service.SysRoleService;
-import net.dowish.modules.sys.service.SysUserRoleService;
-import net.dowish.modules.sys.service.SysUserService;
+import net.dowish.modules.sys.service.*;
 import net.dowish.common.utils.Constant;
 import net.dowish.common.exception.RRException;
 
@@ -32,7 +29,7 @@ public class SysRoleServiceImpl implements SysRoleService {
 	@Autowired
 	private SysRoleMenuService sysRoleMenuService;
 	@Autowired
-	private SysUserRoleService sysUserRoleService;
+	private SysRoleDeptService sysRoleDeptService;
 	@Autowired
 	private SysUserService sysUserService;
 
@@ -62,6 +59,7 @@ public class SysRoleServiceImpl implements SysRoleService {
 		
 		//保存角色与菜单关系
 		sysRoleMenuService.saveOrUpdate(role.getRoleId(), role.getMenuIdList());
+		sysRoleDeptService.saveOrUpdate(role.getRoleId(), role.getDeptIdList());
 	}
 
 	@Override
@@ -74,6 +72,9 @@ public class SysRoleServiceImpl implements SysRoleService {
 		
 		//更新角色与菜单关系
 		sysRoleMenuService.saveOrUpdate(role.getRoleId(), role.getMenuIdList());
+
+		//更新角色与部门关系
+		sysRoleDeptService.saveOrUpdate(role.getRoleId(), role.getDeptIdList());
 	}
 
 	@Override

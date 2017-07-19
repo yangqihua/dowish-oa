@@ -139,7 +139,7 @@ export default {
         url: '/sys/menu/perms',
         showLoading: false,
         scb: (res) => {
-          this.menuTree = res.menuList
+          this.menuTree = this.menuTree = stringUtils.arrayToTree(res.menuList,{id:'menuId',parentId:'parentId',childrenKey:'list'})
           if (this.menuTree.length > 0) {
             this.defaultExpandedKeys.push(this.menuTree[0].menuId)
           }

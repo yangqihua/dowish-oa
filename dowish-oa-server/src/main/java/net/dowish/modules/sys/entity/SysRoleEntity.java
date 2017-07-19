@@ -50,7 +50,7 @@ public class SysRoleEntity implements Serializable {
 	/**
 	 * 部门ID
 	 */
-	@NotNull(message="部门不能为空")
+//	@NotNull(message="部门不能为空")
 	private Long deptId;
 
 	/**
@@ -58,6 +58,7 @@ public class SysRoleEntity implements Serializable {
 	 */
 	private String deptName;
 
+	@NotNull(message="部门不能为空")
 	private List<Long> deptIdList;
 
 }

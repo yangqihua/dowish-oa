@@ -139,7 +139,33 @@ const arrayToTree = (data, options)=>{
   return tree;
 }
 
+const deleteEmptyProperty = (object)=>{
+  for (let i in object) {
+    let value = object[i];
+    if (typeof value === 'object') {
+      if (Array.isArray(value)) {
+        if (value.length == 0) {
+          delete object[i];
+          console.log('delete Array:', i);
+          continue;
+        }
+      }
+      deleteEmptyProperty(value);
+      if (isEmptyObject(value)) {
+        delete object[i];
+        console.log('delete a empty object:',i, value);
+      }
+    } else {
+      if (value === '' || value === null || value === undefined) {
+        delete object[i];
+        console.log('delete: ', i);
+      }
+    }
+  }
+}
+
+
 export default {
   trim, subString, getBaseUrl, createUniqueString, useTokenApi, isEmptyObject, resetObject, getBeforeDate,
-  isParentId, setParentId, arrayToTree
+  isParentId, setParentId, arrayToTree,deleteEmptyProperty
 }

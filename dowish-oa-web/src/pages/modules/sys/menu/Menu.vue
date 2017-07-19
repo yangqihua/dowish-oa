@@ -6,7 +6,7 @@
     </h3>
     <el-row slot="body">
       <el-col :span="6">
-        <h3 class="listHead">角色列表</h3>
+        <h3 class="listHead">菜单列表</h3>
         <el-tree v-if="menuTree"
                  ref="menuTree"
                  :data="menuTree"

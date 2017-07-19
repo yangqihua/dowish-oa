@@ -106,3 +106,29 @@ a.list-group-item-active {
   margin: 20px 0;
 }
 
+
+.render-content {
+  float: right;
+  margin-right: 20px
+}
+
+.render-content i.fa {
+  margin-left: 10px;
+}
+
+.render-content i.fa:hover {
+  color: #e6000f;
+}
+
+.select-tree .el-scrollbar.is-empty .el-select-dropdown__list {
+  padding: 0;
+}
+
+.select-tree .el-scrollbar {
+  border: 1px solid #d1dbe5;
+}
+
+.select-tree .el-tree {
+  border: 0;
+}
+

@@ -25,11 +25,11 @@
         <h3 class="listHead">{{title}}</h3>
         <el-card class="box-card" style="margin: 15px 15px;">
           <div class="text item">
-            <el-form :model="form" ref="form">
-              <el-form-item label="角色名称" :label-width="formLabelWidth">
+            <el-form :model="form" ref="form" :label-width="formLabelWidth">
+              <el-form-item label="角色名称" >
                 <el-input v-model="form.roleName" auto-complete="off" placeholder="请输入内容"></el-input>
               </el-form-item>
-              <el-form-item label="角色描述" :label-width="formLabelWidth">
+              <el-form-item label="角色描述" >
                 <el-input
                   type="textarea"
                   autosize
@@ -38,22 +38,38 @@
                 </el-input>
               </el-form-item>
 
-              <el-form-item label="权限" :label-width="formLabelWidth">
-                <el-tree v-if="menuList"
-                         :data="menuList"
-                         ref="roleTree"
+              <el-form-item label="权限">
+                <el-tree v-if="menuTree"
+                         :data="menuTree"
+                         ref="menuTree"
                          show-checkbox
                          highlight-current
                          clearable
-                         :default-expanded-keys="defaultExpandedKeys"
-                         :default-checked-keys="defaultCheckedKeys"
+                         :default-expanded-keys="menuTreeExpandedKeys"
+                         :default-checked-keys="menuTreeCheckedKeys"
+                         :render-content="renderContent"
                          node-key="menuId"
-                         :props="defaultProps">
+                         :props="menuProps">
 
                 </el-tree>
               </el-form-item>
 
-              <el-form-item label="" :label-width="formLabelWidth">
+              <el-form-item label="数据范围" >
+                <el-tree v-if="deptTree"
+                         :data="deptTree"
+                         ref="deptTree"
+                         show-checkbox
+                         highlight-current
+                         clearable
+                         :default-expanded-keys="deptTreeExpandedKeys"
+                         :default-checked-keys="deptTreeCheckedKeys"
+                         node-key="deptId"
+                         :props="deptProps">
+
+                </el-tree>
+              </el-form-item>
+
+              <el-form-item label="" >
                 <el-button type="primary" @click="onSubmit" v-if="!form.roleId">新增</el-button>
                 <template v-else>
                   <el-button type="success" @click="onUpdate">保存</el-button>

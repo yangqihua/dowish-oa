@@ -20,23 +20,33 @@ export default {
 
       roleList: [],
 
-      //tree相关
-      defaultExpandedKeys: [],
-      defaultCheckedKeys: [],
-      menuList: [],
-      defaultProps: {
+      //menuTree相关
+      menuTreeExpandedKeys: [],
+      menuTreeCheckedKeys: [],
+      menuTree: [],
+      menuProps: {
         children: 'list',
         label: 'name',
         id: "menuId",
       },
 
+      //deotTree相关
+      deptTreeExpandedKeys: [],
+      deptTreeCheckedKeys: [],
+      deptTree: [],
+      deptProps: {
+        children: 'list',
+        label: 'name',
+        id: "deptId",
+      },
+
       activeRole: {},
 
-      menuIdList: [],
       form: {
         createTime: null,
         createUserId: null,
         menuIdList: [],
+        deptIdList: [],
         remark: null,
         roleId: null,
         roleName: null,
@@ -44,10 +54,18 @@ export default {
     }
   },
   methods: {
+    renderContent(h, {node, data, store}) {
+      return (
+        <span>
+        <span>
+        <span><i class={data.icon}></i>&nbsp;{node.label}</span>
+      </span>
+      </span>);
+    },
     newAdd(){
       stringUtils.resetObject(this.form)
-      this.menuIdList = []
-      this.$refs.roleTree.setCheckedKeys(this.menuIdList)
+      this.$refs.menuTree.setCheckedKeys([])
+      this.$refs.deptTree.setCheckedKeys([])
       this.activeRole = {}
       this.title = '新增'
     },
@@ -73,9 +91,9 @@ export default {
     },
 
     onUpdate(){
-      let leafMenuIdList = this.$refs.roleTree.getCheckedKeys()
+      let leafMenuIdList = this.$refs.menuTree.getCheckedKeys()
       let menuIdList = new Set()
-      let rootMenu = {list: this.menuList, menuId: -1}
+      let rootMenu = {list: this.menuTree, menuId: -1}
       let path = new Set()
       leafMenuIdList.forEach(leafMenuId => {
         stringUtils.setParentId(leafMenuId,"menuId","parentId", rootMenu, path)
@@ -83,7 +101,9 @@ export default {
         path.forEach(p => menuIdList.add(p))
         path.clear()
       })
-      this.form['menuIdList'] = menuIdList
+      this.form['menuIdList'] = menuIdList  //加上父菜单
+
+      this.form['deptIdList'] = this.$refs.deptTree.getCheckedKeys()
       let params = {
         url: 'sys/role/update',
         type: 'post',
@@ -97,9 +117,9 @@ export default {
     },
 
     onSubmit(){
-      let leafMenuIdList = this.$refs.roleTree.getCheckedKeys()
+      let leafMenuIdList = this.$refs.menuTree.getCheckedKeys()
       let menuIdList = new Set()
-      let rootMenu = {list: this.menuList, menuId: -1}
+      let rootMenu = {list: this.menuTree, menuId: -1}
       let path = new Set()
       leafMenuIdList.forEach(leafMenuId => {
         stringUtils.setParentId(leafMenuId,"menuId","parentId", rootMenu, path)
@@ -107,7 +127,10 @@ export default {
         path.forEach(p => menuIdList.add(p))
         path.clear()
       })
-      this.form['menuIdList'] = menuIdList
+      this.form['menuIdList'] = menuIdList  //加上父菜单
+
+      this.form['deptIdList'] = this.$refs.deptTree.getCheckedKeys()
+
       let params = {
         url: 'sys/role/save',
         type: 'post',
@@ -139,9 +162,22 @@ export default {
         url: 'sys/menu/perms',
         showLoading: false,
         scb: (response) => {
-          this.menuList = response.menuList
-          if (this.menuList.length > 0) {
-            this.defaultExpandedKeys.push(this.menuList[0].menuId)
+          this.menuTree = stringUtils.arrayToTree(response.menuList,{id:'menuId',parentId:'parentId',childrenKey:'list'})
+          if (this.menuTree.length > 0) {
+            this.menuTreeExpandedKeys.push(this.menuTree[0].menuId)
+          }
+        }
+      }
+      ajax(params)
+    },
+    loadDeptList(){
+      let params = {
+        url: 'sys/dept/list',
+        showLoading: false,
+        scb: (response) => {
+          this.deptTree = stringUtils.arrayToTree(response.deptList,{id:'deptId',parentId:'parentId',childrenKey:'list'})
+          if (this.deptTree.length > 0) {
+            this.deptTreeExpandedKeys.push(this.deptTree[0].deptId)
           }
         }
       }
@@ -156,13 +192,24 @@ export default {
         scb: (response) => {
           this.title = '修改'
           this.form = response.role
-          this.menuIdList = [];
+          let menuIdList = []
           this.form.menuIdList.forEach(menuId => {
-            if (!stringUtils.isParentId(menuId,"menuId","parentId", this.menuList)) {
-              this.menuIdList.push(menuId)
+            if (!stringUtils.isParentId(menuId,"menuId","parentId", this.menuTree)) {
+              menuIdList.push(menuId)
             }
           })
-          this.$refs.roleTree.setCheckedKeys(this.menuIdList);
+          this.form.menuIdList = menuIdList
+          this.$refs.menuTree.setCheckedKeys(this.form.menuIdList);
+
+          // 部门tree相关
+          let deptIdList = []
+          response.role.deptIdList.forEach(deptId => {
+            if (!stringUtils.isParentId(deptId,"deptId","parentId", this.deptTree)) {
+              deptIdList.push(deptId)
+            }
+          })
+          this.form.deptIdList = deptIdList
+          this.$refs.deptTree.setCheckedKeys(this.form.deptIdList);
         }
       }
       ajax(params)
@@ -171,5 +218,6 @@ export default {
   created(){
     this.loadData();
     this.loadMenuList();
+    this.loadDeptList();
   }
 }
