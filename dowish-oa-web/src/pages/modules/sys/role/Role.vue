@@ -16,7 +16,7 @@
         </ul>
         <div v-else class="noMesg">
           暂无角色信息
-          <el-button type="text" @click="newAdd">点击新增</el-button>
+          <!--<el-button type="text" @click="newAdd">点击新增</el-button>-->
         </div>
       </el-col>
 

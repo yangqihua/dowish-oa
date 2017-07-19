@@ -91,28 +91,35 @@ export default {
     },
 
     onUpdate(){
-      let leafMenuIdList = this.$refs.menuTree.getCheckedKeys()
-      let menuIdList = new Set()
-      let rootMenu = {list: this.menuTree, menuId: -1}
-      let path = new Set()
-      leafMenuIdList.forEach(leafMenuId => {
-        stringUtils.setParentId(leafMenuId,"menuId","parentId", rootMenu, path)
-        path.delete(-1)  //构造的root节点要删除掉
-        path.forEach(p => menuIdList.add(p))
-        path.clear()
-      })
-      this.form['menuIdList'] = menuIdList  //加上父菜单
 
-      this.form['deptIdList'] = this.$refs.deptTree.getCheckedKeys()
-      let params = {
-        url: 'sys/role/update',
-        type: 'post',
-        data: this.form,
-        scb: (res) => {
-          this.$message.success('修改成功');
+      this.$confirm('确定修改数据?', '提示', {
+        confirmButtonText: '确定',
+        cancelButtonText: '取消',
+        type: 'warning'
+      }).then(() => {
+        let leafMenuIdList = this.$refs.menuTree.getCheckedKeys()
+        let menuIdList = new Set()
+        let rootMenu = {list: this.menuTree, menuId: -1}
+        let path = new Set()
+        leafMenuIdList.forEach(leafMenuId => {
+          stringUtils.setParentId(leafMenuId,"menuId","parentId", rootMenu, path)
+          path.delete(-1)  //构造的root节点要删除掉
+          path.forEach(p => menuIdList.add(p))
+          path.clear()
+        })
+        this.form['menuIdList'] = menuIdList  //加上父菜单
+
+        this.form['deptIdList'] = this.$refs.deptTree.getCheckedKeys()
+        let params = {
+          url: 'sys/role/update',
+          type: 'post',
+          data: this.form,
+          scb: (res) => {
+            this.$message.success('修改成功');
+          }
         }
-      }
-      ajax(params)
+        ajax(params)
+      }).catch(()=>{})
 
     },
 

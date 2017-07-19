@@ -3,13 +3,10 @@
  */
 export default {
   menuList: state => state.menuList,
-  hasPermission: (state, permission) => {
-    if (window.parent.permissions.indexOf(permission) > -1) {
-      return true;
-    } else {
-      return false;
-    }
-  },
+  permissions:state =>state.permissions,
+
+  user:state => state.user,
+
 
 
 

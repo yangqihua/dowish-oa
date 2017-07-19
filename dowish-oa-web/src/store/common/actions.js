@@ -9,18 +9,19 @@ import * as api from "../../utils/api";
 
 import ajax from '../../utils/ajax/ajax'
 
-const loginAction = ({dispatch,commit, state}, params) => {
+const loginAction = ({dispatch, commit, state}, params) => {
   params.scb = response => {
     commit(types.LOGIN, response);
     //回调跳转到首页
-    if(params.hasOwnProperty('cb')){
+    if (params.hasOwnProperty('cb')) {
       params.cb(response);
-    };
+    }
+    ;
   };
   ajax(params);
 };
 
-const getMenuListAction = ({dispatch,commit, state}, params) => {
+const getMenuListAction = ({dispatch, commit, state}, params) => {
   params.scb = response => {
     commit(types.GET_MENU_LIST, response);
   };

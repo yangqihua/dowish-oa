@@ -160,26 +160,34 @@ const deleteEmptyProperty = (object) => {
       if (Array.isArray(value)) {
         if (value.length == 0) {
           delete object[i];
-          console.log('delete Array:', i);
+          // console.log('delete Array:', i);
           continue;
         }
       }
       deleteEmptyProperty(value);
       if (isEmptyObject(value)) {
         delete object[i];
-        console.log('delete a empty object:', i, value);
+        // console.log('delete a empty object:', i, value);
       }
     } else {
       if (value === '' || value === null || value === undefined) {
         delete object[i];
-        console.log('delete: ', i);
+        // console.log('delete: ', i);
       }
     }
   }
 }
 
+const hasPermission = (permissions, permission) => {
+  if (permissions.indexOf(permission) > -1) {
+    return true;
+  } else {
+    return false;
+  }
+};
+
 
 export default {
   trim, subString, getBaseUrl, createUniqueString, useTokenApi, isEmptyObject, resetObject, getBeforeDate,
-  isParentId, setParentId, arrayToTree, deleteEmptyProperty
+  isParentId, setParentId, arrayToTree, deleteEmptyProperty,hasPermission,
 }

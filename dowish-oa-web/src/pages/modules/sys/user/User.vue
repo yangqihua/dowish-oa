@@ -33,18 +33,18 @@
           </el-row>
           <div class="btn-group">
 
-            <el-button @click.native.prevent="handleDelete" icon="delete" type="danger" :disabled="btnEnable.delete">
+            <el-button v-if="permissions.delete" @click.native.prevent="handleDelete" icon="delete" type="danger" :disabled="btnEnable.delete">
               删除
             </el-button>
-            <el-button @click.native.prevent="handleResetPwd" icon="setting" type="danger"
+            <el-button v-if="permissions.resetPwd" @click.native.prevent="handleResetPwd" icon="setting" type="danger"
                        :disabled="btnEnable.resetPwd">重置密码
             </el-button>
-            <el-button @click.native.prevent="handleEdit" icon="edit" type="info" :disabled="btnEnable.edit">编辑
+            <el-button v-if="permissions.edit" @click.native.prevent="handleEdit" icon="edit" type="info" :disabled="btnEnable.edit">编辑
             </el-button>
 
-            <el-button @click.native.prevent="addNew" icon="plus" type="success">新增</el-button>
-            <el-button type="info" @click="resetSearchForm()" class="el-icon-circle-close"> 重置条件</el-button>
-            <el-button @click.native.prevent="loadData" icon="search" type="primary">搜索</el-button>
+            <el-button v-if="permissions.add" @click.native.prevent="addNew" icon="plus" type="success">新增</el-button>
+            <el-button v-if="permissions.list"  type="info" @click="resetSearchForm()" class="el-icon-circle-close"> 重置条件</el-button>
+            <el-button v-if="permissions.list" @click.native.prevent="loadData" icon="search" type="primary">搜索</el-button>
           </div>
         </el-form>
       </div>

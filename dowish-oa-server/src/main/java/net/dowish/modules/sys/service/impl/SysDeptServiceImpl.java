@@ -77,4 +77,5 @@ public class SysDeptServiceImpl implements SysDeptService {
 			deptIdList.add(deptId);
 		}
 	}
+
 }

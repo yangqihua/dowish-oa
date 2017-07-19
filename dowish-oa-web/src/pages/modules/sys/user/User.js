@@ -7,9 +7,11 @@ import * as api from "../../../../utils/api"
 import panel from "../../../../components/panel.vue"
 import ajax from '../../../../utils/ajax/ajax.js'
 import stringUtils from '../../../../utils/string-utils.js'
+import {hasPermission} from '../../../../utils/string-utils.js'
 //深拷贝
 import merge from 'element-ui/src/utils/merge';
-
+import {mapGetters, mapActions, mapMutations} from 'vuex'
+import perms from '../../../../config/permissions'
 export default {
   components: {
     'content-panel': panel
@@ -68,13 +70,13 @@ export default {
         status: '',
         roleIdList: [],
         password: null,
-        parentIds:[],
-        deptId:'',
+        parentIds: [],
+        deptId: '',
       },
       rules: {
         username: [
           {required: true, message: '请输入用户名', trigger: 'blur'},
-          {min: 3, message: '用户名大于 3 个字符', trigger: 'blur'}
+          {min: 2, message: '用户名大于 2 个字符', trigger: 'blur'}
         ],
       },
       resetPwdRules: {
@@ -111,10 +113,12 @@ export default {
         cancelButtonText: '取消',
         type: 'warning'
       }).then(() => {
-        let userIds = this.multipleSelection.map(item=>{return item.userId})
+        let userIds = this.multipleSelection.map(item => {
+          return item.userId
+        })
         let params = {
           url: 'sys/user/delete',
-          type:'post',
+          type: 'post',
           data: userIds,
           loadingDom: 'userTableId',
           scb: (response) => {
@@ -174,20 +178,24 @@ export default {
         showLoading: false,
         scb: (res) => {
 
-          console.log("res.deptList=====",res.deptList)
-          this.deptTree = stringUtils.arrayToTree(res.deptList,{id:"deptId",parentId:"parentId",childrenKey:"list"})
+          console.log("res.deptList=====", res.deptList)
+          this.deptTree = stringUtils.arrayToTree(res.deptList, {
+            id: "deptId",
+            parentId: "parentId",
+            childrenKey: "list"
+          })
           // 把空属性去掉，不然获取不到叶子节点的值
           stringUtils.deleteEmptyProperty(this.deptTree)
 
 
           let rootDept = {list: this.deptTree, deptId: -1}
           let path = new Set()
-          stringUtils.setParentId(this.form.deptId,"deptId","parentId", rootDept, path)
+          stringUtils.setParentId(this.form.deptId, "deptId", "parentId", rootDept, path)
           path.delete(-1)  //构造的root节点要删除掉
           this.form.parentIds = Array.from(path)
 
-          console.log("this.form:",this.form)
-          console.log("this.deptTree：",this.deptTree)
+          console.log("this.form:", this.form)
+          console.log("this.deptTree：", this.deptTree)
           this.loadRoleList()
         }
       }
@@ -202,6 +210,7 @@ export default {
         if (valid) {
           this.form.status = this.boolStatus ? '1' : '0'
           this.form.deptId = this.form.parentIds[this.form.parentIds.length - 1]
+          this.form["createUserId"] = this.user.userId
           let params = {
             url: 'sys/user/save?password=' + this.form.password,
             type: 'post',
@@ -265,6 +274,23 @@ export default {
     }
   },
   computed: {
+    ...mapGetters({
+      user:'user',userPerms:'permissions'
+    }),
+    permissions(){
+      return {
+        list: stringUtils.hasPermission(this.userPerms,perms.SYS_USER_LIST),
+        add: stringUtils.hasPermission(this.userPerms,perms.SYS_USER_SAVE)
+        && stringUtils.hasPermission(this.userPerms,perms.SYS_ROLE_SELECT)
+        && stringUtils.hasPermission(this.userPerms,perms.SYS_USER_SAVE),
+        edit: stringUtils.hasPermission(this.userPerms,perms.SYS_USER_INFO)
+        && stringUtils.hasPermission(this.userPerms,perms.SYS_ROLE_SELECT)
+        && stringUtils.hasPermission(this.userPerms,perms.SYS_DEPT_SELECT)
+        && stringUtils.hasPermission(this.userPerms,perms.SYS_USER_UPDATE),
+        delete: stringUtils.hasPermission(this.userPerms,perms.SYS_USER_DELETE),
+        resetPwd: stringUtils.hasPermission(this.userPerms,perms.USER_RESET_PWD),
+      }
+    },
     btnEnable(){
       return {
         edit: !(this.multipleSelection.length == 1),

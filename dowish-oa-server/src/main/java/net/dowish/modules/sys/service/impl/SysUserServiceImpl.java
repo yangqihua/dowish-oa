@@ -113,6 +113,7 @@ public class SysUserServiceImpl extends BaseService implements SysUserService {
 	}
 
 	@Override
+	@Transactional
 	public int updatePassword(Long userId, String password, String newPassword) {
 		Map<String, Object> map = new HashMap<>();
 		map.put("userId", userId);

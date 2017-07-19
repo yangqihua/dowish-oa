@@ -13,7 +13,6 @@ import java.util.List;
 /**
  * Created by yangqihua on 2017/7/19.
  */
-@Transactional(readOnly = true)
 public abstract class BaseService {
 
 	protected static SysUserEntity getUser() {
