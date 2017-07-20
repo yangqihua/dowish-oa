@@ -62,6 +62,7 @@ public class GenUtils {
 			} else if (StringUtils.startsWithIgnoreCase(column.getJdbcType(), "BIGINT")
 					|| StringUtils.startsWithIgnoreCase(column.getJdbcType(), "NUMBER")
 					|| StringUtils.startsWithIgnoreCase(column.getJdbcType(), "TINYINT")
+					|| StringUtils.startsWithIgnoreCase(column.getJdbcType(), "INT")
 					) {
 				// 如果是浮点型
 				String[] ss = StringUtils.split(StringUtils.substringBetween(column.getJdbcType(), "(", ")"), ",");
@@ -76,6 +77,8 @@ public class GenUtils {
 				else {
 					column.setJavaType("Long");
 				}
+				column.setShowType("input");
+			}else{
 				column.setShowType("input");
 			}
 
@@ -186,9 +189,9 @@ public class GenUtils {
 //		}
 //		genTableEntity.setColumns(columsList);
 //
-//		//没主键，则第一个字段为主键
-//		if (genTableEntity.getPk() == null) {
-//			genTableEntity.setPk(genTableEntity.getColumns().get(0));
+		//没主键，则第一个字段为主键
+//		if (genTable.getPkList() == null || genTable.getPkList().size()==0) {
+//			genTable.setPk(genTableEntity.getColumns().get(0));
 //		}
 //
 //		//设置velocity资源加载器

@@ -58,7 +58,7 @@ public class GenTableService {
 		genTable.setClassName(StringUtils.toCapitalizeCamelCase(genTable.getTableName()));
 
 		// 设置包名
-		genTable.setPackageName("net.dowish.modules");
+		genTable.setPackageName("net.dowish.modules"+"."+genTable.getTableName());
 
 		// 设置作者
 		genTable.setFunctionAuthor("yangqihua");
@@ -71,6 +71,9 @@ public class GenTableService {
 
 		// 设置主键
 		genTable.setPkList(genTableDao.findTablePK(genTable.getTableName()));
+
+		//设置父菜单ID
+		genTable.setParentMenuId(28L);
 
 		// 初始化列属性字段
 		GenUtils.initColumnField(genTable);

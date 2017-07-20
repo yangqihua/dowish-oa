@@ -55,6 +55,9 @@ public class GenTable implements Serializable {
 
 
 
+	// 生成功能的父菜单ID
+	private Long parentMenuId;
+
 
 	
 }
