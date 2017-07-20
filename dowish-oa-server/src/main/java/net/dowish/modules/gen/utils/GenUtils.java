@@ -27,21 +27,6 @@ import java.util.stream.Collectors;
 @Slf4j
 public class GenUtils {
 
-//	public static List<String> getTemplates() {
-//		List<String> templates = new ArrayList<String>();
-//		templates.add("gen/curd/Entity.java.vm");
-//		templates.add("gen/curd/Dao.java.vm");
-//		templates.add("gen/curd/Dao.xml.vm");
-//		templates.add("gen/curd/Service.java.vm");
-//		templates.add("gen/curd/ServiceImpl.java.vm");
-//		templates.add("gen/curd/Controller.java.vm");
-//		templates.add("gen/curd/list.html.vm");
-//		templates.add("gen/curd/list.js.vm");
-//		templates.add("gen/curd/menu.sql.vm");
-//		return templates;
-//	}
-
-
 	public static void initColumnField(GenTable genTable) {
 		for (GenTableColumn column : genTable.getColumnList()) {
 			// 设置字段说明
@@ -168,42 +153,7 @@ public class GenUtils {
 		Map<String, Object> dataModel = getDataModel(genTable);
 
 		log.info("templateList:{}", templateList);
-		//表信息
-//		GenTableEntity genTableEntity = new GenTableEntity();
-//		genTableEntity.setTableName(table.get("tableName"));
-//		genTableEntity.setComments(table.get("tableComment"));
-//		//表名转换成Java类名
-//		String className = tableToJava(genTableEntity.getTableName(), config.getString("tablePrefix"));
-//		genTableEntity.setClassName(className);
-//		genTableEntity.setCamelClassName(StringUtils.uncapitalize(className));
-//
-//		//列信息
-//		List<GenTableColumnEntity> columsList = new ArrayList<>();
-//		for (Map<String, String> column : columns) {
-//			GenTableColumnEntity genTableColumnEntity = new GenTableColumnEntity();
-//			genTableColumnEntity.setColumnName(column.get("columnName"));
-//			genTableColumnEntity.setJdbcType(column.get("dataType"));
-//			genTableColumnEntity.setComments(column.get("columnComment"));
-//			genTableColumnEntity.setExtra(column.get("extra"));
-//
-//			//列名转换成Java属性名
-//			String attrName = columnToJava(genTableColumnEntity.getColumnName());
-//			genTableColumnEntity.setAttrName(attrName);
-//			genTableColumnEntity.setCamelAttrName(StringUtils.uncapitalize(attrName));
-//
-//			//列的数据类型，转换成Java类型
-//			String attrType = config.getString(genTableColumnEntity.getJdbcType(), Object.class.getSimpleName());
-//			genTableColumnEntity.setAttrType(attrType);
-//
-//			//是否主键
-//			if ("PRI".equalsIgnoreCase(column.get("columnKey")) && genTableEntity.getPk() == null) {
-//				genTableEntity.setPk(genTableColumnEntity);
-//			}
-//
-//			columsList.add(genTableColumnEntity);
-//		}
-//		genTableEntity.setColumns(columsList);
-//
+
 		//没主键，则第一个字段为主键
 		if (genTable.getPkList() == null || genTable.getPkList().size() == 0) {
 			List<GenTableColumn> pks = Lists.newArrayList();
@@ -211,7 +161,7 @@ public class GenUtils {
 			genTable.setPkList(pks);
 		}
 
-//		//设置velocity资源加载器
+		//设置velocity资源加载器
 		Properties prop = new Properties();
 		prop.put("file.resource.loader.class", "org.apache.velocity.runtime.resource.loader.ClasspathResourceLoader");
 		Velocity.init(prop);
@@ -223,7 +173,7 @@ public class GenUtils {
 		map.put("pk", genTable.getPkList().get(0));    //主键
 		map.put("classname", StringUtils.uncapitalize(genTable.getClassName())); // class驼峰变量
 		map.put("className", StringUtils.capitalize(genTable.getClassName()));   // class类
-		map.put("pathName", genTable.getModuleName().toLowerCase()+"/"+genTable.getClassName().toLowerCase());   // url pattern
+		map.put("pathName", genTable.getModuleName().toLowerCase() + "/" + genTable.getClassName().toLowerCase());   // url pattern
 		map.put("columns", genTable.getColumnList()); // 所有列
 		map.put("package", StringUtils.lowerCase(genTable.getPackageName())); // 包名
 		map.put("author", StringUtils.isNotBlank(genTable.getFunctionAuthor()) ? genTable.getFunctionAuthor() : "yangqihua"); //作者
@@ -231,11 +181,8 @@ public class GenUtils {
 		map.put("datetime", DateUtils.format(new Date(), DateUtils.DATE_TIME_PATTERN)); // 日期
 
 		VelocityContext context = new VelocityContext(map);
-//
-//
 		StringBuilder result = new StringBuilder();
-		//获取模板列表
-//		List<String> templates = getTemplate();
+		// 获取模板列表
 		for (String template : templateList) {
 			//渲染模板
 			StringWriter sw = new StringWriter();
@@ -244,7 +191,6 @@ public class GenUtils {
 
 			String fileName = getFileName(template, genTable.getClassName(), genTable.getPackageName(), genTable.getModuleName());
 
-//			log.info("fileName : {}",fileName);
 			// 创建并写入文件
 			if (FileUtils.createFile(fileName)) {
 				FileUtils.writeToFile(fileName, sw.toString(), true);
@@ -287,7 +233,6 @@ public class GenUtils {
 			}
 			is.close();
 			br.close();
-//			log.debug("Read file content: {}", sb.toString());
 			return (T) JaxbMapper.fromXml(sb.toString(), clazz);
 		} catch (Exception e) {
 			e.printStackTrace();
@@ -300,9 +245,9 @@ public class GenUtils {
 	 * 获取文件名
 	 */
 	public static String getFileName(String template, String className, String packageName, String moduleName) {
-		String javaPath = (SystemPathUtils.getServerMainDir() + File.separator + "java" + File.separator + packageName + File.separator).replace(".",File.separator);
-		String xmlPath = (SystemPathUtils.getServerMainDir()  + "resources"+ File.separator + "mapper" + File.separator+ moduleName + File.separator).replace(".",File.separator);
-		String webPath = (SystemPathUtils.getWebPagesDir() + "modules" + File.separator + moduleName + File.separator).replace(".",File.separator);
+		String javaPath = (SystemPathUtils.getServerMainDir() + File.separator + "java" + File.separator + packageName + File.separator).replace(".", File.separator);
+		String xmlPath = (SystemPathUtils.getServerMainDir() + "resources" + File.separator + "mapper" + File.separator + moduleName + File.separator).replace(".", File.separator);
+		String webPath = (SystemPathUtils.getWebPagesDir() + "modules" + File.separator + moduleName + File.separator).replace(".", File.separator);
 
 		if (template.contains("Entity.java.vm")) {
 			return javaPath + "entity" + File.separator + className + "Entity.java";
@@ -325,7 +270,7 @@ public class GenUtils {
 		}
 
 		if (template.contains("Dao.xml.vm")) {
-			return xmlPath  +className.toLowerCase()+"Dao.xml";
+			return xmlPath + className.toLowerCase() + "Dao.xml";
 		}
 
 		if (template.contains("list.html.vm")) {
