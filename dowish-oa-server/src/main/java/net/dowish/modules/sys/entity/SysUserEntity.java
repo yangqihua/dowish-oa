@@ -4,13 +4,12 @@ import com.fasterxml.jackson.annotation.JsonIgnore;
 import lombok.Data;
 import net.dowish.common.base.entity.BaseEntity;
 import net.dowish.common.utils.Constant;
-import net.dowish.common.validator.group.AddGroup;
-import net.dowish.common.validator.group.UpdateGroup;
+import net.dowish.common.security.validator.group.AddGroup;
+import net.dowish.common.security.validator.group.UpdateGroup;
 import org.hibernate.validator.constraints.Email;
 import org.hibernate.validator.constraints.NotBlank;
 
 import javax.validation.constraints.NotNull;
-import java.io.Serializable;
 import java.util.Date;
 import java.util.List;
 

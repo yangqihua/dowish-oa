@@ -10,7 +10,7 @@ import net.dowish.modules.sys.service.SysRoleService;
 import net.dowish.common.utils.Constant;
 import net.dowish.common.utils.Page;
 import net.dowish.common.utils.Query;
-import net.dowish.common.validator.ValidatorUtils;
+import net.dowish.common.security.validator.ValidatorUtils;
 import org.apache.shiro.authz.annotation.RequiresPermissions;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.*;

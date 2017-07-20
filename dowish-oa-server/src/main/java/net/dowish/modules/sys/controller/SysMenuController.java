@@ -2,7 +2,7 @@ package net.dowish.modules.sys.controller;
 
 import net.dowish.common.annotation.SysLog;
 import net.dowish.common.base.controller.BaseController;
-import net.dowish.common.exception.RRException;
+import net.dowish.common.exception.ResultException;
 import net.dowish.common.utils.Apis;
 import net.dowish.common.utils.Constant;
 import net.dowish.modules.sys.entity.SysMenuEntity;
@@ -159,17 +159,17 @@ public class SysMenuController extends BaseController {
 	 */
 	private void verifyForm(SysMenuEntity menu){
 		if(StringUtils.isBlank(menu.getName())){
-			throw new RRException("菜单名称不能为空");
+			throw new ResultException("菜单名称不能为空");
 		}
 		
 		if(menu.getParentId() == null){
-			throw new RRException("上级菜单不能为空");
+			throw new ResultException("上级菜单不能为空");
 		}
 		
 		//菜单
 		if(menu.getType() == Constant.MenuType.MENU.getValue()){
 			if(StringUtils.isBlank(menu.getUrl())){
-				throw new RRException("菜单URL不能为空");
+				throw new ResultException("菜单URL不能为空");
 			}
 		}
 		
@@ -184,7 +184,7 @@ public class SysMenuController extends BaseController {
 		if(menu.getType() == Constant.MenuType.CATALOG.getValue() ||
 				menu.getType() == Constant.MenuType.MENU.getValue()){
 			if(parentType != Constant.MenuType.CATALOG.getValue()){
-				throw new RRException("上级菜单只能为目录类型");
+				throw new ResultException("上级菜单只能为目录类型");
 			}
 			return ;
 		}
@@ -192,7 +192,7 @@ public class SysMenuController extends BaseController {
 		//按钮
 		if(menu.getType() == Constant.MenuType.BUTTON.getValue()){
 			if(parentType != Constant.MenuType.MENU.getValue()){
-				throw new RRException("上级菜单只能为菜单类型");
+				throw new ResultException("上级菜单只能为菜单类型");
 			}
 			return ;
 		}

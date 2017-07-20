@@ -1,7 +1,7 @@
 package net.dowish.config;
 
-import net.dowish.modules.sys.oauth2.OAuth2Filter;
-import net.dowish.modules.sys.oauth2.OAuth2Realm;
+import net.dowish.common.security.oauth2.OAuth2Filter;
+import net.dowish.common.security.oauth2.OAuth2Realm;
 import org.apache.shiro.mgt.SecurityManager;
 import org.apache.shiro.session.mgt.SessionManager;
 import org.apache.shiro.spring.LifecycleBeanPostProcessor;

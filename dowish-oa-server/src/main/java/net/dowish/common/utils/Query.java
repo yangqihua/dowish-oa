@@ -1,7 +1,7 @@
 package net.dowish.common.utils;
 
 import lombok.Data;
-import net.dowish.common.xss.SQLFilter;
+import net.dowish.common.security.xss.SQLFilter;
 import org.apache.commons.lang.StringUtils;
 
 import java.util.LinkedHashMap;

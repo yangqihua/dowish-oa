@@ -2,7 +2,7 @@ package net.dowish.modules.sys.service.impl;
 
 import lombok.extern.slf4j.Slf4j;
 import net.dowish.common.base.service.BaseService;
-import net.dowish.common.exception.RRException;
+import net.dowish.common.exception.ResultException;
 import net.dowish.common.utils.Constant;
 import net.dowish.modules.sys.dao.SysUserDao;
 import net.dowish.modules.sys.entity.SysUserEntity;
@@ -136,7 +136,7 @@ public class SysUserServiceImpl extends BaseService implements SysUserService {
 		
 		//判断是否越权
 		if(!roleIdList.containsAll(user.getRoleIdList())){
-			throw new RRException("新增用户所选角色，不是本人创建");
+			throw new ResultException("新增用户所选角色，不是本人创建");
 		}
 	}
 }

@@ -15,14 +15,14 @@ import org.springframework.web.bind.annotation.RestControllerAdvice;
  * @date 2016年10月27日 下午10:16:19
  */
 @RestControllerAdvice
-public class RRExceptionHandler {
+public class ResultExceptionHandler {
 	private Logger logger = LoggerFactory.getLogger(getClass());
 
 	/**
 	 * 自定义异常
 	 */
-	@ExceptionHandler(RRException.class)
-	public Apis handleRRException(RRException e){
+	@ExceptionHandler(ResultException.class)
+	public Apis handleRRException(ResultException e){
 		Apis apis = new Apis();
 		apis.put("code", e.getCode());
 		apis.put("msg", e.getMessage());

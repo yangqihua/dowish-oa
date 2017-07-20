@@ -13,7 +13,7 @@ import lombok.extern.slf4j.Slf4j;
 import net.dowish.common.utils.Apis;
 import net.dowish.common.utils.Page;
 import net.dowish.common.utils.Query;
-import net.dowish.common.xss.XssHttpServletRequestWrapper;
+import net.dowish.common.security.xss.XssHttpServletRequestWrapper;
 import net.dowish.modules.gen.entity.GenConfig;
 import net.dowish.modules.gen.entity.GenTable;
 import net.dowish.modules.gen.service.GenTableService;

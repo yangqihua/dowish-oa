@@ -1,12 +1,10 @@
-package net.dowish.common.xss;
+package net.dowish.common.security.xss;
 
-import net.dowish.common.exception.RRException;
+import net.dowish.common.exception.ResultException;
 import org.apache.commons.lang.StringUtils;
 
 /**
  * SQL过滤
- *
- * @date 2017-04-01 16:16
  */
 public class SQLFilter {
 
@@ -33,7 +31,7 @@ public class SQLFilter {
         //判断是否包含非法字符
         for(String keyword : keywords){
             if(str.indexOf(keyword) != -1){
-                throw new RRException("包含非法字符");
+                throw new ResultException("包含非法字符");
             }
         }
 

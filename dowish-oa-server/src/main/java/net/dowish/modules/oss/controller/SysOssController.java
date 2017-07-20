@@ -1,17 +1,17 @@
 package net.dowish.modules.oss.controller;
 
 import com.google.gson.Gson;
-import net.dowish.common.exception.RRException;
+import net.dowish.common.exception.ResultException;
 import net.dowish.common.utils.*;
 import net.dowish.modules.oss.entity.SysOssEntity;
 import net.dowish.modules.sys.service.SysConfigService;
 import net.dowish.modules.oss.service.SysOssService;
 import net.dowish.modules.oss.cloud.CloudStorageConfig;
 import net.dowish.modules.oss.cloud.OSSFactory;
-import net.dowish.common.validator.ValidatorUtils;
-import net.dowish.common.validator.group.AliyunGroup;
-import net.dowish.common.validator.group.QcloudGroup;
-import net.dowish.common.validator.group.QiniuGroup;
+import net.dowish.common.security.validator.ValidatorUtils;
+import net.dowish.common.security.validator.group.AliyunGroup;
+import net.dowish.common.security.validator.group.QcloudGroup;
+import net.dowish.common.security.validator.group.QiniuGroup;
 import org.apache.shiro.authz.annotation.RequiresPermissions;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.RequestBody;
@@ -105,7 +105,7 @@ public class SysOssController {
 	@RequiresPermissions("sys:oss:all")
 	public Apis upload(@RequestParam("file") MultipartFile file) throws Exception {
 		if (file.isEmpty()) {
-			throw new RRException("上传文件不能为空");
+			throw new ResultException("上传文件不能为空");
 		}
 
 		//上传文件

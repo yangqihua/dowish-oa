@@ -1,4 +1,4 @@
-package net.dowish.modules.sys.oauth2;
+package net.dowish.common.security.oauth2;
 
 import net.dowish.modules.sys.entity.SysUserEntity;
 import net.dowish.modules.sys.entity.SysUserTokenEntity;

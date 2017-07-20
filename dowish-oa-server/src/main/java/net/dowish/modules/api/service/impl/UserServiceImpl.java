@@ -1,8 +1,8 @@
 package net.dowish.modules.api.service.impl;
 
 
-import net.dowish.common.exception.RRException;
-import net.dowish.common.validator.Assert;
+import net.dowish.common.exception.ResultException;
+import net.dowish.common.security.validator.Assert;
 import net.dowish.modules.api.dao.UserDao;
 import net.dowish.modules.api.entity.UserEntity;
 import net.dowish.modules.api.service.UserService;
@@ -73,7 +73,7 @@ public class UserServiceImpl implements UserService {
 
 		//密码错误
 		if(!user.getPassword().equals(DigestUtils.sha256Hex(password))){
-			throw new RRException("手机号或密码错误");
+			throw new ResultException("手机号或密码错误");
 		}
 
 		return user.getUserId();

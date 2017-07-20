@@ -1,4 +1,4 @@
-package net.dowish.common.xss;
+package net.dowish.common.security.xss;
 
 import javax.servlet.*;
 import javax.servlet.http.HttpServletRequest;

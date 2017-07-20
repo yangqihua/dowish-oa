@@ -1,8 +1,8 @@
 package net.dowish.modules.oss.cloud;
 
-import net.dowish.common.validator.group.AliyunGroup;
-import net.dowish.common.validator.group.QcloudGroup;
-import net.dowish.common.validator.group.QiniuGroup;
+import net.dowish.common.security.validator.group.AliyunGroup;
+import net.dowish.common.security.validator.group.QcloudGroup;
+import net.dowish.common.security.validator.group.QiniuGroup;
 import org.hibernate.validator.constraints.NotBlank;
 import org.hibernate.validator.constraints.Range;
 import org.hibernate.validator.constraints.URL;

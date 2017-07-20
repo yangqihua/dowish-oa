@@ -1,9 +1,9 @@
 package net.dowish.modules.job.utils;
 
 import com.google.gson.Gson;
+import net.dowish.common.exception.ResultException;
 import net.dowish.modules.job.entity.ScheduleJobEntity;
 import net.dowish.common.utils.Constant.ScheduleStatus;
-import net.dowish.common.exception.RRException;
 import org.quartz.*;
 
 /**
@@ -36,7 +36,7 @@ public class ScheduleUtils {
         try {
             return (CronTrigger) scheduler.getTrigger(getTriggerKey(jobId));
         } catch (SchedulerException e) {
-            throw new RRException("获取定时任务CronTrigger出现异常", e);
+            throw new ResultException("获取定时任务CronTrigger出现异常", e);
         }
     }
 
@@ -65,7 +65,7 @@ public class ScheduleUtils {
             	pauseJob(scheduler, scheduleJob.getJobId());
             }
         } catch (SchedulerException e) {
-            throw new RRException("创建定时任务失败", e);
+            throw new ResultException("创建定时任务失败", e);
         }
     }
     
@@ -96,7 +96,7 @@ public class ScheduleUtils {
             }
             
         } catch (SchedulerException e) {
-            throw new RRException("更新定时任务失败", e);
+            throw new ResultException("更新定时任务失败", e);
         }
     }
 
@@ -111,7 +111,7 @@ public class ScheduleUtils {
         	
             scheduler.triggerJob(getJobKey(scheduleJob.getJobId()), dataMap);
         } catch (SchedulerException e) {
-            throw new RRException("立即执行定时任务失败", e);
+            throw new ResultException("立即执行定时任务失败", e);
         }
     }
 
@@ -122,7 +122,7 @@ public class ScheduleUtils {
         try {
             scheduler.pauseJob(getJobKey(jobId));
         } catch (SchedulerException e) {
-            throw new RRException("暂停定时任务失败", e);
+            throw new ResultException("暂停定时任务失败", e);
         }
     }
 
@@ -133,7 +133,7 @@ public class ScheduleUtils {
         try {
             scheduler.resumeJob(getJobKey(jobId));
         } catch (SchedulerException e) {
-            throw new RRException("暂停定时任务失败", e);
+            throw new ResultException("暂停定时任务失败", e);
         }
     }
 
@@ -144,7 +144,7 @@ public class ScheduleUtils {
         try {
             scheduler.deleteJob(getJobKey(jobId));
         } catch (SchedulerException e) {
-            throw new RRException("删除定时任务失败", e);
+            throw new ResultException("删除定时任务失败", e);
         }
     }
 }

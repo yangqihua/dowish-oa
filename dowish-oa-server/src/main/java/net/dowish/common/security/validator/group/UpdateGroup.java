@@ -1,4 +1,4 @@
-package net.dowish.common.validator.group;
+package net.dowish.common.security.validator.group;
 
 /**
  * 更新数据 Group

@@ -1,4 +1,4 @@
-package net.dowish.common.xss;
+package net.dowish.common.security.xss;
 
 import org.apache.commons.io.IOUtils;
 import org.apache.commons.lang.StringUtils;

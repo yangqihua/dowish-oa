@@ -1,6 +1,6 @@
-package net.dowish.modules.sys.oauth2;
+package net.dowish.common.security.oauth2;
 
-import net.dowish.common.exception.RRException;
+import net.dowish.common.exception.ResultException;
 
 import java.security.MessageDigest;
 import java.util.UUID;
@@ -36,7 +36,7 @@ public class TokenGenerator {
             byte[] messageDigest = algorithm.digest();
             return toHexString(messageDigest);
         } catch (Exception e) {
-            throw new RRException("生成Token失败", e);
+            throw new ResultException("生成Token失败", e);
         }
     }
 }

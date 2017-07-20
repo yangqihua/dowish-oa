@@ -1,7 +1,7 @@
 package net.dowish.modules.api.interceptor;
 
 
-import net.dowish.common.exception.RRException;
+import net.dowish.common.exception.ResultException;
 import net.dowish.modules.api.annotation.AuthIgnore;
 import net.dowish.modules.api.entity.TokenEntity;
 import net.dowish.modules.api.service.TokenService;
@@ -49,13 +49,13 @@ public class AuthorizationInterceptor extends HandlerInterceptorAdapter {
 
         //token为空
         if(StringUtils.isBlank(token)){
-            throw new RRException("token不能为空");
+            throw new ResultException("token不能为空");
         }
 
         //查询token信息
         TokenEntity tokenEntity = tokenService.queryByToken(token);
         if(tokenEntity == null || tokenEntity.getExpireTime().getTime() < System.currentTimeMillis()){
-            throw new RRException("token失效，请重新登录");
+            throw new ResultException("token失效，请重新登录");
         }
 
         //设置userId到request里，后续根据userId，获取用户信息

@@ -4,7 +4,7 @@ import net.dowish.modules.sys.dao.SysRoleDao;
 import net.dowish.modules.sys.entity.SysRoleEntity;
 import net.dowish.modules.sys.service.*;
 import net.dowish.common.utils.Constant;
-import net.dowish.common.exception.RRException;
+import net.dowish.common.exception.ResultException;
 
 import java.util.Date;
 import java.util.List;
@@ -102,7 +102,7 @@ public class SysRoleServiceImpl implements SysRoleService {
 		
 		//判断是否越权
 		if(!menuIdList.containsAll(role.getMenuIdList())){
-			throw new RRException("新增角色的权限，已超出你的权限范围");
+			throw new ResultException("新增角色的权限，已超出你的权限范围");
 		}
 	}
 }

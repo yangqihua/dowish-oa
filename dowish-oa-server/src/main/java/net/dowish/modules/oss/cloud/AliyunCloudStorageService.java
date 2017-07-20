@@ -1,7 +1,7 @@
 package net.dowish.modules.oss.cloud;
 
 import com.aliyun.oss.OSSClient;
-import net.dowish.common.exception.RRException;
+import net.dowish.common.exception.ResultException;
 
 import java.io.ByteArrayInputStream;
 import java.io.InputStream;
@@ -36,7 +36,7 @@ public class AliyunCloudStorageService extends CloudStorageService{
         try {
             client.putObject(config.getAliyunBucketName(), path, inputStream);
         } catch (Exception e){
-            throw new RRException("上传文件失败，请检查配置信息", e);
+            throw new ResultException("上传文件失败，请检查配置信息", e);
         }
 
         return config.getAliyunDomain() + "/" + path;

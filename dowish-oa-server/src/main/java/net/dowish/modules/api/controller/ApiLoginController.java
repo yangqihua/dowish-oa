@@ -2,7 +2,7 @@ package net.dowish.modules.api.controller;
 
 
 import net.dowish.common.utils.Apis;
-import net.dowish.common.validator.Assert;
+import net.dowish.common.security.validator.Assert;
 import net.dowish.modules.api.annotation.AuthIgnore;
 import net.dowish.modules.api.service.TokenService;
 import net.dowish.modules.api.service.UserService;

@@ -5,7 +5,7 @@ import net.dowish.modules.sys.dao.SysUserTokenDao;
 import net.dowish.modules.sys.entity.SysUserEntity;
 import net.dowish.modules.sys.entity.SysUserTokenEntity;
 import net.dowish.modules.sys.service.SysUserTokenService;
-import net.dowish.modules.sys.oauth2.TokenGenerator;
+import net.dowish.common.security.oauth2.TokenGenerator;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 

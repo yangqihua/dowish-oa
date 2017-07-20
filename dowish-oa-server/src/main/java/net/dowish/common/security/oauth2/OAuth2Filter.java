@@ -1,4 +1,4 @@
-package net.dowish.modules.sys.oauth2;
+package net.dowish.common.security.oauth2;
 
 import com.google.gson.Gson;
 import net.dowish.common.utils.Apis;

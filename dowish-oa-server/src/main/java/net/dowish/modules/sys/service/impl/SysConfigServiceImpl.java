@@ -4,7 +4,7 @@ import com.google.gson.Gson;
 import net.dowish.modules.sys.dao.SysConfigDao;
 import net.dowish.modules.sys.entity.Dict;
 import net.dowish.modules.sys.service.SysConfigService;
-import net.dowish.common.exception.RRException;
+import net.dowish.common.exception.ResultException;
 import org.apache.commons.lang.StringUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
@@ -73,7 +73,7 @@ public class SysConfigServiceImpl implements SysConfigService {
 		try {
 			return clazz.newInstance();
 		} catch (Exception e) {
-			throw new RRException("获取参数失败");
+			throw new ResultException("获取参数失败");
 		}
 	}
 }

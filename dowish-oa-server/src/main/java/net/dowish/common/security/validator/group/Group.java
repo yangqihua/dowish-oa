@@ -1,4 +1,4 @@
-package net.dowish.common.validator.group;
+package net.dowish.common.security.validator.group;
 
 import javax.validation.GroupSequence;
 

@@ -1,6 +1,6 @@
 package net.dowish.common.utils;
 
-import net.dowish.common.exception.RRException;
+import net.dowish.common.exception.ResultException;
 import net.dowish.modules.sys.entity.SysUserEntity;
 import org.apache.shiro.SecurityUtils;
 import org.apache.shiro.session.Session;
@@ -50,7 +50,7 @@ public class ShiroUtils {
 	public static String getKaptcha(String key) {
 		Object kaptcha = getSessionAttribute(key);
 		if(kaptcha == null){
-			throw new RRException("验证码已失效");
+			throw new ResultException("验证码已失效");
 		}
 		getSession().removeAttribute(key);
 		return kaptcha.toString();
