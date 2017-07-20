@@ -107,6 +107,11 @@ const addParentId = (id, idName, parentIdName, root, path) => {
   }
   return false
 }
+const setParentId = (id, idName, parentIdName, root)=>{
+  let path = new Set()
+  addParentId(id, idName, parentIdName, root, path)
+  return Array.from(path)
+}
 
 const arrayToTree = (data, options) => {
 
@@ -137,14 +142,10 @@ const arrayToTree = (data, options) => {
     item = data[i];
     id = item[ID_KEY];
     parentId = item[PARENT_KEY] || 0;
-    // every item may have children
     childrenOf[id] = childrenOf[id] || [];
-    // init its children
     item[CHILDREN_KEY] = childrenOf[id];
     if (parentId != ROOT_ID) {
-      // init its parent's children object
       childrenOf[parentId] = childrenOf[parentId] || [];
-      // push it into its parent's children object
       childrenOf[parentId].push(item);
     } else {
       tree.push(item);
@@ -191,5 +192,5 @@ const hasPermission = (permissions, permission) => {
 
 export default {
   trim, subString, getBaseUrl, createUniqueString, useTokenApi, isEmptyObject, resetObject, getBeforeDate,
-  isParentId, addParentId, arrayToTree, deleteEmptyProperty, hasPermission
+  isParentId, addParentId,setParentId, arrayToTree, deleteEmptyProperty, hasPermission
 }

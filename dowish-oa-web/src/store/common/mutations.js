@@ -20,7 +20,6 @@ const mutations = {
     setMenuList(response.menuList);
     state.menuList = response.menuList;
     state.permissions = response.permissions;
-    console.log("state.permissions:",state.permissions)
   },
 
 

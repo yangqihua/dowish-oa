@@ -149,7 +149,21 @@
               </el-col>
             </el-row>
 
+
             <el-row>
+              <el-col :span="12">
+                <el-form-item label="父级菜单">
+                  <el-cascader
+                    :props="cascaderProps"
+                    :options="menuTree"
+                    v-model="parentMenuIds"
+                    change-on-select
+                    style="display: block"
+                  >
+                  </el-cascader>
+                </el-form-item>
+              </el-col>
+
               <el-col :span="12">
                 <el-form-item label="作者">
                   <el-input v-model="genTable.functionAuthor" placeholder="作者"></el-input>

@@ -29,8 +29,6 @@ export default {
         label: 'name',
         id: "menuId",
       },
-      maxId: 7000000,
-
 
       cascaderProps: {
         value: 'menuId',

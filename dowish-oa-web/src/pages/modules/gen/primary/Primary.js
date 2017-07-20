@@ -4,7 +4,7 @@
 
 import panel from "../../../../components/panel.vue"
 import ajax from '../../../../utils/ajax/ajax.js'
-
+import stringUtils from '../../../../utils/string-utils.js'
 export default {
   components: {
     'content-panel': panel
@@ -23,6 +23,14 @@ export default {
       rows: [],
 
       allTables:[],
+
+      menuTree:[],
+      cascaderProps: {
+        value: 'menuId',
+        label: 'name',
+        children: 'list',
+      },
+      parentMenuIds:[],
 
 
       stepTitle:'选择原生数据表',
@@ -45,6 +53,7 @@ export default {
           this.genConfig = response.genConfig
 
           this.getAllTable()
+          this.loadMenuList()
           this.next()
         }
       }
@@ -92,6 +101,7 @@ export default {
     //step2
 
     genCode(){
+      this.genTable.parentMenuId = this.parentMenuIds[this.parentMenuIds.length-1]
       let params = {
         url: 'sys/generator/code',
         type:'post',
@@ -126,12 +136,35 @@ export default {
       }
       ajax(params)
     },
+    loadMenuList(){
+      let params = {
+        url: '/sys/menu/perms',
+        showLoading: false,
+        scb: (res) => {
+          this.menuTree = this.menuTree = stringUtils.arrayToTree(res.menuList, {
+            id: 'menuId',
+            parentId: 'parentId',
+            childrenKey: 'list'
+          })
+
+          //父级菜单默认选项
+          this.parentMenuIds.push(this.genTable.parentMenuId)
+          let pid = []
+          pid = stringUtils.setParentId(this.genTable.parentMenuId)
+          pid.forEach(p=>{
+            this.parentMenuIds.push(p)
+          })
+        }
+      }
+      ajax(params)
+    },
 
     //step3
     goStep1(){
       this.activeStep =1;
       this.stepTitle = '选择原生数据表';
-    }
+    },
+
   },
   created(){
     this.loadData();
