@@ -30,13 +30,18 @@ public class SysUserTokenServiceImpl implements SysUserTokenService {
 	}
 
 	@Override
-	public void save(SysUserTokenEntity token){
+	public void save(SysUserTokenEntity token) {
 		sysUserTokenDao.save(token);
 	}
-	
+
 	@Override
-	public void update(SysUserTokenEntity token){
+	public void update(SysUserTokenEntity token) {
 		sysUserTokenDao.update(token);
+	}
+
+	@Override
+	public void delete(Long userId) {
+		sysUserTokenDao.delete(userId);
 	}
 
 	@Override
@@ -53,7 +58,7 @@ public class SysUserTokenServiceImpl implements SysUserTokenService {
 
 		//判断是否生成过token
 		SysUserTokenEntity tokenEntity = queryByUserId(userId);
-		if(tokenEntity == null){
+		if (tokenEntity == null) {
 			tokenEntity = new SysUserTokenEntity();
 			tokenEntity.setUserId(userId);
 			tokenEntity.setToken(token);
@@ -62,10 +67,12 @@ public class SysUserTokenServiceImpl implements SysUserTokenService {
 
 			//保存token
 			save(tokenEntity);
-		}else{
+		} else {
 			//生成过的话，只更新过期时间，这样就不会被挤掉
 //			tokenEntity.setToken(token);
-			tokenEntity.setToken(tokenEntity.getToken());
+			if (tokenEntity.getExpireTime().getTime() < System.currentTimeMillis()) {
+				tokenEntity.setToken(token);
+			}
 			tokenEntity.setUpdateTime(now);
 			tokenEntity.setExpireTime(expireTime);
 
@@ -75,8 +82,7 @@ public class SysUserTokenServiceImpl implements SysUserTokenService {
 
 		user.setPassword(null);
 		user.setSalt(null);
-		Apis apis = Apis.ok().put("token", token).put("expire", EXPIRE).put("user",user);
 
-		return apis;
+		return Apis.ok().put("token", tokenEntity.getToken()).put("expire", EXPIRE).put("user", user);
 	}
 }

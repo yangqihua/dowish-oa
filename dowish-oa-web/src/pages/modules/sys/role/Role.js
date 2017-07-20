@@ -4,6 +4,8 @@ import selectTree from "../../../../components/selectTree.vue"
 import treeter from "../../../../components/treeter"
 import ajax from '../../../../utils/ajax/ajax.js'
 import stringUtils from '../../../../utils/string-utils.js'
+import {mapGetters, mapActions, mapMutations} from 'vuex'
+import perms from '../../../../config/permissions'
 
 export default {
   mixins: [treeter],
@@ -216,6 +218,24 @@ export default {
         }
       }
       ajax(params)
+    },
+  },
+  computed: {
+    ...mapGetters({
+      user: 'user', userPerms: 'permissions'
+    }),
+    permissions(){
+      return {
+        list: stringUtils.hasPermission(this.userPerms, perms.SYS_ROLE_LIST),
+        add: stringUtils.hasPermission(this.userPerms, perms.SYS_DEPT_LIST)
+        && stringUtils.hasPermission(this.userPerms, perms.SYS_MENU_PERMS)
+        && stringUtils.hasPermission(this.userPerms, perms.SYS_ROLE_SAVE),
+        edit: stringUtils.hasPermission(this.userPerms, perms.SYS_ROLE_INFO)
+        && stringUtils.hasPermission(this.userPerms, perms.SYS_MENU_PERMS)
+        && stringUtils.hasPermission(this.userPerms, perms.SYS_DEPT_LIST)
+        && stringUtils.hasPermission(this.userPerms, perms.SYS_ROLE_UPDATE),
+        delete: stringUtils.hasPermission(this.userPerms, perms.SYS_ROLE_DELETE),
+      }
     },
   },
   created(){

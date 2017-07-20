@@ -38,4 +38,8 @@
 		where user_id = #{userId}
 	</update>
 
+	<delete id="delete">
+		DELETE FROM `sys_user_token` WHERE `user_id` = #{userId}
+	</delete>
+
 </mapper>

@@ -8,11 +8,11 @@ import treeter from "../../../../components/treeter"
 //深拷贝
 import merge from 'element-ui/src/utils/merge';
 
-import * as api from "../../../../utils/api"
-
 import icons from "../../../../config/icon"
 import ajax from "../../../../utils/ajax/ajax"
 import stringUtils from '../../../../utils/string-utils.js'
+import {mapGetters, mapActions, mapMutations} from 'vuex'
+import perms from '../../../../config/permissions'
 
 
 export default {
@@ -67,9 +67,10 @@ export default {
       return (
         <span>
         <span>
-        <span><i class={data.icon}></i>&nbsp;{node.label}</span>
-      </span>
-      </span>);
+        <span> <i class= {data.icon}></i> &nbsp;{node.label} </span >
+        </span>
+        </span>
+      );
     },
     newAdd(){
       stringUtils.resetObject(this.form)
@@ -92,12 +93,13 @@ export default {
           }
         }
         ajax(params)
-      }).catch(() => {})
+      }).catch(() => {
+      })
     },
     handleNodeClick(data){
       this.form = merge({}, data);
       let path = new Set()
-      stringUtils.addParentId(this.form.parentId,"menuId","parentId", this.menuTree, path)
+      stringUtils.addParentId(this.form.parentId, "menuId", "parentId", this.menuTree, path)
       this.form.parentIds = Array.from(path)
 
       this.title = "修改"
@@ -137,7 +139,11 @@ export default {
         url: '/sys/menu/perms',
         showLoading: false,
         scb: (res) => {
-          this.menuTree = this.menuTree = stringUtils.arrayToTree(res.menuList,{id:'menuId',parentId:'parentId',childrenKey:'list'})
+          this.menuTree = this.menuTree = stringUtils.arrayToTree(res.menuList, {
+            id: 'menuId',
+            parentId: 'parentId',
+            childrenKey: 'list'
+          })
           if (this.menuTree.length > 0) {
             this.defaultExpandedKeys.push(this.menuTree[0].menuId)
           }
@@ -148,10 +154,24 @@ export default {
   },
 
   computed: {
+    ...mapGetters({
+      user: 'user', userPerms: 'permissions'
+    }),
+    permissions(){
+      return {
+        list: stringUtils.hasPermission(this.userPerms, perms.SYS_MENU_PERMS),
+        add: stringUtils.hasPermission(this.userPerms, perms.SYS_MENU_PERMS)
+        && stringUtils.hasPermission(this.userPerms, perms.SYS_MENU_SAVE),
+        edit: stringUtils.hasPermission(this.userPerms, perms.SYS_MENU_PERMS)
+        && stringUtils.hasPermission(this.userPerms, perms.SYS_MENU_UPDATE),
+        delete: stringUtils.hasPermission(this.userPerms, perms.SYS_MENU_DELETE),
+      }
+    },
     icons(){
       return icons
     }
   },
+
   created(){
     this.loadData();
   }

@@ -7,7 +7,6 @@ import * as api from "../../../../utils/api"
 import panel from "../../../../components/panel.vue"
 import ajax from '../../../../utils/ajax/ajax.js'
 import stringUtils from '../../../../utils/string-utils.js'
-import {hasPermission} from '../../../../utils/string-utils.js'
 //深拷贝
 import merge from 'element-ui/src/utils/merge';
 import {mapGetters, mapActions, mapMutations} from 'vuex'
@@ -272,7 +271,7 @@ export default {
     permissions(){
       return {
         list: stringUtils.hasPermission(this.userPerms,perms.SYS_USER_LIST),
-        add: stringUtils.hasPermission(this.userPerms,perms.SYS_USER_SAVE)
+        add: stringUtils.hasPermission(this.userPerms,perms.SYS_DEPT_SELECT)
         && stringUtils.hasPermission(this.userPerms,perms.SYS_ROLE_SELECT)
         && stringUtils.hasPermission(this.userPerms,perms.SYS_USER_SAVE),
         edit: stringUtils.hasPermission(this.userPerms,perms.SYS_USER_INFO)

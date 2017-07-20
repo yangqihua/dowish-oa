@@ -7,7 +7,8 @@ import treeter from "../../../../components/treeter"
 
 //深拷贝
 import merge from 'element-ui/src/utils/merge';
-
+import {mapGetters, mapActions, mapMutations} from 'vuex'
+import perms from '../../../../config/permissions'
 import ajax from "../../../../utils/ajax/ajax"
 import stringUtils from '../../../../utils/string-utils.js'
 
@@ -154,6 +155,21 @@ export default {
       }
       ajax(params)
     }
+  },
+  computed: {
+    ...mapGetters({
+      user: 'user', userPerms: 'permissions'
+    }),
+    permissions(){
+      return {
+        list: stringUtils.hasPermission(this.userPerms, perms.SYS_DEPT_LIST),
+        add: stringUtils.hasPermission(this.userPerms, perms.SYS_DEPT_SAVE)
+        && stringUtils.hasPermission(this.userPerms, perms.SYS_DEPT_LIST),
+        edit: stringUtils.hasPermission(this.userPerms, perms.SYS_DEPT_LIST)
+        && stringUtils.hasPermission(this.userPerms, perms.SYS_DEPT_UPDATE),
+        delete: stringUtils.hasPermission(this.userPerms, perms.SYS_DEPT_DELETE),
+      }
+    },
   },
   created(){
     this.loadData();

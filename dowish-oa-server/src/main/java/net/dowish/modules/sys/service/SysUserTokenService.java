@@ -20,6 +20,8 @@ public interface SysUserTokenService {
 	
 	void update(SysUserTokenEntity token);
 
+	void delete(Long userId);
+
 	/**
 	 * 生成token
 	 * @param userId  用户ID

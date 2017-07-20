@@ -3,6 +3,7 @@ package net.dowish.modules.sys.oauth2;
 import net.dowish.modules.sys.entity.SysUserEntity;
 import net.dowish.modules.sys.entity.SysUserTokenEntity;
 import net.dowish.modules.sys.service.ShiroService;
+import net.dowish.modules.sys.service.SysUserTokenService;
 import org.apache.shiro.authc.*;
 import org.apache.shiro.authz.AuthorizationInfo;
 import org.apache.shiro.authz.SimpleAuthorizationInfo;
@@ -16,58 +17,63 @@ import java.util.Set;
 /**
  * 认证
  *
- *
  * @date 2017-05-20 14:00
  */
 @Component
 public class OAuth2Realm extends AuthorizingRealm {
-    @Autowired
-    private ShiroService shiroService;
+	@Autowired
+	private ShiroService shiroService;
 
-    @Override
-    public boolean supports(AuthenticationToken token) {
-        return token instanceof OAuth2Token;
-    }
+	@Autowired
+	private SysUserTokenService sysUserTokenService;
 
-    /**
-     * 授权(验证权限时调用)
-     */
-    @Override
-    protected AuthorizationInfo doGetAuthorizationInfo(PrincipalCollection principals) {
-        SysUserEntity user = (SysUserEntity)principals.getPrimaryPrincipal();
-        Long userId = user.getUserId();
+	@Override
+	public boolean supports(AuthenticationToken token) {
+		return token instanceof OAuth2Token;
+	}
 
-        //用户权限列表
-        Set<String> permsSet = shiroService.getUserPermissions(userId);
+	/**
+	 * 授权(验证权限时调用)
+	 */
+	@Override
+	protected AuthorizationInfo doGetAuthorizationInfo(PrincipalCollection principals) {
+		SysUserEntity user = (SysUserEntity) principals.getPrimaryPrincipal();
+		Long userId = user.getUserId();
 
-        SimpleAuthorizationInfo info = new SimpleAuthorizationInfo();
-        info.setStringPermissions(permsSet);
-        return info;
-    }
+		//用户权限列表
+		Set<String> permsSet = shiroService.getUserPermissions(userId);
 
-    /**
-     * 认证(登录时调用)
-     */
-    @Override
-    protected AuthenticationInfo doGetAuthenticationInfo(AuthenticationToken token) throws AuthenticationException {
-        String accessToken = (String) token.getPrincipal();
+		SimpleAuthorizationInfo info = new SimpleAuthorizationInfo();
+		info.setStringPermissions(permsSet);
+		return info;
+	}
 
-        //根据accessToken，查询用户信息
-        SysUserTokenEntity tokenEntity = shiroService.queryByToken(accessToken);
-        //token失效
-        if(tokenEntity == null || tokenEntity.getExpireTime().getTime() < System.currentTimeMillis()){
+	/**
+	 * 认证(登录时调用)
+	 */
+	@Override
+	protected AuthenticationInfo doGetAuthenticationInfo(AuthenticationToken token) throws AuthenticationException {
+		String accessToken = (String) token.getPrincipal();
 
-            throw new IncorrectCredentialsException("token失效，请重新登录");
-        }
+		//根据accessToken，查询用户信息
+		SysUserTokenEntity tokenEntity = shiroService.queryByToken(accessToken);
+		//token失效
+		if (tokenEntity == null || tokenEntity.getExpireTime().getTime() < System.currentTimeMillis()) {
+			if (tokenEntity != null) {
+				sysUserTokenService.delete(tokenEntity.getUserId());
 
-        //查询用户信息
-        SysUserEntity user = shiroService.queryUser(tokenEntity.getUserId());
-        //账号锁定
-        if(user.getStatus() == 0){
-            throw new LockedAccountException("账号已被锁定,请联系管理员");
-        }
+			}
+			throw new IncorrectCredentialsException("token失效，请重新登录");
+		}
 
-        SimpleAuthenticationInfo info = new SimpleAuthenticationInfo(user, accessToken, getName());
-        return info;
-    }
+		//查询用户信息
+		SysUserEntity user = shiroService.queryUser(tokenEntity.getUserId());
+		//账号锁定
+		if (user.getStatus() == 0) {
+			throw new LockedAccountException("账号已被锁定,请联系管理员");
+		}
+
+		SimpleAuthenticationInfo info = new SimpleAuthenticationInfo(user, accessToken, getName());
+		return info;
+	}
 }

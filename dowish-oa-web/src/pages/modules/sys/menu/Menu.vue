@@ -2,7 +2,7 @@
 
   <content-panel>
     <h3 class="box-title" slot="header" style="width: 100%;">
-      <el-button type="primary" icon="plus" @click="newAdd">新增</el-button>
+      <el-button v-if="permissions.add && !form.menuId" type="primary" icon="plus" @click="newAdd">新增</el-button>
     </h3>
     <el-row slot="body">
       <el-col :span="6">
@@ -58,10 +58,10 @@
                 <el-slider v-model="form.orderNum" show-input></el-slider>
               </el-form-item>
               <el-form-item label="" :label-width="formLabelWidth">
-                <el-button type="primary" @click="onSubmit" v-if="!form.menuId">新增</el-button>
+                <el-button v-if="permissions.add && !form.menuId" type="primary" @click="onSubmit">新增</el-button>
                 <template v-else>
-                  <el-button type="success" @click="onUpdate">保存</el-button>
-                  <el-button type="danger" @click="deleteMenu" icon="delete">删除</el-button>
+                  <el-button v-if="permissions.edit" type="success" @click="onUpdate">保存</el-button>
+                  <el-button v-if="permissions.delete" type="danger" @click="deleteMenu" icon="delete">删除</el-button>
                 </template>
               </el-form-item>
             </el-form>
