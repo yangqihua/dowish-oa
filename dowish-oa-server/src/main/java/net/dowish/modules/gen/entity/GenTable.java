@@ -10,6 +10,8 @@ import java.util.List;
 import lombok.Data;
 import com.google.common.collect.Lists;
 
+import javax.swing.table.TableColumn;
+
 /**
  * 业务表Entity
  */
@@ -47,7 +49,7 @@ public class GenTable implements Serializable {
 	// 当前表的列
 	private List<GenTableColumn> columnList = Lists.newArrayList();
 	// 当前表主键列表
-	private List<String> pkList;
+	private List<GenTableColumn> pkList;
 	// 父表对象
 	private GenTable parent;
 	// 子表列表

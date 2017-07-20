@@ -8,10 +8,9 @@ import login from "../pages/common/login.vue";
 import frame from "../pages/frame.vue";
 import User from "../pages/modules/sys/user/";
 import Primary from "../pages/modules/gen/primary/";
-import Mapper from "../pages/modules/gen/mapper/";
-import Scheme from "../pages/modules/gen/scheme/";
 import userAdd from "../pages/modules/sys/userAdd.vue";
 import resetPwd from "../pages/common/resetPwd.vue";
+import Student from "../pages/modules/sys/student/";
 // Routes
 const routes = [
   {
@@ -55,10 +54,7 @@ const routes = [
       path: '/gen/primary', component: Primary
     },
     {
-      path: '/gen/mapper', component: Mapper
-    },
-    {
-      path: '/gen/scheme', component: Scheme
+      path: '/student/student', component: Student
     }
   ]
   },

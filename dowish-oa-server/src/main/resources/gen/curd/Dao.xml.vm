@@ -6,7 +6,7 @@
 	<!-- 可根据自己的需求，是否要使用 -->
     <resultMap type="${package}.entity.${className}Entity" id="${classname}Map">
 #foreach($column in $columns)
-        <result property="${column.attrname}" column="${column.columnName}"/>
+        <result property="${column.javaField}" column="${column.columnName}"/>
 #end
     </resultMap>
 
@@ -33,7 +33,7 @@
 		select count(*) from ${tableName} 
 	</select>
 	 
-	<insert id="save" parameterType="${package}.entity.${className}Entity"#if($pk.extra == 'auto_increment') useGeneratedKeys="true" keyProperty="$pk.attrname"#end>
+	<insert id="save" parameterType="${package}.entity.${className}Entity"#if($pk.extra == 'auto_increment') useGeneratedKeys="true" keyProperty="$pk.javaField"#end>
 		insert into ${tableName}
 		(
 #foreach($column in $columns)
@@ -47,7 +47,7 @@
 		(
 #foreach($column in $columns)
 #if($column.columnName != $pk.columnName || $pk.extra != 'auto_increment')
-			#{$column.attrname}#if($velocityCount != $columns.size()), #end
+			#{$column.javaField}#if($velocityCount != $columns.size()), #end
 
 #end			
 #end
@@ -59,11 +59,11 @@
 		<set>
 #foreach($column in $columns)
 #if($column.columnName != $pk.columnName)
-			<if test="$column.attrname != null">`$column.columnName` = #{$column.attrname}#if($velocityCount != $columns.size()), #end</if>
+			<if test="$column.javaField != null">`$column.columnName` = #{$column.javaField}#if($velocityCount != $columns.size()), #end</if>
 #end
 #end
 		</set>
-		where ${pk.columnName} = #{${pk.attrname}}
+		where ${pk.columnName} = #{${pk.javaField}}
 	</update>
 	
 	<delete id="delete">
@@ -72,8 +72,8 @@
 	
 	<delete id="deleteBatch">
 		delete from ${tableName} where ${pk.columnName} in 
-		<foreach item="${pk.attrname}" collection="array" open="(" separator="," close=")">
-			#{${pk.attrname}}
+		<foreach item="${pk.javaField}" collection="array" open="(" separator="," close=")">
+			#{${pk.javaField}}
 		</foreach>
 	</delete>
 

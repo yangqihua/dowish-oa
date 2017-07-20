@@ -18,8 +18,8 @@ public class ${className}ServiceImpl implements ${className}Service {
 	private ${className}Dao ${classname}Dao;
 	
 	@Override
-	public ${className}Entity queryObject(${pk.attrType} ${pk.attrname}){
-		return ${classname}Dao.queryObject(${pk.attrname});
+	public ${className}Entity queryObject(${pk.javaType} ${pk.javaField}){
+		return ${classname}Dao.queryObject(${pk.javaField});
 	}
 	
 	@Override
@@ -43,13 +43,13 @@ public class ${className}ServiceImpl implements ${className}Service {
 	}
 	
 	@Override
-	public void delete(${pk.attrType} ${pk.attrname}){
-		${classname}Dao.delete(${pk.attrname});
+	public void delete(${pk.javaType} ${pk.javaField}){
+		${classname}Dao.delete(${pk.javaField});
 	}
 	
 	@Override
-	public void deleteBatch(${pk.attrType}[] ${pk.attrname}s){
-		${classname}Dao.deleteBatch(${pk.attrname}s);
+	public void deleteBatch(${pk.javaType}[] ${pk.javaField}s){
+		${classname}Dao.deleteBatch(${pk.javaField}s);
 	}
 	
 }

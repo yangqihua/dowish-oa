@@ -16,6 +16,7 @@ import org.apache.velocity.app.Velocity;
 import org.springframework.core.io.ClassPathResource;
 import org.springframework.core.io.Resource;
 
+import javax.swing.table.TableColumn;
 import java.io.*;
 import java.util.*;
 import java.util.stream.Collectors;
@@ -78,42 +79,55 @@ public class GenUtils {
 					column.setJavaType("Long");
 				}
 				column.setShowType("input");
-			}else{
+			} else {
 				column.setShowType("input");
 			}
 
 			// 设置java字段名
 			column.setJavaField(StringUtils.toCamelCase(column.getColumnName()));
 
-			// 是否是主键
-			column.setIsPk(genTable.getPkList().contains(column.getColumnName()));
+			if (column.getIsPk() || "create_user_id".equals(column.getColumnName())) {
 
-			// 插入字段
-			column.setIsInsert(true);
+				// 插入字段
+				column.setIsInsert(false);
 
-			// 编辑字段
-			column.setIsEdit(true);
+				// 编辑字段
+				column.setIsEdit(false);
 
-			// 列表字段
-			column.setIsList(true);
+				// 列表字段
+				column.setIsList(false);
 
-			// 查询字段
-			column.setIsQuery(true);
+				// 查询字段
+				column.setIsQuery(false);
 
+			} else {
+				// 插入字段
+				column.setIsInsert(true);
+
+				// 编辑字段
+				column.setIsEdit(true);
+
+				// 列表字段
+				column.setIsList(true);
+
+				// 查询字段
+				column.setIsQuery(true);
+
+			}
 			// 查询字段类型
 			column.setQueryType("=");
 
 		}
 	}
 
-	public static List<String> getTemplateList(GenConfig config, String category){
+	public static List<String> getTemplateList(GenConfig config, String category) {
 		List<String> templateList = Lists.newArrayList();
-		if (config !=null && config.getCategoryList() != null && category !=  null){
-			for (GenCategory e : config.getCategoryList()){
-				if (category.equals(e.getValue())){
+		if (config != null && config.getCategoryList() != null && category != null) {
+			for (GenCategory e : config.getCategoryList()) {
+				if (category.equals(e.getValue())) {
 					templateList = e.getTemplate();
 					final String path = e.getPath();
-					templateList = templateList.stream().map(template->path+template).collect(Collectors.toList());
+					templateList = templateList.stream().map(template -> path + template).collect(Collectors.toList());
 					break;
 				}
 			}
@@ -124,20 +138,21 @@ public class GenUtils {
 
 	/**
 	 * 获取数据模型
+	 *
 	 * @param genTable
 	 * @param genTable
 	 * @return
 	 */
-	public static Map<String, Object> getDataModel(GenTable genTable){
+	public static Map<String, Object> getDataModel(GenTable genTable) {
 		Map<String, Object> model = Maps.newHashMap();
 
 		model.put("packageName", StringUtils.lowerCase(genTable.getPackageName()));
-		model.put("lastPackageName", StringUtils.substringAfterLast((String)model.get("packageName"),"."));
+		model.put("lastPackageName", StringUtils.substringAfterLast((String) model.get("packageName"), "."));
 		model.put("moduleName", StringUtils.lowerCase(genTable.getModuleName()));
 		model.put("className", StringUtils.uncapitalize(genTable.getClassName()));
 		model.put("ClassName", StringUtils.capitalize(genTable.getClassName()));
 
-		model.put("functionAuthor", StringUtils.isNotBlank(genTable.getFunctionAuthor())?genTable.getFunctionAuthor():"yangqihua");
+		model.put("functionAuthor", StringUtils.isNotBlank(genTable.getFunctionAuthor()) ? genTable.getFunctionAuthor() : "yangqihua");
 		model.put("functionVersion", DateUtils.getDate());
 		return model;
 	}
@@ -148,11 +163,11 @@ public class GenUtils {
 	public static String generatorCode(GenTable genTable) {
 		//配置信息
 		GenConfig config = getConfig();
-		List<String> templateList = getTemplateList(config,genTable.getCategory());
+		List<String> templateList = getTemplateList(config, genTable.getCategory());
 
 		Map<String, Object> dataModel = getDataModel(genTable);
 
-		log.info("templateList:{}",templateList);
+		log.info("templateList:{}", templateList);
 		//表信息
 //		GenTableEntity genTableEntity = new GenTableEntity();
 //		genTableEntity.setTableName(table.get("tableName"));
@@ -190,10 +205,12 @@ public class GenUtils {
 //		genTableEntity.setColumns(columsList);
 //
 		//没主键，则第一个字段为主键
-//		if (genTable.getPkList() == null || genTable.getPkList().size()==0) {
-//			genTable.setPk(genTableEntity.getColumns().get(0));
-//		}
-//
+		if (genTable.getPkList() == null || genTable.getPkList().size() == 0) {
+			List<GenTableColumn> pks = Lists.newArrayList();
+			pks.add(genTable.getColumnList().get(0));
+			genTable.setPkList(pks);
+		}
+
 //		//设置velocity资源加载器
 		Properties prop = new Properties();
 		prop.put("file.resource.loader.class", "org.apache.velocity.runtime.resource.loader.ClasspathResourceLoader");
@@ -201,17 +218,17 @@ public class GenUtils {
 
 		//封装模板数据
 		Map<String, Object> map = new HashMap<>();
-		map.put("tableName", genTable.getTableName());
-		map.put("comments", genTable.getComments());
-		map.put("pk", genTable.getPkList());
-		map.put("classname", StringUtils.uncapitalize(genTable.getClassName()));
-		map.put("className", StringUtils.capitalize(genTable.getClassName()));
-		map.put("pathName", genTable.getClassName().toLowerCase());
-		map.put("columns", genTable.getColumnList());
-		map.put("package", StringUtils.lowerCase(genTable.getPackageName()));
-		map.put("author", StringUtils.isNotBlank(genTable.getFunctionAuthor())?genTable.getFunctionAuthor():"yangqihua");
-		map.put("email", "904693433@qq.com");
-		map.put("datetime", DateUtils.format(new Date(), DateUtils.DATE_TIME_PATTERN));
+		map.put("tableName", genTable.getTableName()); //表名
+		map.put("comments", genTable.getComments());   //中文模块名
+		map.put("pk", genTable.getPkList().get(0));    //主键
+		map.put("classname", StringUtils.uncapitalize(genTable.getClassName())); // class驼峰变量
+		map.put("className", StringUtils.capitalize(genTable.getClassName()));   // class类
+		map.put("pathName", genTable.getModuleName().toLowerCase()+"/"+genTable.getClassName().toLowerCase());   // url pattern
+		map.put("columns", genTable.getColumnList()); // 所有列
+		map.put("package", StringUtils.lowerCase(genTable.getPackageName())); // 包名
+		map.put("author", StringUtils.isNotBlank(genTable.getFunctionAuthor()) ? genTable.getFunctionAuthor() : "yangqihua"); //作者
+		map.put("email", "904693433@qq.com"); // email
+		map.put("datetime", DateUtils.format(new Date(), DateUtils.DATE_TIME_PATTERN)); // 日期
 
 		VelocityContext context = new VelocityContext(map);
 //
@@ -225,7 +242,7 @@ public class GenUtils {
 			Template tpl = Velocity.getTemplate(template, "UTF-8");
 			tpl.merge(context, sw);
 
-			String fileName = SystemPathUtils.getServerMainDir() + getFileName(template, genTable.getClassName(), genTable.getPackageName());
+			String fileName = getFileName(template, genTable.getClassName(), genTable.getPackageName(), genTable.getModuleName());
 
 //			log.info("fileName : {}",fileName);
 			// 创建并写入文件
@@ -233,41 +250,11 @@ public class GenUtils {
 				FileUtils.writeToFile(fileName, sw.toString(), true);
 				result.append("创建 ").append(fileName).append(" 文件成功<br/>");
 			} else {
-				result.append("创建 ").append(fileName).append(" 文件失败<br/>");
-				log.debug(" file fail to create === " + fileName);
+				result.append("文件 ").append(fileName).append(" 已存在<br/>");
 			}
 		}
 		return result.toString();
 	}
-
-
-	/**
-	 * 列名转换成Java属性名
-	 */
-	public static String columnToJava(String columnName) {
-		return WordUtils.capitalizeFully(columnName, new char[]{'_'}).replace("_", "");
-	}
-
-	/**
-	 * 表名转换成Java类名
-	 */
-	public static String tableToJava(String tableName, String tablePrefix) {
-		if (StringUtils.isNotBlank(tablePrefix)) {
-			tableName = tableName.replace(tablePrefix, "");
-		}
-		return columnToJava(tableName);
-	}
-
-	/**
-	 * 获取配置信息
-	 */
-//	public static Configuration getConfig() {
-//		try {
-//			return new PropertiesConfiguration("generator.properties");
-//		} catch (ConfigurationException e) {
-//			throw new ResultException("获取配置文件失败，", e);
-//		}
-//	}
 
 	/**
 	 * 获取代码生成配置对象
@@ -312,47 +299,45 @@ public class GenUtils {
 	/**
 	 * 获取文件名
 	 */
-	public static String getFileName(String template, String className, String packageName) {
-		String packagePath = "main" + File.separator + "java" + File.separator;
-		if (StringUtils.isNotBlank(packageName)) {
-			packagePath += packageName.replace(".", File.separator) + File.separator;
-		}
+	public static String getFileName(String template, String className, String packageName, String moduleName) {
+		String javaPath = (SystemPathUtils.getServerMainDir() + File.separator + "java" + File.separator + packageName + File.separator).replace(".",File.separator);
+		String xmlPath = (SystemPathUtils.getServerMainDir()  + "resources"+ File.separator + "mapper" + File.separator+ moduleName + File.separator).replace(".",File.separator);
+		String webPath = (SystemPathUtils.getWebPagesDir() + "modules" + File.separator + moduleName + File.separator).replace(".",File.separator);
 
 		if (template.contains("Entity.java.vm")) {
-			return packagePath + "entity" + File.separator + className + "Entity.java";
+			return javaPath + "entity" + File.separator + className + "Entity.java";
 		}
 
 		if (template.contains("Dao.java.vm")) {
-			return packagePath + "dao" + File.separator + className + "Dao.java";
+			return javaPath + "dao" + File.separator + className + "Dao.java";
 		}
 
 		if (template.contains("Service.java.vm")) {
-			return packagePath + "service" + File.separator + className + "Service.java";
+			return javaPath + "service" + File.separator + className + "Service.java";
 		}
 
 		if (template.contains("ServiceImpl.java.vm")) {
-			return packagePath + "service" + File.separator + "impl" + File.separator + className + "ServiceImpl.java";
+			return javaPath + "service" + File.separator + "impl" + File.separator + className + "ServiceImpl.java";
 		}
 
 		if (template.contains("Controller.java.vm")) {
-			return packagePath + "controller" + File.separator + className + "Controller.java";
+			return javaPath + "controller" + File.separator + className + "Controller.java";
 		}
 
 		if (template.contains("Dao.xml.vm")) {
-//			return "main" + File.separator + "resources" + File.separator + "mapper" + File.separator + className + "Dao.xml";
-			return packagePath + "static" + File.separator + className + "Dao.xml";
+			return xmlPath  +className.toLowerCase()+"Dao.xml";
 		}
 
 		if (template.contains("list.html.vm")) {
-			return packagePath + "static" + File.separator + className.toLowerCase() + ".html";
+			return javaPath + "static" + File.separator + className.toLowerCase() + ".html";
 		}
 
 		if (template.contains("list.js.vm")) {
-			return packagePath + "static" + File.separator + className.toLowerCase() + ".js";
+			return javaPath + "static" + File.separator + className.toLowerCase() + ".js";
 		}
 
 		if (template.contains("menu.sql.vm")) {
-			return packagePath + "static" + File.separator + className.toLowerCase() + "_menu.sql";
+			return javaPath + "static" + File.separator + className.toLowerCase() + "_menu.sql";
 		}
 
 		return null;

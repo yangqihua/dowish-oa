@@ -1,6 +1,7 @@
 package ${package}.dao;
 
 import ${package}.entity.${className}Entity;
+import net.dowish.common.base.dao.BaseDao;
 
 /**
  * ${comments}

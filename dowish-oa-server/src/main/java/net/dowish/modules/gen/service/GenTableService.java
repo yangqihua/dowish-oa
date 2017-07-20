@@ -5,6 +5,7 @@ package net.dowish.modules.gen.service;
 
 import java.util.List;
 import java.util.Map;
+import java.util.stream.Collectors;
 
 import net.dowish.common.utils.StringUtils;
 import net.dowish.modules.gen.dao.GenTableDao;
@@ -70,7 +71,7 @@ public class GenTableService {
 		genTable.setCategory("curd");
 
 		// 设置主键
-		genTable.setPkList(genTableDao.findTablePK(genTable.getTableName()));
+		genTable.setPkList(genTable.getColumnList().stream().filter(GenTableColumn::getIsPk).collect(Collectors.toList()));
 
 		//设置父菜单ID
 		genTable.setParentMenuId(28L);

@@ -28,6 +28,7 @@
 
     <select id="queryColumns" resultType="net.dowish.modules.gen.entity.GenTableColumn">
 		SELECT t.COLUMN_NAME AS columnName, (CASE WHEN t.IS_NULLABLE = 'YES' THEN TRUE ELSE FALSE END) AS isNull,
+		(CASE WHEN t.COLUMN_KEY = 'PRI' THEN TRUE ELSE FALSE END) AS isPk,
 		(t.ORDINAL_POSITION * 10) AS sort,t.COLUMN_COMMENT AS comments,t.COLUMN_TYPE AS jdbcType
 		FROM information_schema.`COLUMNS` t
 		WHERE t.TABLE_SCHEMA = (select database())

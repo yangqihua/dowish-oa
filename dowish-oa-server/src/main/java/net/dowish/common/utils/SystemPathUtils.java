@@ -57,7 +57,7 @@ public class SystemPathUtils {
 						break;
 					}
 				}
-				mainPath = file.getAbsolutePath()+System.getProperty("file.separator");
+				mainPath = file.getAbsolutePath()+File.separator;
 			}
 		} catch (IOException e) {
 			e.printStackTrace();
@@ -66,7 +66,11 @@ public class SystemPathUtils {
 	}
 
 	public static String getServerMainDir(){
-		return getServerProject()+ "src" + File.separator;
+		return getServerProject()+ "src" + File.separator+"main"+ File.separator;
+	}
+
+	public static String getWebPagesDir(){
+		return getProjectPath()+ "dowish-oa-web"+File.separator+"src"+File.separator+"pages"+File.separator;
 	}
 
 	public static String getProjectPath() {
@@ -78,7 +82,7 @@ public class SystemPathUtils {
 				if(null==projectFile){
 					throw new FileNotFoundException("找不到项目根目录啊啊啊啊");
 				}
-				projectPath = projectFile.getAbsolutePath()+System.getProperty("file.separator");
+				projectPath = projectFile.getAbsolutePath()+File.separator;
 			}
 		} catch (IOException e) {
 			e.printStackTrace();
@@ -93,6 +97,7 @@ public class SystemPathUtils {
 		System.out.println(getClassPath());
 		System.out.println(getServerProject());
 		System.out.println(getProjectPath());
+		System.out.println(getWebPagesDir());
 	}
 }
 
