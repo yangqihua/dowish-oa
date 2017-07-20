@@ -225,7 +225,7 @@ public class GenUtils {
 			Template tpl = Velocity.getTemplate(template, "UTF-8");
 			tpl.merge(context, sw);
 
-			String fileName = SystemPathUtils.getServerMainDir() + getFileName(template, genTable.getClassName(), genTable.getPackageName()+File.separator+genTable.getModuleName());
+			String fileName = SystemPathUtils.getServerMainDir() + getFileName(template, genTable.getClassName(), genTable.getPackageName());
 
 //			log.info("fileName : {}",fileName);
 			// 创建并写入文件
