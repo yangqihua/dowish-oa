@@ -90,13 +90,9 @@ export default {
     //点击树结构中某个元素的回调
     onNodeClick(data){
       this.form = merge({}, data);
-      let rootDept = {list: this.deptTree, deptId: -1}
       let path = new Set()
-      console.log("this.deptTree:",this.deptTree)
-      stringUtils.setParentId(this.form.parentId,"deptId","parentId", rootDept, path)
-      path.delete(-1)  //构造的root节点要删除掉
+      stringUtils.addParentId(this.form.parentId,"deptId","parentId", this.deptTree, path)
       this.form.parentIds = Array.from(path)
-      console.log("this.form.parentIds:",this.form.parentIds)
       this.title = "修改"
     },
     //修改某个树节点的属性回调

@@ -67,6 +67,7 @@ public class SysUserController extends BaseController {
 	 */
 	@SysLog("修改密码")
 	@RequestMapping("/password")
+//	@RequiresPermissions("sys:user:password")  // 为了让普通用户可以修改密码，故注释掉后台权限验证
 	public Apis password(@RequestBody Map<String,Object> map ){
 		String password= (String) map.get("password");
 		String newPassword = (String) map.get("newPassword");

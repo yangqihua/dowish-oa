@@ -99,11 +99,9 @@ export default {
       }).then(() => {
         let leafMenuIdList = this.$refs.menuTree.getCheckedKeys()
         let menuIdList = new Set()
-        let rootMenu = {list: this.menuTree, menuId: -1}
         let path = new Set()
         leafMenuIdList.forEach(leafMenuId => {
-          stringUtils.setParentId(leafMenuId,"menuId","parentId", rootMenu, path)
-          path.delete(-1)  //构造的root节点要删除掉
+          stringUtils.addParentId(leafMenuId,"menuId","parentId", this.menuTree, path)
           path.forEach(p => menuIdList.add(p))
           path.clear()
         })
@@ -126,11 +124,9 @@ export default {
     onSubmit(){
       let leafMenuIdList = this.$refs.menuTree.getCheckedKeys()
       let menuIdList = new Set()
-      let rootMenu = {list: this.menuTree, menuId: -1}
       let path = new Set()
       leafMenuIdList.forEach(leafMenuId => {
-        stringUtils.setParentId(leafMenuId,"menuId","parentId", rootMenu, path)
-        path.delete(-1)  //构造的root节点要删除掉
+        stringUtils.addParentId(leafMenuId,"menuId","parentId", this.menuTree, path)
         path.forEach(p => menuIdList.add(p))
         path.clear()
       })

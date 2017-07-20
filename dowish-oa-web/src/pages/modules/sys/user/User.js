@@ -174,11 +174,10 @@ export default {
 
     loadDeptList(){
       let params = {
-        url: '/sys/dept/list',
+        url: '/sys/dept/select',
         showLoading: false,
         scb: (res) => {
 
-          console.log("res.deptList=====", res.deptList)
           this.deptTree = stringUtils.arrayToTree(res.deptList, {
             id: "deptId",
             parentId: "parentId",
@@ -186,16 +185,9 @@ export default {
           })
           // 把空属性去掉，不然获取不到叶子节点的值
           stringUtils.deleteEmptyProperty(this.deptTree)
-
-
-          let rootDept = {list: this.deptTree, deptId: -1}
           let path = new Set()
-          stringUtils.setParentId(this.form.deptId, "deptId", "parentId", rootDept, path)
-          path.delete(-1)  //构造的root节点要删除掉
+          stringUtils.addParentId(this.form.deptId, "deptId", "parentId", this.deptTree, path)
           this.form.parentIds = Array.from(path)
-
-          console.log("this.form:", this.form)
-          console.log("this.deptTree：", this.deptTree)
           this.loadRoleList()
         }
       }
@@ -287,8 +279,8 @@ export default {
         && stringUtils.hasPermission(this.userPerms,perms.SYS_ROLE_SELECT)
         && stringUtils.hasPermission(this.userPerms,perms.SYS_DEPT_SELECT)
         && stringUtils.hasPermission(this.userPerms,perms.SYS_USER_UPDATE),
-        delete: stringUtils.hasPermission(this.userPerms,perms.SYS_USER_DELETE),
         resetPwd: stringUtils.hasPermission(this.userPerms,perms.USER_RESET_PWD),
+        delete: stringUtils.hasPermission(this.userPerms,perms.SYS_USER_DELETE),
       }
     },
     btnEnable(){

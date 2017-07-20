@@ -96,10 +96,8 @@ export default {
     },
     handleNodeClick(data){
       this.form = merge({}, data);
-      let rootMenu = {list: this.menuTree, menuId: -1}
       let path = new Set()
-      stringUtils.setParentId(this.form.parentId,"menuId","parentId", rootMenu, path)
-      path.delete(-1)  //构造的root节点要删除掉
+      stringUtils.addParentId(this.form.parentId,"menuId","parentId", this.menuTree, path)
       this.form.parentIds = Array.from(path)
 
       this.title = "修改"

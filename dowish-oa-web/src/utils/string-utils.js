@@ -83,26 +83,28 @@ const isParentId = (id, idName, parentIdName, root) => {
   for (let key in root) {
     if (root[key][parentIdName] == id) {
       return true
-    } else if (root[key].list != null) {
-      return isParentId(id, idName, parentIdName, root[key].list);
-    } else {
-      return false
-    }
-  }
-}
-const setParentId = (id, idName, parentIdName, root, path = new Set()) => {
-  path.add(root[idName])
-  if (root[idName] == id) {
-    return true
-  }
-  if (root.list != null) {
-    for (let key in root.list) {
-      if (setParentId(id, idName, parentIdName, root.list[key], path)) {
+    } else if (root[key].hasOwnProperty('list') && root[key].list != null && root[key].list.length > 0) {
+      // 如果找到了，就直接返回true，没找到就循环下一层
+      if (isParentId(id, idName, parentIdName, root[key].list)) {
         return true
       }
     }
   }
-  path.delete(root[idName])
+  return false
+}
+
+const addParentId = (id, idName, parentIdName, root, path) => {
+  for (let key in root) {
+    path.add(root[key][idName])
+    if (root[key][idName] == id) {
+      return true
+    } else if (root[key].hasOwnProperty('list') && root[key].list != null && root[key].list.length > 0) {
+      if (addParentId(id, idName, parentIdName, root[key].list, path)) {
+        return true
+      }
+    }
+    path.delete(root[key][idName])
+  }
   return false
 }
 
@@ -189,5 +191,5 @@ const hasPermission = (permissions, permission) => {
 
 export default {
   trim, subString, getBaseUrl, createUniqueString, useTokenApi, isEmptyObject, resetObject, getBeforeDate,
-  isParentId, setParentId, arrayToTree, deleteEmptyProperty,hasPermission,
+  isParentId, addParentId, arrayToTree, deleteEmptyProperty, hasPermission
 }

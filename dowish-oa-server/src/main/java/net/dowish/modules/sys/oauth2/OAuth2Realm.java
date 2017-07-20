@@ -56,6 +56,7 @@ public class OAuth2Realm extends AuthorizingRealm {
         SysUserTokenEntity tokenEntity = shiroService.queryByToken(accessToken);
         //token失效
         if(tokenEntity == null || tokenEntity.getExpireTime().getTime() < System.currentTimeMillis()){
+
             throw new IncorrectCredentialsException("token失效，请重新登录");
         }
 

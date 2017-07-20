@@ -44,21 +44,21 @@
           <li class="dropdown user user-menu">
             <a href="#" class="dropdown-toggle" @click.stop.prevent="showProfileBox=!showProfileBox">
               <img src="../../../static/img/user2-160x160.jpg" class="user-image" alt="User Image">
-              <span class="hidden-xs">{{userInfo.name}}</span>
+              <span class="hidden-xs">{{user.username}}</span>
             </a>
             <ul class="dropdown-menu" v-if="showProfileBox">
               <!-- User image -->
               <li class="user-header">
                 <img src="../../../static/img/user2-160x160.jpg" class="img-circle" alt="User Image">
                 <p>
-                  {{userInfo.name}} - Web Developer
+                  {{user.username}}
                 </p>
               </li>
               <!-- Menu Body -->
               <li class="user-body">
                 <div class="row">
                   <div class="col-xs-4 text-center">
-                    <a href="#">Followers</a>
+                    <!--<a href="#">Followers</a>-->
                   </div>
                 </div>
                 <!-- /.row -->
@@ -67,7 +67,7 @@
               <li class="user-footer">
                 <div class="pull-left">
                   <router-link :to="{ path: '/resetPwd' }">
-                    <el-button type="default">修改密码</el-button>
+                    <el-button type="default">个人中心</el-button>
                   </router-link>
                 </div>
                 <div class="pull-right">
@@ -99,7 +99,8 @@
     },
     computed: mapGetters({
       sidebar: 'sidebar',
-      userInfo: 'userInfo'
+      userInfo: 'userInfo',
+      user: 'user',
     }),
     methods: {
       logout(){

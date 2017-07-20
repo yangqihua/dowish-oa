@@ -63,7 +63,9 @@ public class SysUserTokenServiceImpl implements SysUserTokenService {
 			//保存token
 			save(tokenEntity);
 		}else{
-			tokenEntity.setToken(token);
+			//生成过的话，只更新过期时间，这样就不会被挤掉
+//			tokenEntity.setToken(token);
+			tokenEntity.setToken(tokenEntity.getToken());
 			tokenEntity.setUpdateTime(now);
 			tokenEntity.setExpireTime(expireTime);
 

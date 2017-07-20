@@ -6,18 +6,18 @@
 const permissions = {
 
   //USER 部分
-  SYS_USER_LIST:'sys_user_list',
-  SYS_USER_INFO:'sys_user_info',
-  SYS_USER_DELETE:'sys_user_delete',
-  SYS_USER_UPDATE:'sys_user_update',
-  SYS_USER_SAVE:'sys_user_save',
-  USER_SEARCH:'sys_user_list',
+  SYS_USER_LIST:'sys:user:list',
+  SYS_USER_INFO:'sys:user:info',
+  SYS_USER_DELETE:'sys:user:delete',
+  SYS_USER_UPDATE:'sys:user:update',
+  SYS_USER_SAVE:'sys:user:save',
   USER_RESET_PWD:'sys:user:password',
+  USER_SEARCH:'sys:user:list',
 
 
 
   // ROLE 部分
-  SYS_ROLE_SELECT:'sys_role_select',
+  SYS_ROLE_SELECT:'sys:role:select',
 
 
   // DEPT 部分
