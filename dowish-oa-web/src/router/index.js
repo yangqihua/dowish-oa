@@ -8,7 +8,6 @@ import frame from "../pages/frame.vue";
 import User from "../pages/modules/sys/user/";
 import Primary from "../pages/modules/gen/primary/";
 import Student from "../pages/modules/student/student/";
-
 // Routes
 const routes = [
   {

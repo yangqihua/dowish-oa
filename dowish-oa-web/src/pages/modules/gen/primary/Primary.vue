@@ -288,6 +288,15 @@
       </div>
 
       <div v-if="activeStep==3">
+        <div style="margin: 25px">
+          <el-alert
+            :title="genTitle"
+            :closable="false"
+            :type="msgType"
+            :description="successMsg"
+            >
+          </el-alert>
+        </div>
         <div style="float: right;margin: 30px 20px 20px 0;">
           <el-button @click.native.prevent="goStep1" type="primary">返回第一步</el-button>
           <el-button @click.native.prevent="backStep" type="info">返回上一步</el-button>

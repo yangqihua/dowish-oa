@@ -63,7 +63,7 @@ public class GenTableController{
 	 * 列表
 	 */
 	@RequestMapping("/list")
-	@RequiresPermissions("gen:primary:list")
+//	@RequiresPermissions("gen:primary:list")
 	public Apis list(@RequestParam Map<String, Object> params){
 		//查询列表数据
 		Query query = new Query(params);
@@ -87,7 +87,11 @@ public class GenTableController{
 		String table = orgRequest.getParameter("table");
 
 		String message = genTableService.generatorCode(genTable);
-		return Apis.ok(message);
+
+		if(message.indexOf("已存在")>0){
+			return Apis.ok().put("msg",message).put("status",0);
+		}
+		return Apis.ok().put("msg",message).put("status",1);
 	}
 
 }

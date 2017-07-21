@@ -20,7 +20,7 @@ import net.dowish.modules.student.service.StudentService;
  * 
  * @author yangqihua
  * @email 904693433@qq.com
- * @date 2017-07-21 20:22:01
+ * @date 2017-07-21 22:43:17
  */
 @RestController
 @RequestMapping("/student/student")

@@ -14,7 +14,7 @@ export default {
 
       activeStep: 1,
       //list部分
-      searchKey: '',  //搜索的用户名
+      searchKey: '',
       pagination: {
         total: 0,
         pageNo: 1,
@@ -37,6 +37,10 @@ export default {
       genTable:{},
       genConfig:{},
 
+      // step3
+      msgType:'success',
+      successMsg:'',
+      genTitle:'代码生成提示',
     }
   },
   methods: {
@@ -107,7 +111,10 @@ export default {
         type:'post',
         data: this.genTable,
         scb: (response) => {
-          // this.next();
+          this.msgType = response.status==1?'success':'warning'
+          this.genTitle = response.status==1?'生成成功，请注意提示信息最后四行！':'代码文件已存在,如需重新生成，请手动删除原文件！'
+          this.successMsg = response.msg
+          this.next();
         }
       }
       ajax(params)

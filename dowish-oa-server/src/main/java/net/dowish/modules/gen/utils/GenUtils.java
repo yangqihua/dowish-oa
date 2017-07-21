@@ -174,7 +174,7 @@ public class GenUtils {
 		map.put("author", StringUtils.isNotBlank(genTable.getFunctionAuthor()) ? genTable.getFunctionAuthor() : "yangqihua"); //作者
 		map.put("email", "904693433@qq.com"); // email
 		map.put("datetime", DateUtils.format(new Date(), DateUtils.DATE_TIME_PATTERN)); // 日期
-		map.put("parentMenuId", genTable.getParentMenuId()); // 父菜单
+		map.put("parentMenuId", genTable.getParentMenuId()==null?28L:genTable.getParentMenuId()); // 父菜单
 
 		VelocityContext context = new VelocityContext(map);
 		StringBuilder result = new StringBuilder();
@@ -188,12 +188,20 @@ public class GenUtils {
 			// 创建并写入文件
 			if (FileUtils.createFile(fileName)) {
 				FileUtils.writeToFile(fileName, sw.toString(), true);
-				result.append("创建 ").append(fileName).append(" 文件成功<br/>");
+				result.append("!  创建 ").append(fileName).append(" 文件成功  ");
 			} else {
-				result.append("文件 ").append(fileName).append(" 已存在<br/>");
+				result.append("！ ").append(fileName).append(" 已存在  ");
+			}
+
+			assert fileName != null;
+			if(fileName.toLowerCase().indexOf("router.txt")>0){
+				result.append("请将"+fileName+"文件的内容复制追加至dowish-oa-web/src/router/index.js中  ");
+			}
+			if(fileName.toLowerCase().indexOf("menu.sql")>0){
+				result.append("请将"+fileName+"文件的数据导入数据库生成菜单");
 			}
 		}
-		return result.toString();
+		return result.toString().substring(2,result.length());
 	}
 
 	/**
