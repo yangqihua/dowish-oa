@@ -1,6 +1,6 @@
 package net.dowish.common.base.controller;
 
-import net.dowish.modules.sys.entity.SysUserEntity;
+import net.dowish.modules.sys.entity.UserEntity;
 import org.apache.shiro.SecurityUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -11,8 +11,8 @@ import org.slf4j.LoggerFactory;
 public abstract class BaseController {
 	protected Logger logger = LoggerFactory.getLogger(getClass());
 	
-	protected SysUserEntity getUser() {
-		SysUserEntity userEntity = (SysUserEntity) SecurityUtils.getSubject().getPrincipal();
+	protected UserEntity getUser() {
+		UserEntity userEntity = (UserEntity) SecurityUtils.getSubject().getPrincipal();
 		return userEntity;
 	}
 

@@ -1,6 +1,6 @@
 package net.dowish.modules.oss.cloud;
 
-import net.dowish.modules.sys.service.SysConfigService;
+import net.dowish.modules.sys.service.ConfigService;
 import net.dowish.common.utils.ConfigConstant;
 import net.dowish.common.utils.Constant;
 import net.dowish.common.utils.SpringContextHolder;
@@ -9,15 +9,15 @@ import net.dowish.common.utils.SpringContextHolder;
  * 文件上传Factory
  */
 public final class OSSFactory {
-    private static SysConfigService sysConfigService;
+    private static ConfigService configService;
 
     static {
-        OSSFactory.sysConfigService = (SysConfigService) SpringContextHolder.getBean("sysConfigService");
+        OSSFactory.configService = (ConfigService) SpringContextHolder.getBean("configService");
     }
 
     public static CloudStorageService build(){
         //获取云存储配置信息
-        CloudStorageConfig config = sysConfigService.getConfigObject(ConfigConstant.CLOUD_STORAGE_CONFIG_KEY, CloudStorageConfig.class);
+        CloudStorageConfig config = configService.getConfigObject(ConfigConstant.CLOUD_STORAGE_CONFIG_KEY, CloudStorageConfig.class);
 
         if(config.getType() == Constant.CloudService.QINIU.getValue()){
             return new QiniuCloudStorageService(config);

@@ -1,22 +1,15 @@
 package net.dowish.common.base.service;
 
-import com.google.common.collect.Lists;
-import net.dowish.common.base.entity.BaseEntity;
-import net.dowish.common.utils.StringUtils;
-import net.dowish.modules.sys.entity.SysRoleEntity;
-import net.dowish.modules.sys.entity.SysUserEntity;
+import net.dowish.modules.sys.entity.UserEntity;
 import org.apache.shiro.SecurityUtils;
-import org.springframework.transaction.annotation.Transactional;
-
-import java.util.List;
 
 /**
  * Created by yangqihua on 2017/7/19.
  */
 public abstract class BaseService {
 
-	protected static SysUserEntity getUser() {
-		SysUserEntity userEntity = (SysUserEntity) SecurityUtils.getSubject().getPrincipal();
+	protected static UserEntity getUser() {
+		UserEntity userEntity = (UserEntity) SecurityUtils.getSubject().getPrincipal();
 		return userEntity;
 	}
 
@@ -26,7 +19,7 @@ public abstract class BaseService {
 	 * userAlias和xml中的查询的别名一致
 	 */
 	public static String dataScopeFilter(String tableName,String userAlias) {
-		SysUserEntity user = getUser();
+		UserEntity user = getUser();
 		// 超级管理员，跳过权限过滤
 		if (!user.isAdmin()) {
 		StringBuilder sqlString = new StringBuilder();

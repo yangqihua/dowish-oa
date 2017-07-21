@@ -1,7 +1,7 @@
 package net.dowish.modules.sys.service;
 
-import net.dowish.modules.sys.entity.SysUserEntity;
-import net.dowish.modules.sys.entity.SysUserTokenEntity;
+import net.dowish.modules.sys.entity.UserEntity;
+import net.dowish.modules.sys.entity.UserTokenEntity;
 
 import java.util.Set;
 
@@ -14,11 +14,11 @@ public interface ShiroService {
      */
     Set<String> getUserPermissions(long userId);
 
-    SysUserTokenEntity queryByToken(String token);
+    UserTokenEntity queryByToken(String token);
 
     /**
      * 根据用户ID，查询用户
      * @param userId
      */
-    SysUserEntity queryUser(Long userId);
+    UserEntity queryUser(Long userId);
 }

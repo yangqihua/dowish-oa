@@ -1,12 +1,12 @@
 package net.dowish.modules.sys.service.impl;
 
 import net.dowish.common.utils.Constant;
-import net.dowish.modules.sys.dao.SysMenuDao;
-import net.dowish.modules.sys.dao.SysUserDao;
-import net.dowish.modules.sys.dao.SysUserTokenDao;
-import net.dowish.modules.sys.entity.SysMenuEntity;
-import net.dowish.modules.sys.entity.SysUserEntity;
-import net.dowish.modules.sys.entity.SysUserTokenEntity;
+import net.dowish.modules.sys.dao.MenuDao;
+import net.dowish.modules.sys.dao.UserDao;
+import net.dowish.modules.sys.dao.UserTokenDao;
+import net.dowish.modules.sys.entity.MenuEntity;
+import net.dowish.modules.sys.entity.UserEntity;
+import net.dowish.modules.sys.entity.UserTokenEntity;
 import net.dowish.modules.sys.service.ShiroService;
 import org.apache.commons.lang.StringUtils;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -17,11 +17,11 @@ import java.util.*;
 @Service
 public class ShiroServiceImpl implements ShiroService {
     @Autowired
-    private SysMenuDao sysMenuDao;
+    private MenuDao menuDao;
     @Autowired
-    private SysUserDao sysUserDao;
+    private UserDao userDao;
     @Autowired
-    private SysUserTokenDao sysUserTokenDao;
+    private UserTokenDao userTokenDao;
 
     @Override
     public Set<String> getUserPermissions(long userId) {
@@ -29,13 +29,13 @@ public class ShiroServiceImpl implements ShiroService {
 
         //系统管理员，拥有最高权限
         if(userId == Constant.SUPER_ADMIN){
-            List<SysMenuEntity> menuList = sysMenuDao.queryList(new HashMap<>());
+            List<MenuEntity> menuList = menuDao.queryList(new HashMap<>());
             permsList = new ArrayList<>(menuList.size());
-            for(SysMenuEntity menu : menuList){
+            for(MenuEntity menu : menuList){
                 permsList.add(menu.getPerms());
             }
         }else{
-            permsList = sysUserDao.queryAllPerms(userId);
+            permsList = userDao.queryAllPerms(userId);
         }
         //用户权限列表
         Set<String> permsSet = new HashSet<>();
@@ -49,12 +49,12 @@ public class ShiroServiceImpl implements ShiroService {
     }
 
     @Override
-    public SysUserTokenEntity queryByToken(String token) {
-        return sysUserTokenDao.queryByToken(token);
+    public UserTokenEntity queryByToken(String token) {
+        return userTokenDao.queryByToken(token);
     }
 
     @Override
-    public SysUserEntity queryUser(Long userId) {
-        return sysUserDao.queryObject(userId);
+    public UserEntity queryUser(Long userId) {
+        return userDao.queryObject(userId);
     }
 }

@@ -1,13 +1,13 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
 
-<mapper namespace="net.dowish.modules.sys.dao.SysRoleDao">
+<mapper namespace="net.dowish.modules.sys.dao.RoleDao">
 
-	<select id="queryObject" resultType="net.dowish.modules.sys.entity.SysRoleEntity">
+	<select id="queryObject" resultType="net.dowish.modules.sys.entity.RoleEntity">
 		select * from sys_role where role_id = #{value}
 	</select>
 	
-	<select id="queryList" resultType="net.dowish.modules.sys.entity.SysRoleEntity">
+	<select id="queryList" resultType="net.dowish.modules.sys.entity.RoleEntity">
 		select * from sys_role 
 		<where>
 			<if test="roleName != null and roleName.trim() != ''">
@@ -42,7 +42,7 @@
 		</where>
 	</select>
 	
-	<insert id="save" parameterType="net.dowish.modules.sys.entity.SysRoleEntity" useGeneratedKeys="true" keyProperty="roleId">
+	<insert id="save" parameterType="net.dowish.modules.sys.entity.RoleEntity" useGeneratedKeys="true" keyProperty="roleId">
 		insert into sys_role
 		(
 			`role_id`, 
@@ -63,7 +63,7 @@
 		)
 	</insert>
 	 
-	<update id="update" parameterType="net.dowish.modules.sys.entity.SysRoleEntity">
+	<update id="update" parameterType="net.dowish.modules.sys.entity.RoleEntity">
 		update sys_role 
 		<set> 
 			<if test="roleName != null">`role_name` = #{roleName}, </if>

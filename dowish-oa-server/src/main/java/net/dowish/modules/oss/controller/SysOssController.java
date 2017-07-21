@@ -4,7 +4,7 @@ import com.google.gson.Gson;
 import net.dowish.common.exception.ResultException;
 import net.dowish.common.utils.*;
 import net.dowish.modules.oss.entity.SysOssEntity;
-import net.dowish.modules.sys.service.SysConfigService;
+import net.dowish.modules.sys.service.ConfigService;
 import net.dowish.modules.oss.service.SysOssService;
 import net.dowish.modules.oss.cloud.CloudStorageConfig;
 import net.dowish.modules.oss.cloud.OSSFactory;
@@ -35,7 +35,7 @@ public class SysOssController {
 	@Autowired
 	private SysOssService sysOssService;
     @Autowired
-    private SysConfigService sysConfigService;
+    private ConfigService configService;
 
     private final static String KEY = ConfigConstant.CLOUD_STORAGE_CONFIG_KEY;
 	
@@ -62,7 +62,7 @@ public class SysOssController {
     @RequestMapping("/config")
     @RequiresPermissions("sys:oss:all")
     public Apis config(){
-        CloudStorageConfig config = sysConfigService.getConfigObject(KEY, CloudStorageConfig.class);
+        CloudStorageConfig config = configService.getConfigObject(KEY, CloudStorageConfig.class);
 
         return Apis.ok().put("config", config);
     }
@@ -89,7 +89,7 @@ public class SysOssController {
 		}
 		
 
-        sysConfigService.updateValueByKey(KEY, new Gson().toJson(config));
+        configService.updateValueByKey(KEY, new Gson().toJson(config));
 
 		return Apis.ok();
 	}

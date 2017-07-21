@@ -1,9 +1,9 @@
 package net.dowish.common.security.oauth2;
 
-import net.dowish.modules.sys.entity.SysUserEntity;
-import net.dowish.modules.sys.entity.SysUserTokenEntity;
+import net.dowish.modules.sys.entity.UserEntity;
+import net.dowish.modules.sys.entity.UserTokenEntity;
 import net.dowish.modules.sys.service.ShiroService;
-import net.dowish.modules.sys.service.SysUserTokenService;
+import net.dowish.modules.sys.service.UserTokenService;
 import org.apache.shiro.authc.*;
 import org.apache.shiro.authz.AuthorizationInfo;
 import org.apache.shiro.authz.SimpleAuthorizationInfo;
@@ -23,7 +23,7 @@ public class OAuth2Realm extends AuthorizingRealm {
 	private ShiroService shiroService;
 
 	@Autowired
-	private SysUserTokenService sysUserTokenService;
+	private UserTokenService userTokenService;
 
 	@Override
 	public boolean supports(AuthenticationToken token) {
@@ -35,7 +35,7 @@ public class OAuth2Realm extends AuthorizingRealm {
 	 */
 	@Override
 	protected AuthorizationInfo doGetAuthorizationInfo(PrincipalCollection principals) {
-		SysUserEntity user = (SysUserEntity) principals.getPrimaryPrincipal();
+		UserEntity user = (UserEntity) principals.getPrimaryPrincipal();
 		Long userId = user.getUserId();
 
 		//用户权限列表
@@ -54,18 +54,18 @@ public class OAuth2Realm extends AuthorizingRealm {
 		String accessToken = (String) token.getPrincipal();
 
 		//根据accessToken，查询用户信息
-		SysUserTokenEntity tokenEntity = shiroService.queryByToken(accessToken);
+		UserTokenEntity tokenEntity = shiroService.queryByToken(accessToken);
 		//token失效
 		if (tokenEntity == null || tokenEntity.getExpireTime().getTime() < System.currentTimeMillis()) {
 			if (tokenEntity != null) {
-				sysUserTokenService.delete(tokenEntity.getUserId());
+				userTokenService.delete(tokenEntity.getUserId());
 
 			}
 			throw new IncorrectCredentialsException("token失效，请重新登录");
 		}
 
 		//查询用户信息
-		SysUserEntity user = shiroService.queryUser(tokenEntity.getUserId());
+		UserEntity user = shiroService.queryUser(tokenEntity.getUserId());
 		//账号锁定
 		if (user.getStatus() == 0) {
 			throw new LockedAccountException("账号已被锁定,请联系管理员");

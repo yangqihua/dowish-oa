@@ -1,12 +1,12 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
 
-<mapper namespace="net.dowish.modules.sys.dao.SysUserDao">
-    <select id="queryObject" resultType="net.dowish.modules.sys.entity.SysUserEntity">
+<mapper namespace="net.dowish.modules.sys.dao.UserDao">
+    <select id="queryObject" resultType="net.dowish.modules.sys.entity.UserEntity">
 		select * from sys_user where user_id = #{value}
 	</select>
 
-    <select id="queryList" resultType="net.dowish.modules.sys.entity.SysUserEntity">
+    <select id="queryList" resultType="net.dowish.modules.sys.entity.UserEntity">
         SELECT u.*, d.name deptName FROM sys_user u LEFT JOIN sys_dept d ON d.dept_id = u.dept_id WHERE 1=1
         <if test="username != null and username.trim() != ''">
             and u.`username` like concat('%',#{username},'%')
@@ -61,11 +61,11 @@
 		where ur.user_id = #{userId}
 	</select>
 
-    <select id="queryByUserName" resultType="net.dowish.modules.sys.entity.SysUserEntity">
+    <select id="queryByUserName" resultType="net.dowish.modules.sys.entity.UserEntity">
 		select * from sys_user where username = #{username}
 	</select>
 
-    <insert id="save" parameterType="net.dowish.modules.sys.entity.SysUserEntity" useGeneratedKeys="true"
+    <insert id="save" parameterType="net.dowish.modules.sys.entity.UserEntity" useGeneratedKeys="true"
             keyProperty="userId">
 		insert into sys_user
 		(
@@ -95,7 +95,7 @@
 		)
 	</insert>
 
-    <update id="update" parameterType="net.dowish.modules.sys.entity.SysUserEntity">
+    <update id="update" parameterType="net.dowish.modules.sys.entity.UserEntity">
         update sys_user
         <set>
             <if test="username != null">`username` = #{username},</if>

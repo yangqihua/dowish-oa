@@ -1,7 +1,7 @@
 package net.dowish.common.utils;
 
 import net.dowish.common.exception.ResultException;
-import net.dowish.modules.sys.entity.SysUserEntity;
+import net.dowish.modules.sys.entity.UserEntity;
 import org.apache.shiro.SecurityUtils;
 import org.apache.shiro.session.Session;
 import org.apache.shiro.subject.Subject;
@@ -23,8 +23,8 @@ public class ShiroUtils {
 		return SecurityUtils.getSubject();
 	}
 
-	public static SysUserEntity getUserEntity() {
-		return (SysUserEntity)SecurityUtils.getSubject().getPrincipal();
+	public static UserEntity getUserEntity() {
+		return (UserEntity)SecurityUtils.getSubject().getPrincipal();
 	}
 
 	public static Long getUserId() {

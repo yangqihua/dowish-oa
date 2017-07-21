@@ -1,9 +1,9 @@
 package net.dowish.common.aspect;
 
 import com.google.gson.Gson;
-import net.dowish.modules.sys.entity.SysLogEntity;
-import net.dowish.modules.sys.entity.SysUserEntity;
-import net.dowish.modules.sys.service.SysLogService;
+import net.dowish.modules.sys.entity.LogEntity;
+import net.dowish.modules.sys.entity.UserEntity;
+import net.dowish.modules.sys.service.LogService;
 import net.dowish.common.utils.HttpContextUtils;
 import net.dowish.common.utils.IPUtils;
 import net.dowish.common.annotation.SysLog;
@@ -28,7 +28,7 @@ import java.util.Date;
 @Component
 public class SysLogAspect {
 	@Autowired
-	private SysLogService sysLogService;
+	private LogService logService;
 	
 	@Pointcut("@annotation(net.dowish.common.annotation.SysLog)")
 	public void logPointCut() { 
@@ -40,7 +40,7 @@ public class SysLogAspect {
 		MethodSignature signature = (MethodSignature) joinPoint.getSignature();
 		Method method = signature.getMethod();
 		
-		SysLogEntity sysLog = new SysLogEntity();
+		LogEntity sysLog = new LogEntity();
 		SysLog syslog = method.getAnnotation(SysLog.class);
 		if(syslog != null){
 			//注解上的描述 
@@ -63,12 +63,12 @@ public class SysLogAspect {
 		sysLog.setIp(IPUtils.getIpAddr(request));
 		
 		//用户名
-		String username = ((SysUserEntity) SecurityUtils.getSubject().getPrincipal()).getUsername();
+		String username = ((UserEntity) SecurityUtils.getSubject().getPrincipal()).getUsername();
 		sysLog.setUsername(username);
 		
 		sysLog.setCreateDate(new Date());
 		//保存系统日志
-		sysLogService.save(sysLog);
+		logService.save(sysLog);
 	}
 	
 }

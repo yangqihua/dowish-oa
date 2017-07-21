@@ -1,7 +1,7 @@
 package net.dowish.modules.job.task;
 
-import net.dowish.modules.sys.entity.SysUserEntity;
-import net.dowish.modules.sys.service.SysUserService;
+import net.dowish.modules.sys.entity.UserEntity;
+import net.dowish.modules.sys.service.UserService;
 
 import org.apache.commons.lang.builder.ToStringBuilder;
 import org.slf4j.Logger;
@@ -17,7 +17,7 @@ public class TestTask {
 	private Logger logger = LoggerFactory.getLogger(getClass());
 	
 	@Autowired
-	private SysUserService sysUserService;
+	private UserService userService;
 	
 	public void test(String params){
 		logger.info("我是带参数的test方法，正在被执行，参数为：" + params);
@@ -28,7 +28,7 @@ public class TestTask {
 			e.printStackTrace();
 		}
 		
-		SysUserEntity user = sysUserService.queryObject(1L);
+		UserEntity user = userService.queryObject(1L);
 		System.out.println(ToStringBuilder.reflectionToString(user));
 		
 	}

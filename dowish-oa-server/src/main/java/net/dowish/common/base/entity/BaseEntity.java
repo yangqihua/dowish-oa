@@ -3,9 +3,7 @@ package net.dowish.common.base.entity;
 import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.google.common.collect.Maps;
 import lombok.Setter;
-import net.dowish.common.utils.Page;
-import net.dowish.modules.api.entity.UserEntity;
-import net.dowish.modules.sys.entity.SysUserEntity;
+import net.dowish.modules.sys.entity.UserEntity;
 import org.apache.shiro.SecurityUtils;
 
 import javax.xml.bind.annotation.XmlTransient;
@@ -22,7 +20,7 @@ public abstract class BaseEntity<T> implements Serializable {
 	 * 当前用户
 	 */
 	@Setter
-	protected SysUserEntity currentUser;
+	protected UserEntity currentUser;
 
 	/**
 	 * 自定义SQL（SQL标识，SQL内容）
@@ -65,9 +63,9 @@ public abstract class BaseEntity<T> implements Serializable {
 
 	@JsonIgnore
 	@XmlTransient
-	public SysUserEntity getCurrentUser() {
+	public UserEntity getCurrentUser() {
 		if(currentUser == null){
-			SysUserEntity userEntity = (SysUserEntity) SecurityUtils.getSubject().getPrincipal();
+			UserEntity userEntity = (UserEntity) SecurityUtils.getSubject().getPrincipal();
 			return userEntity;
 		}
 		return currentUser;
