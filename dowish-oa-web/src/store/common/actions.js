@@ -5,8 +5,6 @@
 import Vue from "vue";
 import * as types from './mutation-types';
 import defaultMenu from "./default-menu";
-import * as api from "../../utils/api";
-
 import ajax from '../../utils/ajax/ajax'
 
 const loginAction = ({dispatch, commit, state}, params) => {

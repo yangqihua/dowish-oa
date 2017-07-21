@@ -88,7 +88,9 @@
                       v-for="item in genConfig.categoryList"
                       :key="item.value"
                       :label="item.label"
-                      :value="item.value">
+                      :value="item.value"
+                      :disabled="item.value!='curd'"
+                    >
                     </el-option>
                   </el-select>
                 </el-form-item>

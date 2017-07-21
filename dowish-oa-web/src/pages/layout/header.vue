@@ -86,8 +86,6 @@
 <script>
   import {mapGetters, mapActions, mapMutations} from 'vuex'
   import * as types from "../../store/common/mutation-types"
-  import * as api from "../../utils/api"
-  import  auth from '../../utils/auth'
   export default {
     data(){
       return {
@@ -134,14 +132,6 @@
       }
       this.count = 0;
       this.list = [];
-      this.$http.get(api.TEST_DATA)
-        .then(res => {
-          res.data = res.data.messageList;
-          if (res.data && res.data.length > 0) {
-            this.count = res.data.length;
-            this.list = res.data;
-          }
-        })
     },
     mounted() {
       document.addEventListener('click', this.autoHide, false)

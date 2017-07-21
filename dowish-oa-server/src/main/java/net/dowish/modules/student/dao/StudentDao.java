@@ -8,7 +8,7 @@ import net.dowish.common.base.dao.BaseDao;
  * 
  * @author yangqihua
  * @email 904693433@qq.com
- * @date 2017-07-21 14:23:51
+ * @date 2017-07-21 20:22:01
  */
 public interface StudentDao extends BaseDao<StudentEntity> {
 	

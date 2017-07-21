@@ -74,7 +74,7 @@ public class GenTableService {
 		genTable.setPkList(genTable.getColumnList().stream().filter(GenTableColumn::getIsPk).collect(Collectors.toList()));
 
 		//设置父菜单ID
-		genTable.setParentMenuId(28L);
+		genTable.setParentMenuId(41L);
 
 		// 初始化列属性字段
 		GenUtils.initColumnField(genTable);

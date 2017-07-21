@@ -1,0 +1,5 @@
+import ${className} from "../pages/modules/${pathName}/";
+
+{
+    path: '/${pathName}', component: ${className}
+},

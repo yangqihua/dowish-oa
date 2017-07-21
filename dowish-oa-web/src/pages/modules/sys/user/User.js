@@ -3,7 +3,6 @@
  */
 
 
-import * as api from "../../../../utils/api"
 import panel from "../../../../components/panel.vue"
 import ajax from '../../../../utils/ajax/ajax.js'
 import stringUtils from '../../../../utils/string-utils.js'

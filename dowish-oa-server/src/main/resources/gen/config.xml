@@ -10,6 +10,10 @@
 			<template>menu.sql.vm</template>
 			<template>Service.java.vm</template>
 			<template>ServiceImpl.java.vm</template>
+			<template>web.js.vm</template>
+			<template>web.vue.vm</template>
+			<template>index.js.vm</template>
+			<template>router.js.vm</template>
 		</category>
 		<category value="curd_many" label="增删改查（一对多）" path="/gen/curd_many/">
 			<template>curd/controller.xml</template>

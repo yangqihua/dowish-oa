@@ -149,18 +149,12 @@ public class GenUtils {
 		//配置信息
 		GenConfig config = getConfig();
 		List<String> templateList = getTemplateList(config, genTable.getCategory());
-
-		Map<String, Object> dataModel = getDataModel(genTable);
-
-		log.info("templateList:{}", templateList);
-
 		//没主键，则第一个字段为主键
 		if (genTable.getPkList() == null || genTable.getPkList().size() == 0) {
 			List<GenTableColumn> pks = Lists.newArrayList();
 			pks.add(genTable.getColumnList().get(0));
 			genTable.setPkList(pks);
 		}
-
 		//设置velocity资源加载器
 		Properties prop = new Properties();
 		prop.put("file.resource.loader.class", "org.apache.velocity.runtime.resource.loader.ClasspathResourceLoader");
@@ -174,12 +168,13 @@ public class GenUtils {
 		map.put("classname", StringUtils.uncapitalize(genTable.getClassName())); // class驼峰变量
 		map.put("className", StringUtils.capitalize(genTable.getClassName()));   // class类
 		map.put("pathName", genTable.getModuleName().toLowerCase() + "/" + genTable.getClassName().toLowerCase());   // url pattern
-		map.put("moduleName", genTable.getModuleName().toLowerCase());   // module
+		map.put("moduleName", genTable.getModuleName().toLowerCase());   // 英文module
 		map.put("columns", genTable.getColumnList()); // 所有列
 		map.put("package", StringUtils.lowerCase(genTable.getPackageName())); // 包名
 		map.put("author", StringUtils.isNotBlank(genTable.getFunctionAuthor()) ? genTable.getFunctionAuthor() : "yangqihua"); //作者
 		map.put("email", "904693433@qq.com"); // email
 		map.put("datetime", DateUtils.format(new Date(), DateUtils.DATE_TIME_PATTERN)); // 日期
+		map.put("parentMenuId", genTable.getParentMenuId()); // 父菜单
 
 		VelocityContext context = new VelocityContext(map);
 		StringBuilder result = new StringBuilder();
@@ -189,9 +184,7 @@ public class GenUtils {
 			StringWriter sw = new StringWriter();
 			Template tpl = Velocity.getTemplate(template, "UTF-8");
 			tpl.merge(context, sw);
-
 			String fileName = getFileName(template, genTable.getClassName(), genTable.getPackageName(), genTable.getModuleName());
-
 			// 创建并写入文件
 			if (FileUtils.createFile(fileName)) {
 				FileUtils.writeToFile(fileName, sw.toString(), true);
@@ -248,7 +241,7 @@ public class GenUtils {
 	public static String getFileName(String template, String className, String packageName, String moduleName) {
 		String javaPath = (SystemPathUtils.getServerMainDir() + File.separator + "java" + File.separator + packageName + File.separator).replace(".", File.separator);
 		String xmlPath = (SystemPathUtils.getServerMainDir() + "resources" + File.separator + "mapper" + File.separator + moduleName + File.separator).replace(".", File.separator);
-		String webPath = (SystemPathUtils.getWebPagesDir() + "modules" + File.separator + moduleName + File.separator).replace(".", File.separator);
+		String webPath = (SystemPathUtils.getWebPagesDir() + "modules" + File.separator + moduleName + File.separator + className.toLowerCase() + File.separator).replace(".", File.separator);
 
 		if (template.contains("Entity.java.vm")) {
 			return javaPath + "entity" + File.separator + className + "Entity.java";
@@ -274,16 +267,24 @@ public class GenUtils {
 			return xmlPath + className.toLowerCase() + "Dao.xml";
 		}
 
-		if (template.contains("list.html.vm")) {
-			return javaPath + "static" + File.separator + className.toLowerCase() + ".html";
+		if (template.contains("web.js.vm")) {
+			return webPath + File.separator + className + ".js";
 		}
 
-		if (template.contains("list.js.vm")) {
-			return javaPath + "static" + File.separator + className.toLowerCase() + ".js";
+		if (template.contains("web.vue.vm")) {
+			return webPath + File.separator + className + ".vue";
+		}
+
+		if (template.contains("index.js.vm")) {
+			return webPath + File.separator + "index.js";
+		}
+
+		if (template.contains("router.js.vm")) {
+			return (SystemPathUtils.getServerMainDir() + "resources" + File.separator + "static" + File.separator ).replace(".", File.separator) + className.toLowerCase()+"_router.js";
 		}
 
 		if (template.contains("menu.sql.vm")) {
-			return javaPath + "static" + File.separator + className.toLowerCase() + "_menu.sql";
+			return (SystemPathUtils.getServerMainDir() + "resources" + File.separator + "static" + File.separator ).replace(".", File.separator) + className.toLowerCase() + "_menu.sql";
 		}
 
 		return null;
