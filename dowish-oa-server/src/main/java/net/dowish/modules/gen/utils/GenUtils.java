@@ -280,7 +280,7 @@ public class GenUtils {
 		}
 
 		if (template.contains("router.js.vm")) {
-			return (SystemPathUtils.getServerMainDir() + "resources" + File.separator + "static" + File.separator ).replace(".", File.separator) + className.toLowerCase()+"_router.js";
+			return (SystemPathUtils.getServerMainDir() + "resources" + File.separator + "static" + File.separator ).replace(".", File.separator) + className.toLowerCase()+"_router.txt";
 		}
 
 		if (template.contains("menu.sql.vm")) {

@@ -6,9 +6,6 @@ import java.util.List;
 
 /**
  * 菜单管理
- * 
- *
- * @date 2016年9月18日 上午9:26:39
  */
 public class SysMenuEntity implements Serializable {
 	private static final long serialVersionUID = 1L;

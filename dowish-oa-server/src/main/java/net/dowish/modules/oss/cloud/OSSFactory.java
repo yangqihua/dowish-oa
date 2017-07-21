@@ -7,8 +7,6 @@ import net.dowish.common.utils.SpringContextHolder;
 
 /**
  * 文件上传Factory
- *
- * @date 2017-03-26 10:18
  */
 public final class OSSFactory {
     private static SysConfigService sysConfigService;

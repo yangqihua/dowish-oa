@@ -10,9 +10,6 @@ import javax.servlet.DispatcherType;
 
 /**
  * Filter配置
- *
- *
- * @date 2017-04-21 21:56
  */
 @Configuration
 public class FilterConfig {

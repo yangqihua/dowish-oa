@@ -2,9 +2,6 @@ package net.dowish.common.utils;
 
 /**
  * 常量
- * 
- *
- * @date 2016年11月15日 下午1:23:52
  */
 public class Constant {
 	/** 超级管理员ID */
@@ -12,10 +9,6 @@ public class Constant {
 
 	/**
 	 * 菜单类型
-	 * 
-	 * @author chenshun
-	 * @email sunlightcs@gmail.com
-	 * @date 2016年11月15日 下午1:24:29
 	 */
     public enum MenuType {
         /**

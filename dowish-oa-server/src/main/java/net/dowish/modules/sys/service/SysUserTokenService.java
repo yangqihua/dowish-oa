@@ -6,9 +6,6 @@ import net.dowish.common.utils.Apis;
 
 /**
  * 用户Token
- * 
- *
- * @date 2017-03-23 15:22:07
  */
 public interface SysUserTokenService {
 

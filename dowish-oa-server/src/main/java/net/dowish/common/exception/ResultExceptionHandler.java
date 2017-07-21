@@ -10,9 +10,6 @@ import org.springframework.web.bind.annotation.RestControllerAdvice;
 
 /**
  * 异常处理器
- * 
- *
- * @date 2016年10月27日 下午10:16:19
  */
 @RestControllerAdvice
 public class ResultExceptionHandler {

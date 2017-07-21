@@ -9,9 +9,6 @@ import java.util.Properties;
 
 /**
  * 定时任务配置
- *
- *
- * @date 2017-04-20 23:38
  */
 @Configuration
 public class ScheduleConfig {

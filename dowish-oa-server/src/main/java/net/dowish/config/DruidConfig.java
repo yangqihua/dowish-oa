@@ -20,9 +20,6 @@ import java.util.List;
 
 /**
  * Druid配置
- *
- *
- * @date 2017-04-21 0:00
  */
 @Configuration
 public class DruidConfig {

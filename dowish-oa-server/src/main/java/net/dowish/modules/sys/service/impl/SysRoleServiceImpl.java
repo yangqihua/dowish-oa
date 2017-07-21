@@ -18,9 +18,6 @@ import org.springframework.transaction.annotation.Transactional;
 
 /**
  * 角色
- * 
- *
- * @date 2016年9月18日 上午9:45:12
  */
 @Service("sysRoleService")
 public class SysRoleServiceImpl implements SysRoleService {

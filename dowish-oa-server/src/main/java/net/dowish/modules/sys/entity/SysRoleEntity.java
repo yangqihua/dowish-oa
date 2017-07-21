@@ -11,9 +11,6 @@ import java.util.List;
 
 /**
  * 角色
- * 
- *
- * @date 2016年9月18日 上午9:27:38
  */
 @Data
 public class SysRoleEntity implements Serializable {
