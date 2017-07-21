@@ -15,7 +15,13 @@
 	</select>
 
 	<select id="queryList" resultType="${package}.entity.${className}Entity">
-		select * from ${tableName}
+		select ${tableName}.* from ${tableName} ${tableName} WHERE 1=1
+#foreach($column in $columns)
+		<if test="${column.javaField} != null">
+			and ${tableName}.`${column.columnName}` like concat('%',#{${column.javaField}},'%')
+		</if>
+#end
+		${sqlFilter}
         <choose>
             <when test="sidx != null and sidx.trim() != ''">
                 order by ${sidx} ${order}

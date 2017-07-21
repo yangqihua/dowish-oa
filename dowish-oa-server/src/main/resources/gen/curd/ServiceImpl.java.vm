@@ -2,7 +2,7 @@ package ${package}.service.impl;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
-
+import net.dowish.common.base.service.BaseService;
 import java.util.List;
 import java.util.Map;
 
@@ -13,7 +13,7 @@ import ${package}.service.${className}Service;
 
 
 @Service("${classname}Service")
-public class ${className}ServiceImpl implements ${className}Service {
+public class ${className}ServiceImpl extends BaseService implements ${className}Service {
 	@Autowired
 	private ${className}Dao ${classname}Dao;
 	
@@ -24,6 +24,7 @@ public class ${className}ServiceImpl implements ${className}Service {
 	
 	@Override
 	public List<${className}Entity> queryList(Map<String, Object> map){
+		map.put("sqlFilter",dataScopeFilter("${tableName}","${tableName}"));
 		return ${classname}Dao.queryList(map);
 	}
 	

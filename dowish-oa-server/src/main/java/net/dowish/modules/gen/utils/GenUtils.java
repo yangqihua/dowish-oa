@@ -174,6 +174,7 @@ public class GenUtils {
 		map.put("classname", StringUtils.uncapitalize(genTable.getClassName())); // class驼峰变量
 		map.put("className", StringUtils.capitalize(genTable.getClassName()));   // class类
 		map.put("pathName", genTable.getModuleName().toLowerCase() + "/" + genTable.getClassName().toLowerCase());   // url pattern
+		map.put("moduleName", genTable.getModuleName().toLowerCase());   // module
 		map.put("columns", genTable.getColumnList()); // 所有列
 		map.put("package", StringUtils.lowerCase(genTable.getPackageName())); // 包名
 		map.put("author", StringUtils.isNotBlank(genTable.getFunctionAuthor()) ? genTable.getFunctionAuthor() : "yangqihua"); //作者

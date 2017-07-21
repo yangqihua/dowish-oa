@@ -31,7 +31,8 @@ public class ${className}Controller {
 	/**
 	 * ${comments} 列表
 	 *
-	 * @param map 至少包含了分页参数page、limit，可附加 ${className} 的属性作为查询条件，${className} 的属性包括：
+	 * @param map 至少包含了分页参数page、limit，可附加 ${className} 的属性作为查询条件.
+	 * ${className} 的属性包括：
 #foreach ($column in $columns)
 	 * $column.comments ：$column.javaType $column.javaField
 #end
@@ -39,7 +40,7 @@ public class ${className}Controller {
 	 * @return 包含了 ${comments} 的分页列表
 	 */
 	@GetMapping("/list")
-	@RequiresPermissions("${pathName}:list")
+	@RequiresPermissions("${moduleName}:${classname}:list")
 	public Apis list(@RequestParam Map<String, Object> params){
 		//查询列表数据
         Query query = new Query(params);
@@ -54,7 +55,7 @@ public class ${className}Controller {
 	 * ${comments} 详情
 	 */
 	@GetMapping("/info/{${pk.javaField}}")
-	@RequiresPermissions("${pathName}:info")
+	@RequiresPermissions("${moduleName}:${classname}:info")
 	public Apis info(@PathVariable("${pk.javaField}") ${pk.javaType} ${pk.javaField}){
 		${className}Entity ${classname} = ${classname}Service.queryObject(${pk.javaField});
 		return Apis.ok() .put("${classname}", ${classname});
@@ -64,7 +65,7 @@ public class ${className}Controller {
 	 * ${comments} 保存
 	 */
 	@PostMapping("/save")
-	@RequiresPermissions("${pathName}:save")
+	@RequiresPermissions("${moduleName}:${classname}:save")
 	public Apis save(@RequestBody ${className}Entity ${classname}){
 		ValidatorUtils.validateEntity(${classname});
 		${classname}Service.save(${classname});
@@ -75,7 +76,7 @@ public class ${className}Controller {
 	 * ${comments} 修改
 	 */
 	@PostMapping("/update")
-	@RequiresPermissions("${pathName}:update")
+	@RequiresPermissions("${moduleName}:${classname}:update")
 	public Apis update(@RequestBody ${className}Entity ${classname}){
 		ValidatorUtils.validateEntity(${classname});
 		${classname}Service.update(${classname});
@@ -86,7 +87,7 @@ public class ${className}Controller {
 	 * ${comments} 删除
 	 */
 	@PostMapping("/delete")
-	@RequiresPermissions("${pathName}:delete")
+	@RequiresPermissions("${moduleName}:${classname}:delete")
 	public Apis delete(@RequestBody ${pk.javaType}[] ${pk.javaField}s){
 		${classname}Service.deleteBatch(${pk.javaField}s);
 		return Apis.ok() ;

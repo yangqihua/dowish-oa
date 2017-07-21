@@ -12,7 +12,7 @@ import java.util.Map;
  * @email ${email}
  * @date ${datetime}
  */
-public interface ${className}Service {
+public interface ${className}Service  {
 	
 	${className}Entity queryObject(${pk.javaType} ${pk.javaField});
 	
