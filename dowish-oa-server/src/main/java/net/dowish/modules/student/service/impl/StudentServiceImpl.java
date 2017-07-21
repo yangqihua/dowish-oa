@@ -24,6 +24,7 @@ public class StudentServiceImpl extends BaseService implements StudentService {
 	
 	@Override
 	public List<StudentEntity> queryList(Map<String, Object> map){
+
 		map.put("sqlFilter",dataScopeFilter("student","student"));
 		return studentDao.queryList(map);
 	}

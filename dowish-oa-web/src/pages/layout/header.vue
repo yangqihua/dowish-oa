@@ -102,12 +102,7 @@
     }),
     methods: {
       logout(){
-        this.$http.get(api.TEST_DATA)
-          .then(res => {
-            auth.logout();
-            this.$http.defaults.headers.common['Authorization'] = '';
-            this.$router.push({path: '/login'});
-          })
+        this.$router.push({path: '/login'});
       },
       ...mapMutations({toggleSidebar: types.TOGGLE_SIDEBAR, setUserInfo: types.SET_USER_INFO}),
       toggleMessage(){

@@ -43,6 +43,12 @@ export default {
       },
 
       rules: {
+        name: [
+          {required: true, message: '请输入姓名', trigger: 'blur'},
+        ],
+        address: [
+          {required: true, message: '请输入地址', trigger: 'blur'},
+        ],
       },
     }
   },
