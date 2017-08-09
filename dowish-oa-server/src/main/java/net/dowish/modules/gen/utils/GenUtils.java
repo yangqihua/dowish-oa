@@ -8,15 +8,16 @@ import net.dowish.common.utils.FileUtils;
 import net.dowish.common.utils.StringUtils;
 import net.dowish.common.utils.SystemPathUtils;
 import net.dowish.common.utils.mapper.JaxbMapper;
-import net.dowish.modules.gen.entity.*;
-import org.apache.commons.lang.WordUtils;
+import net.dowish.modules.gen.entity.GenCategory;
+import net.dowish.modules.gen.entity.GenConfig;
+import net.dowish.modules.gen.entity.GenTable;
+import net.dowish.modules.gen.entity.GenTableColumn;
 import org.apache.velocity.Template;
 import org.apache.velocity.VelocityContext;
 import org.apache.velocity.app.Velocity;
 import org.springframework.core.io.ClassPathResource;
 import org.springframework.core.io.Resource;
 
-import javax.swing.table.TableColumn;
 import java.io.*;
 import java.util.*;
 import java.util.stream.Collectors;
@@ -37,6 +38,7 @@ public class GenUtils {
 			// 设置java类型
 			if (StringUtils.startsWithIgnoreCase(column.getJdbcType(), "CHAR")
 					|| StringUtils.startsWithIgnoreCase(column.getJdbcType(), "VARCHAR")
+					|| StringUtils.startsWithIgnoreCase(column.getJdbcType(), "TEXT")
 					|| StringUtils.startsWithIgnoreCase(column.getJdbcType(), "NARCHAR")) {
 				column.setJavaType("String");
 				column.setShowType("input");
@@ -49,10 +51,11 @@ public class GenUtils {
 					|| StringUtils.startsWithIgnoreCase(column.getJdbcType(), "NUMBER")
 					|| StringUtils.startsWithIgnoreCase(column.getJdbcType(), "TINYINT")
 					|| StringUtils.startsWithIgnoreCase(column.getJdbcType(), "INT")
+					|| StringUtils.startsWithIgnoreCase(column.getJdbcType(), "DOUBLE")
 					) {
 				// 如果是浮点型
 				String[] ss = StringUtils.split(StringUtils.substringBetween(column.getJdbcType(), "(", ")"), ",");
-				if (ss != null && ss.length == 2 && Integer.parseInt(ss[1]) > 0) {
+				if ((ss != null && ss.length == 2 && Integer.parseInt(ss[1]) > 0) || StringUtils.startsWithIgnoreCase(column.getJdbcType(), "DOUBLE")) {
 					column.setJavaType("Double");
 				}
 				// 如果是整形
@@ -71,7 +74,11 @@ public class GenUtils {
 			// 设置java字段名
 			column.setJavaField(StringUtils.toCamelCase(column.getColumnName()));
 
-			if (column.getIsPk() || "create_user_id".equals(column.getColumnName())) {
+			if (column.getIsPk()
+					|| StringUtils.equalsIgnoreCase(column.getColumnName(),"create_user_id")
+					|| StringUtils.equalsIgnoreCase(column.getColumnName(),"create_time")
+					|| StringUtils.equalsIgnoreCase(column.getColumnName(),"mark")
+					|| StringUtils.indexOf(column.getColumnName().toLowerCase(),"_id")>-1) {
 
 				// 插入字段
 				column.setIsInsert(false);
@@ -167,7 +174,7 @@ public class GenUtils {
 		map.put("pk", genTable.getPkList().get(0));    //主键
 		map.put("classname", StringUtils.uncapitalize(genTable.getClassName())); // class驼峰变量
 		map.put("className", StringUtils.capitalize(genTable.getClassName()));   // class类
-		map.put("pathName", genTable.getModuleName().toLowerCase() + "/" + genTable.getClassName().toLowerCase());   // url pattern
+		map.put("pathName", genTable.getModuleName().toLowerCase() + "/" + genTable.getTableName());   // url pattern 及前端路由
 		map.put("moduleName", genTable.getModuleName().toLowerCase());   // 英文module
 		map.put("columns", genTable.getColumnList()); // 所有列
 		map.put("package", StringUtils.lowerCase(genTable.getPackageName())); // 包名
@@ -184,7 +191,7 @@ public class GenUtils {
 			StringWriter sw = new StringWriter();
 			Template tpl = Velocity.getTemplate(template, "UTF-8");
 			tpl.merge(context, sw);
-			String fileName = getFileName(template, genTable.getClassName(), genTable.getPackageName(), genTable.getModuleName());
+			String fileName = getFileName(template, genTable.getClassName(), genTable.getPackageName(), genTable.getModuleName(),genTable);
 			// 创建并写入文件
 			if (FileUtils.createFile(fileName)) {
 				FileUtils.writeToFile(fileName, sw.toString(), true);
@@ -195,7 +202,7 @@ public class GenUtils {
 
 			assert fileName != null;
 			if(fileName.toLowerCase().indexOf("router.txt")>0){
-				result.append("请将"+fileName+"文件的内容复制追加至dowish-oa-web/src/router/index.js中  ");
+				result.append("请将"+fileName+"文件的内容复制追加至cigarette-web/src/router/index.js中  ");
 			}
 			if(fileName.toLowerCase().indexOf("menu.sql")>0){
 				result.append("请将"+fileName+"文件的数据导入数据库生成菜单");
@@ -246,10 +253,10 @@ public class GenUtils {
 	/**
 	 * 获取文件名
 	 */
-	public static String getFileName(String template, String className, String packageName, String moduleName) {
+	public static String getFileName(String template, String className, String packageName, String moduleName,GenTable table) {
 		String javaPath = (SystemPathUtils.getServerMainDir() + File.separator + "java" + File.separator + packageName + File.separator).replace(".", File.separator);
 		String xmlPath = (SystemPathUtils.getServerMainDir() + "resources" + File.separator + "mapper" + File.separator + moduleName + File.separator).replace(".", File.separator);
-		String webPath = (SystemPathUtils.getWebPagesDir() + "modules" + File.separator + moduleName + File.separator + className.toLowerCase() + File.separator).replace(".", File.separator);
+		String webPath = (SystemPathUtils.getWebPagesDir() + "modules" + File.separator + moduleName + File.separator + table.getTableName().toLowerCase() + File.separator).replace(".", File.separator);
 
 		if (template.contains("Entity.java.vm")) {
 			return javaPath + "entity" + File.separator + className + "Entity.java";
@@ -262,7 +269,6 @@ public class GenUtils {
 		if (template.contains("Service.java.vm")) {
 			return javaPath + "service" + File.separator + className + "Service.java";
 		}
-
 		if (template.contains("ServiceImpl.java.vm")) {
 			return javaPath + "service" + File.separator + "impl" + File.separator + className + "ServiceImpl.java";
 		}
@@ -272,7 +278,7 @@ public class GenUtils {
 		}
 
 		if (template.contains("Dao.xml.vm")) {
-			return xmlPath + className.toLowerCase() + "Dao.xml";
+			return xmlPath + className + "Dao.xml";
 		}
 
 		if (template.contains("web.js.vm")) {

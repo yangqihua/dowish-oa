@@ -22,7 +22,6 @@ import net.dowish.modules.gen.entity.GenTable;
 import net.dowish.modules.gen.entity.GenTableColumn;
 import net.dowish.modules.gen.service.GenTableService;
 import net.dowish.modules.gen.utils.GenUtils;
-import org.apache.shiro.authz.annotation.RequiresPermissions;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.RequestBody;
@@ -57,7 +56,6 @@ public class GenTableController{
 		return Apis.ok().put("genTable", genTable)
 				   .put("genConfig",config );
 	}
-
 
 	/**
 	 * 列表

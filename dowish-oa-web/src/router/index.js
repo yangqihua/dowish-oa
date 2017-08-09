@@ -7,7 +7,7 @@ import login from "../pages/common/login.vue";
 import frame from "../pages/frame.vue";
 import User from "../pages/modules/sys/user/";
 import Primary from "../pages/modules/gen/primary/";
-import Student from "../pages/modules/student/student/";
+// import Student from "../pages/modules/student/student/";
 // Routes
 const routes = [
   {
@@ -41,9 +41,9 @@ const routes = [
     {
       path: '/gen/primary', component: Primary
     },
-    {
-      path: '/student/student', component: Student
-    },
+    // {
+    //   path: '/student/student', component: Student
+    // },
   ]
   },
   {

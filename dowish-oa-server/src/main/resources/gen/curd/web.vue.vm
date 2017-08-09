@@ -7,7 +7,7 @@
         <el-form label-width="120px">
           <el-row>
 #foreach ($column in $columns)
-#if($column.columnName!="create_user_id"&&!$column.isPk)
+#if($column.isQuery)
             <el-col :span="12">
               <el-form-item label="$column.comments">
                 <el-input v-model="searchForm.$column.javaField" placeholder="$column.comments"></el-input>
@@ -43,7 +43,7 @@
           width="45">
         </el-table-column>
 #foreach ($column in $columns)
-#if($column.columnName!="create_user_id"&&!$column.isPk)
+#if($column.isList)
         <el-table-column
           prop="$column.javaField"
           label="$column.comments">
@@ -73,7 +73,7 @@
     <div style="margin: 30px 50px 20px 10px">
       <el-form :model="form" ref="form" :rules="rules" label-width="180px">
 #foreach ($column in $columns)
-#if($column.columnName!="create_user_id"&&!$column.isPk)
+#if($column.isEdit)
         <el-form-item label="$column.comments" prop="$column.javaField">
           <el-input v-model="form.$column.javaField"></el-input>
         </el-form-item>

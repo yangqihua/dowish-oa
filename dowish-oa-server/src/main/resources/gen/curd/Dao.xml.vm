@@ -3,84 +3,103 @@
 
 <mapper namespace="${package}.dao.${className}Dao">
 
-	<!-- 可根据自己的需求，是否要使用 -->
+    <!-- 可根据自己的需求，是否要使用 -->
     <resultMap type="${package}.entity.${className}Entity" id="${classname}Map">
-#foreach($column in $columns)
-        <result property="${column.javaField}" column="${column.columnName}"/>
-#end
+		#foreach($column in $columns)
+            <result property="${column.javaField}" column="${column.columnName}"/>
+		#end
     </resultMap>
 
-	<select id="queryObject" resultType="${package}.entity.${className}Entity">
+    <select id="queryObject" resultType="${package}.entity.${className}Entity">
 		select * from ${tableName} where ${pk.columnName} = #{value}
 	</select>
 
-	<select id="queryList" resultType="${package}.entity.${className}Entity">
-		select ${tableName}.* from ${tableName} ${tableName} WHERE 1=1
-#foreach($column in $columns)
-		<if test="${column.javaField} != null">
-			and ${tableName}.`${column.columnName}` like concat('%',#{${column.javaField}},'%')
-		</if>
-#end
-		${sqlFilter}
+    <select id="queryList" resultType="${package}.entity.${className}Entity">
+        select ${tableName}.* from ${tableName} ${tableName} WHERE 1=1
+
+		#foreach($column in $columns)
+			#if($column.isQuery && $column.queryType=="like")
+                <if test="${column.javaField} != null and ${column.javaField}.trim() != ''">
+                    and ${tableName}.`${column.columnName}` like concat('%',#{${column.javaField}},'%')
+                </if>
+			###elseif($column.isQuery && $column.queryType=="between")
+			##        <if test="${column.javaField} != null and ${column.javaField}.trim() != ''">
+			##            and ${tableName}.`${column.columnName}` like concat('%',#{${column.javaField}},'%')
+			##        </if>
+			#elseif($column.isQuery && $column.queryType=="=")
+                <if test="${column.javaField} != null and ${column.javaField}.trim() != ''">
+                    and ${tableName}.`${column.columnName}` = #{${column.javaField}}
+                </if>
+
+			#elseif($column.isQuery && $column.queryType=="<")
+                <if test="${column.javaField} != null and ${column.javaField}.trim() != ''">
+                    and ${tableName}.`${column.columnName}` < #{${column.javaField}}
+                </if>
+			#elseif($column.isQuery && $column.queryType==">")
+                <if test="${column.javaField} != null and ${column.javaField}.trim() != ''">
+                    and ${tableName}.`${column.columnName}` > #{${column.javaField}}
+                </if>
+			#end
+		#end
         <choose>
             <when test="sidx != null and sidx.trim() != ''">
                 order by ${sidx} ${order}
             </when>
-			<otherwise>
+            <otherwise>
                 order by ${pk.columnName} desc
-			</otherwise>
+            </otherwise>
         </choose>
-		<if test="offset != null and limit != null">
-			limit #{offset}, #{limit}
-		</if>
-	</select>
-	
- 	<select id="queryTotal" resultType="int">
+        <if test="offset != null and limit != null">
+            limit #{offset}, #{limit}
+        </if>
+    </select>
+
+    <select id="queryTotal" resultType="int">
 		select count(*) from ${tableName} 
 	</select>
-	 
-	<insert id="save" parameterType="${package}.entity.${className}Entity"#if($pk.extra == 'auto_increment') useGeneratedKeys="true" keyProperty="$pk.javaField"#end>
+
+    <insert id="save" parameterType="${package}.entity.${className}Entity"#if($pk.extra == 'auto_increment') useGeneratedKeys="true" keyProperty="$pk.javaField"#end>
 		insert into ${tableName}
 		(
 #foreach($column in $columns)
-#if($column.columnName != $pk.columnName || $pk.extra != 'auto_increment')
+		#if($column.columnName != $pk.columnName || $pk.extra != 'auto_increment')
 			`$column.columnName`#if($velocityCount != $columns.size()), #end
 
-#end			
-#end
+		#end
+	#end
 		)
 		values
 		(
 #foreach($column in $columns)
-#if($column.columnName != $pk.columnName || $pk.extra != 'auto_increment')
+		#if($column.columnName != $pk.columnName || $pk.extra != 'auto_increment')
 			#{$column.javaField}#if($velocityCount != $columns.size()), #end
 
-#end			
-#end
+		#end
+	#end
 		)
 	</insert>
-	 
-	<update id="update" parameterType="${package}.entity.${className}Entity">
-		update ${tableName} 
-		<set>
-#foreach($column in $columns)
-#if($column.columnName != $pk.columnName)
-			<if test="$column.javaField != null">`$column.columnName` = #{$column.javaField}#if($velocityCount != $columns.size()), #end</if>
-#end
-#end
-		</set>
-		where ${pk.columnName} = #{${pk.javaField}}
-	</update>
-	
-	<delete id="delete">
+
+    <update id="update" parameterType="${package}.entity.${className}Entity">
+        update ${tableName}
+        <set>
+			#foreach($column in $columns)
+				#if($column.columnName != $pk.columnName)
+                    <if test="$column.javaField != null">`$column.columnName` = #{$column.javaField}#if($velocityCount != $columns.size()), #end</if>
+				#end
+			#end
+        </set>
+        where ${pk.columnName} = #{${pk.javaField}}
+    </update>
+
+    <delete id="delete">
 		delete from ${tableName} where ${pk.columnName} = #{value}
 	</delete>
-	
-	<delete id="deleteBatch">
-		delete from ${tableName} where ${pk.columnName} in 
-		<foreach item="${pk.javaField}" collection="array" open="(" separator="," close=")">
-			#{${pk.javaField}}
-		</foreach>
-	</delete>
+
+    <delete id="deleteBatch">
+        delete from ${tableName} where ${pk.columnName} in
+        <foreach item="${pk.javaField}" collection="array" open="(" separator="," close=")">
+            #{${pk.javaField}}
+        </foreach>
+    </delete>
 
 </mapper>

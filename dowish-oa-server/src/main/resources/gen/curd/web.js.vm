@@ -19,7 +19,9 @@ export default {
       // 搜索条件
       searchForm: {
 #foreach ($column in $columns)
+#if($column.isQuery)
         $column.javaField:'',
+#end
 #end
       },
       // 表格相关数据
@@ -36,13 +38,15 @@ export default {
       // edit 部分
       form: {
 #foreach ($column in $columns)
+#if($column.isEdit)
         $column.javaField:'',
+#end
 #end
       },
 
       rules: {
 #foreach ($column in $columns)
-#if((!$column.isNull)&&$column.columnName!="create_user_id"&&!$column.isPk)
+#if(!$column.isNull)
         $column.javaField: [
           {required: true, message: '请输入$column.comments', trigger: 'blur'},
         ],
