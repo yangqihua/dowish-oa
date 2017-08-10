@@ -1,6 +1,8 @@
 import index from "../pages/common/index.vue";
 import NotFoundView from "../components/404.vue";
 import Menu from "../pages/modules/sys/menu/";
+import Druid from "../pages/modules/sys/druid/";
+import Schedule from "../pages/modules/job/schedule/";
 import Dept from "../pages/modules/sys/dept/";
 import role from "../pages/modules/sys/role/";
 import login from "../pages/common/login.vue";
@@ -28,6 +30,12 @@ const routes = [
     },
     {
       path: '/sys/menu', component: Menu
+    },
+    {
+      path: '/sys/druid', component: Druid
+    },
+    {
+      path: '/job/schedule', component: Schedule
     },
     {
       path: '/sys/dept', component: Dept

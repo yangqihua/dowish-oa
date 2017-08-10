@@ -5,7 +5,7 @@
         <div class="login-form">
           <div class="card-block">
             <h1>Dowish-OA-Login</h1>
-            <p class="text-muted">任意用户名/密码登录</p>
+            <p class="text-muted"></p>
             <div class="input-group m-b-1">
               <span class="input-group-addon"><i class="fa fa-user"></i></span>
               <input type="text" class="form-control" placeholder="Username" v-model="form.username">
@@ -29,9 +29,9 @@
         </div>
         <div class="login-register">
           <div class="card-block">
-            <h2>注册</h2>
+            <h2>用户登录</h2>
             <p></p>
-            <el-button type="info" class="btn btn-primary active m-t-1"> 马上注册</el-button>
+            <!--<el-button type="info" class="btn btn-primary active m-t-1"> 马上注册</el-button>-->
           </div>
         </div>
       </div>
