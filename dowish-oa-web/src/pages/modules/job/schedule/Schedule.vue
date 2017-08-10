@@ -7,26 +7,13 @@
         <el-form label-width="120px">
           <el-row>
             <el-col :span="12">
-              <el-form-item label="用户名">
-                <el-input v-model="searchForm.username" placeholder="用户名"></el-input>
+              <el-form-item label="Bean名称">
+                <el-input v-model="searchForm.beanName" placeholder="Bean名称"></el-input>
               </el-form-item>
             </el-col>
             <el-col :span="12">
-              <el-form-item label="邮箱">
-                <el-input v-model="searchForm.email" placeholder="邮箱"></el-input>
-              </el-form-item>
-            </el-col>
-
-          </el-row>
-          <el-row>
-            <el-col :span="12">
-              <el-form-item label="电话">
-                <el-input v-model="searchForm.mobile" placeholder="电话"></el-input>
-              </el-form-item>
-            </el-col>
-            <el-col :span="12">
-              <el-form-item label="部门">
-                <el-input v-model="searchForm.deptName" placeholder="部门"></el-input>
+              <el-form-item label="方法名称">
+                <el-input v-model="searchForm.methodName" placeholder="方法名称"></el-input>
               </el-form-item>
             </el-col>
 
@@ -36,9 +23,9 @@
             <el-button v-if="permissions.delete" @click.native.prevent="handleDelete" icon="delete" type="danger" :disabled="btnEnable.delete">
               删除
             </el-button>
-            <el-button v-if="permissions.resetPwd" @click.native.prevent="handleResetPwd" icon="setting" type="danger"
-                       :disabled="btnEnable.resetPwd">重置密码
-            </el-button>
+            <!--<el-button v-if="permissions.resetPwd" @click.native.prevent="handleResetPwd" icon="setting" type="danger"-->
+                       <!--:disabled="btnEnable.resetPwd">重置密码-->
+            <!--</el-button>-->
             <el-button v-if="permissions.edit" @click.native.prevent="handleEdit" icon="edit" type="info" :disabled="btnEnable.edit">编辑
             </el-button>
 
@@ -63,31 +50,37 @@
         </el-table-column>
 
         <el-table-column
-          prop="username"
-          label="用户名">
+          prop="beanName"
+          label="Bean名称">
         </el-table-column>
 
         <el-table-column
-          prop="deptName"
-          label="部门">
+          prop="methodName"
+          label="方法名称">
         </el-table-column>
 
         <el-table-column
-          prop="mobile"
-          label="手机号">
+          prop="params"
+          label="参数">
         </el-table-column>
+
         <el-table-column
-          prop="email"
-          label="邮箱">
+          prop="cronExpression"
+          label="cron表达式">
         </el-table-column>
+
+        <el-table-column
+          prop="remark"
+          label="备注">
+        </el-table-column>
+
         <el-table-column
           prop="status"
-          label="状态"
-        >
+          label="状态">
           <template scope="scope">
             <el-tag
               :type="scope.row.status == '1' ? '' : 'danger'"
-              close-transition>{{scope.row.status==1?'正常':'禁用'}}
+              close-transition>{{scope.row.status==1?'暂停中':'正常运行'}}
             </el-tag>
           </template>
         </el-table-column>
@@ -103,19 +96,8 @@
         :total="tableData.pagination.total">
       </el-pagination>
 
-      <el-dialog title="重置密码" v-model="resetPwdFormVisible">
-        <el-form :model="pwdForm" ref="resetPwdForm" :rules="resetPwdRules" label-width="120px">
-          <el-form-item label="旧密码">
-            <el-input type="password" v-model="pwdForm.password" auto-complete="off"></el-input>
-          </el-form-item>
-          <el-form-item label="新密码" prop="newPassword">
-            <el-input type="password" v-model="pwdForm.newPassword" auto-complete="off"></el-input>
-          </el-form-item>
-        </el-form>
-        <div slot="footer" class="dialog-footer">
-          <el-button @click="resetPwdFormVisible = false">取 消</el-button>
-          <el-button type="primary" @click="onResetPwd">确 定</el-button>
-        </div>
+      <el-dialog title="重置密码" v-model="logTableVisible">
+
       </el-dialog>
     </div>
 

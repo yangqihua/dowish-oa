@@ -20,12 +20,11 @@ export default {
       multipleSelection: [],
 
       searchForm: {
-        username: '',
-        email: '',
-        mobile: '',
-        deptName: '',
-        status: '',
+        beanName: '',
+        methodName: '',
       },
+
+      logTableVisible:false,
 
       showList: true,  //显示用户列表div
       searchKey: '',  //搜索的用户名
@@ -36,13 +35,6 @@ export default {
           pageSize: 10,
         },
         rows: []
-      },
-
-      resetPwdFormVisible: false,
-      pwdForm: {
-        userId: '',
-        password: '',
-        newPassword: '',
       },
 
       // edit 部分
@@ -77,20 +69,10 @@ export default {
           {min: 2, message: '用户名大于 2 个字符', trigger: 'blur'}
         ],
       },
-      resetPwdRules: {
-        newPassword: [
-          {required: true, message: '请输入密码', trigger: 'blur'},
-          {min: 3, message: '用户名大于 3 个字符', trigger: 'blur'}
-        ],
-      }
 
     }
   },
   methods: {
-    handleResetPwd(){
-      this.pwdForm.userId = this.multipleSelection[0].userId
-      this.resetPwdFormVisible = true
-    },
     handleEdit(){
       this.showList = !this.showList
       let params = {
@@ -148,7 +130,7 @@ export default {
       this.searchForm.page = this.tableData.pagination.pageNo
       this.searchForm.limit = this.tableData.pagination.pageSize
       let params = {
-        url: 'sys/user/list',
+        url: '/sys/schedule/list',
         data: this.searchForm,
         loadingDom: 'userTableId',
         scb: (response) => {
@@ -165,28 +147,6 @@ export default {
         showLoading: false,
         scb: (response) => {
           this.roleList = response.list
-        }
-      }
-      ajax(params)
-    },
-
-    loadDeptList(){
-      let params = {
-        url: '/sys/dept/select',
-        showLoading: false,
-        scb: (res) => {
-
-          this.deptTree = stringUtils.arrayToTree(res.deptList, {
-            id: "deptId",
-            parentId: "parentId",
-            childrenKey: "list"
-          })
-          // 把空属性去掉，不然获取不到叶子节点的值
-          stringUtils.deleteEmptyProperty(this.deptTree)
-          let path = new Set()
-          stringUtils.addParentId(this.form.deptId, "deptId", "parentId", this.deptTree, path)
-          this.form.parentIds = Array.from(path)
-          this.loadRoleList()
         }
       }
       ajax(params)
@@ -237,26 +197,7 @@ export default {
         }
       })
     },
-    onResetPwd(){
-      this.$refs['resetPwdForm'].validate((valid) => {
-        if (valid) {
-          this.resetPwdFormVisible = false
-          let params = {
-            url: 'sys/user/password',
-            type: 'post',
-            data: this.pwdForm,
-            scb: (res) => {
-              this.$message.success('更新成功')
-              this.loadData()
-            }
-          }
-          ajax(params)
-        } else {
-        }
-      })
-    },
     resetForm() {
-      this.boolStatus = true
       stringUtils.resetObject(this.form)
     },
     resetSearchForm() {
