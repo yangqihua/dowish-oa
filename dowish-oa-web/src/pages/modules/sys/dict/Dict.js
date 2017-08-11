@@ -23,9 +23,6 @@ export default {
         key: '',
         value: '',
       },
-
-      logTableVisible:false,
-
       showList: true,  //显示用户列表div
       tableData: {
         pagination: {

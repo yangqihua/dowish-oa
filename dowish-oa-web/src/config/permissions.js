@@ -55,6 +55,9 @@ const permissions = {
   SYS_DICT_DELETE:'sys:dict:delete',
   SYS_DICT_UPDATE:'sys:dict:update',
   SYS_DICT_SAVE:'sys:dict:save',
+
+  // LOG 部分
+  SYS_LOG_LIST:'sys:log:list',
 };
 
 
