@@ -12,6 +12,9 @@
 			<if test="beanName != null and beanName.trim() != ''">
 				bean_name like concat('%', #{beanName}, '%') 
 			</if>
+			<if test="methodName != null and methodName.trim() != ''">
+				method_name like concat('%', #{methodName}, '%')
+			</if>
 		</where>
 		<if test="offset != null and limit != null ">
 		limit #{offset}, #{limit}
@@ -23,6 +26,9 @@
 		<where>
 			<if test="beanName != null and beanName.trim() != ''">
 				bean_name like concat('%', #{beanName}, '%') 
+			</if>
+			<if test="methodName != null and methodName.trim() != ''">
+				method_name like concat('%', #{methodName}, '%')
 			</if>
 		</where>
 	</select>

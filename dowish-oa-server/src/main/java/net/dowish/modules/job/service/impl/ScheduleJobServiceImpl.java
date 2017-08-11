@@ -64,7 +64,6 @@ public class ScheduleJobServiceImpl implements ScheduleJobService {
 		scheduleJob.setCreateTime(new Date());
 		scheduleJob.setStatus(Constant.ScheduleStatus.NORMAL.getValue());
         schedulerJobDao.save(scheduleJob);
-        
         ScheduleUtils.createScheduleJob(scheduler, scheduleJob);
     }
 	
@@ -72,7 +71,6 @@ public class ScheduleJobServiceImpl implements ScheduleJobService {
 	@Transactional
 	public void update(ScheduleJobEntity scheduleJob) {
         ScheduleUtils.updateScheduleJob(scheduler, scheduleJob);
-                
         schedulerJobDao.update(scheduleJob);
     }
 

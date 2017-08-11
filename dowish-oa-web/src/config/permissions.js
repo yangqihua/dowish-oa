@@ -14,8 +14,6 @@ const permissions = {
   USER_RESET_PWD:'sys:user:password',
   USER_SEARCH:'sys:user:list',
 
-
-
   // ROLE 部分
   SYS_ROLE_LIST:'sys:role:list',
   SYS_ROLE_INFO:'sys:role:info',
@@ -23,7 +21,6 @@ const permissions = {
   SYS_ROLE_UPDATE:'sys:role:update',
   SYS_ROLE_SAVE:'sys:role:save',
   SYS_ROLE_SELECT:'sys:role:select',
-
 
   // DEPT 部分
   SYS_DEPT_SELECT:'sys:dept:select',
@@ -40,6 +37,17 @@ const permissions = {
   SYS_MENU_SAVE:'sys:menu:save',
   SYS_MENU_SELECT:'sys:menu:select',
   SYS_MENU_PERMS:'sys:menu:perms',
+
+  // SCHEDULE 部分
+  SYS_SCHEDULE_LIST:'sys:schedule:list',
+  SYS_SCHEDULE_INFO:'sys:schedule:info',
+  SYS_SCHEDULE_DELETE:'sys:schedule:delete',
+  SYS_SCHEDULE_UPDATE:'sys:schedule:update',
+  SYS_SCHEDULE_SAVE:'sys:schedule:save',
+  SYS_SCHEDULE_PAUSE:'sys:schedule:pause',
+  SYS_SCHEDULE_RESUME:'sys:schedule:resume',
+  SYS_SCHEDULE_RUN:'sys:schedule:run',
+  SYS_SCHEDULE_LOG:'sys:schedule:log',
 };
 
 

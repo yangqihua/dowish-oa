@@ -1,5 +1,6 @@
 package net.dowish.modules.job.entity;
 
+import lombok.Data;
 import org.hibernate.validator.constraints.NotBlank;
 
 import java.io.Serializable;
@@ -8,6 +9,7 @@ import java.util.Date;
 /**
  * 定时器
  */
+@Data
 public class ScheduleJobEntity implements Serializable {
 	private static final long serialVersionUID = 1L;
 
@@ -59,99 +61,4 @@ public class ScheduleJobEntity implements Serializable {
 	 */
 	private Date createTime;
 
-	/**
-	 * 设置：任务id
-	 * @param jobId 任务id
-	 */
-	public void setJobId(Long jobId) {
-		this.jobId = jobId;
-	}
-
-	/**
-	 * 获取：任务id
-	 * @return Long
-	 */
-	public Long getJobId() {
-		return jobId;
-	}
-	
-	public String getBeanName() {
-		return beanName;
-	}
-
-	public void setBeanName(String beanName) {
-		this.beanName = beanName;
-	}
-
-	public String getMethodName() {
-		return methodName;
-	}
-
-	public void setMethodName(String methodName) {
-		this.methodName = methodName;
-	}
-
-	public String getParams() {
-		return params;
-	}
-
-	public void setParams(String params) {
-		this.params = params;
-	}
-
-	public String getRemark() {
-		return remark;
-	}
-
-	public void setRemark(String remark) {
-		this.remark = remark;
-	}
-
-	/**
-	 * 设置：任务状态
-	 * @param status 任务状态
-	 */
-	public void setStatus(Integer status) {
-		this.status = status;
-	}
-
-	/**
-	 * 获取：任务状态
-	 * @return String
-	 */
-	public Integer getStatus() {
-		return status;
-	}
-	
-	/**
-	 * 设置：cron表达式
-	 * @param cronExpression cron表达式
-	 */
-	public void setCronExpression(String cronExpression) {
-		this.cronExpression = cronExpression;
-	}
-
-	/**
-	 * 获取：cron表达式
-	 * @return String
-	 */
-	public String getCronExpression() {
-		return cronExpression;
-	}
-	
-	/**
-	 * 设置：创建时间
-	 * @param createTime 创建时间
-	 */
-	public void setCreateTime(Date createTime) {
-		this.createTime = createTime;
-	}
-
-	/**
-	 * 获取：创建时间
-	 * @return Date
-	 */
-	public Date getCreateTime() {
-		return createTime;
-	}
 }

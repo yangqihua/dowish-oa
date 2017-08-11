@@ -1,6 +1,6 @@
 <template>
 
-  <content-panel id="userListId" v-if="showList">
+  <content-panel v-if="showList">
     <h3 class="box-title" slot="header" style="width: 100%;">
 
       <div class="title-search">
@@ -16,20 +16,15 @@
                 <el-input v-model="searchForm.methodName" placeholder="方法名称"></el-input>
               </el-form-item>
             </el-col>
-
           </el-row>
           <div class="btn-group">
-
-            <el-button v-if="permissions.delete" @click.native.prevent="handleDelete" icon="delete" type="danger" :disabled="btnEnable.delete">
-              删除
-            </el-button>
-            <!--<el-button v-if="permissions.resetPwd" @click.native.prevent="handleResetPwd" icon="setting" type="danger"-->
-                       <!--:disabled="btnEnable.resetPwd">重置密码-->
-            <!--</el-button>-->
-            <el-button v-if="permissions.edit" @click.native.prevent="handleEdit" icon="edit" type="info" :disabled="btnEnable.edit">编辑
-            </el-button>
-
+            <el-button v-if="permissions.delete" @click.native.prevent="handleDelete" icon="delete" type="danger" :disabled="btnEnable.multi">删除</el-button>
+            <el-button v-if="permissions.edit" @click.native.prevent="handleEdit" icon="edit" type="info" :disabled="btnEnable.edit">编辑</el-button>
             <el-button v-if="permissions.add" @click.native.prevent="addNew" icon="plus" type="success">新增</el-button>
+            <el-button v-if="permissions.run" @click.native.prevent="runSchedule" icon="setting" type="success" :disabled="btnEnable.multi">立即运行</el-button>
+            <el-button v-if="permissions.pause" @click.native.prevent="pauseSchedule" icon="setting" type="success" :disabled="btnEnable.multi">暂停</el-button>
+            <el-button v-if="permissions.resume" @click.native.prevent="resumeSchedule" icon="setting" type="success" :disabled="btnEnable.multi">恢复</el-button>
+            <el-button v-if="permissions.log" @click.native.prevent="scheduleLog" icon="setting" type="danger" :disabled="true">日志列表</el-button>
             <el-button v-if="permissions.list"  type="info" @click="resetSearchForm()" class="el-icon-circle-close"> 重置条件</el-button>
             <el-button v-if="permissions.list" @click.native.prevent="loadData" icon="search" type="primary">搜索</el-button>
           </div>
@@ -41,7 +36,7 @@
         :data="tableData.rows"
         border
         style="width: 100%"
-        @selection-change="handleSelectionChange" id="userTableId">
+        @selection-change="handleSelectionChange">
 
         <el-table-column
           prop="id"
@@ -105,54 +100,31 @@
 
 
   <!--编辑/添加用户start-->
-  <content-panel id="userEditId" v-else>
+  <content-panel v-else>
     <div style="margin: 30px 50px 20px 10px">
       <el-form :model="form" ref="form" :rules="rules" label-width="180px">
-        <el-form-item label="用户名" prop="username">
-          <el-input v-model="form.username"></el-input>
+        <el-form-item label="Bean名称" prop="beanName">
+          <el-input v-model="form.beanName"></el-input>
         </el-form-item>
-        <el-form-item label="密码" v-if="!form.userId">
-          <el-input v-model="form.password"></el-input>
+        <el-form-item label="方法名称">
+          <el-input v-model="form.methodName"></el-input>
         </el-form-item>
-        <el-form-item label="手机">
-          <el-input v-model="form.mobile"></el-input>
+        <el-form-item label="参数">
+          <el-input v-model="form.params"></el-input>
         </el-form-item>
-        <el-form-item label="邮箱">
-          <el-input v-model="form.email"></el-input>
-        </el-form-item>
-
-        <el-form-item label="状态">
-          <el-switch
-            v-model="boolStatus"
-            on-color="#13ce66"
-            off-color="#ff4949"
-            on-text="正常"
-            off-text="禁用"
-          >
-          </el-switch>
+        <el-form-item label="cron表达式">
+          <el-input v-model="form.cronExpression"></el-input>
         </el-form-item>
 
-        <el-form-item label="所属部门">
-          <el-cascader
-            :props="cascaderProps"
-            :options="deptTree"
-            v-model="form.parentIds"
-          >
-          </el-cascader>
-        </el-form-item>
-
-        <el-form-item label="用户角色">
-          <el-checkbox-group v-model="form.roleIdList">
-            <el-checkbox v-for="item in roleList" :key="item.roleId" :label="item.roleId">{{item.roleName}}
-            </el-checkbox>
-          </el-checkbox-group>
+        <el-form-item label="备注">
+          <el-input v-model="form.remark"></el-input>
         </el-form-item>
 
         <el-form-item>
-          <el-button type="success" @click="onUpdate" v-if="form.userId" class="el-icon-circle-check"> 保存</el-button>
+          <el-button type="success" @click="onUpdate" v-if="form.jobId" class="el-icon-circle-check"> 保存</el-button>
           <el-button type="success" @click="onSubmit" class="el-icon-circle-check" v-else> 立即创建</el-button>
           <el-button type="primary" @click="resetForm()" class="el-icon-circle-close"> 重置</el-button>
-          <el-button type="primary" @click="showList = !showList;resetForm()" class="el-icon-arrow-left"> 返回</el-button>
+          <el-button type="primary" @click="showList = !showList;" class="el-icon-arrow-left"> 返回</el-button>
         </el-form-item>
       </el-form>
     </div>

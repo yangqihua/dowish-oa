@@ -27,7 +27,6 @@ export default {
       logTableVisible:false,
 
       showList: true,  //显示用户列表div
-      searchKey: '',  //搜索的用户名
       tableData: {
         pagination: {
           total: 0,
@@ -38,54 +37,70 @@ export default {
       },
 
       // edit 部分
-      roleList: [],
-
-      //级联选择数据源
-      deptTree: [],
-
-      //级联选择属性定义
-      cascaderProps: {
-        value: 'deptId',
-        label: 'name',
-        children: 'list',
-      },
-
-      boolStatus: true,
-
       form: {
-        userId: null,
-        roleName: '',
-        email: '',
-        mobile: '',
-        status: '',
-        roleIdList: [],
-        password: null,
-        parentIds: [],
-        deptId: '',
+        beanName: null,
+        methodName: null,
+        params: null,
+        cronExpression:null,
+        remark:null,
       },
       rules: {
-        username: [
-          {required: true, message: '请输入用户名', trigger: 'blur'},
-          {min: 2, message: '用户名大于 2 个字符', trigger: 'blur'}
+        beanName: [
+          {required: true, message: 'Bean名称', trigger: 'blur'},
+          {min: 1, message: 'Bean名称 2 个字符', trigger: 'blur'}
         ],
       },
 
     }
   },
   methods: {
-    handleEdit(){
-      this.showList = !this.showList
+
+    runSchedule(){
       let params = {
-        url: 'sys/user/info/' + this.multipleSelection[0].userId,
-        showLoading: false,
+        url: '/sys/schedule/run',
+        type: 'post',
+        data: this.multipleSelection.map(item => {
+          return item.jobId
+        }),
         scb: (response) => {
-          this.form = merge({}, response.user)
-          this.boolStatus = response.user.status === 1
-          this.loadDeptList()
+          this.loadData()
         }
       }
       ajax(params)
+    },
+    pauseSchedule(){
+      let params = {
+        url: '/sys/schedule/pause',
+        type: 'post',
+        data: this.multipleSelection.map(item => {
+          return item.jobId
+        }),
+        scb: (response) => {
+          this.loadData()
+        }
+      }
+      ajax(params)
+    },
+    resumeSchedule(){
+      let params = {
+        url: '/sys/schedule/resume',
+        type: 'post',
+        data: this.multipleSelection.map(item => {
+          return item.jobId
+        }),
+        scb: (response) => {
+          this.loadData()
+        }
+      }
+      ajax(params)
+    },
+    scheduleLog(){
+      // TODO:在dialog中显示日志列表
+    },
 
+    handleEdit(){
+      this.form = merge({},this.multipleSelection[0]);
+      this.showList = !this.showList
     },
     handleDelete(){
       this.$confirm('确定删除?', '提示', {
@@ -93,14 +108,13 @@ export default {
         cancelButtonText: '取消',
         type: 'warning'
       }).then(() => {
-        let userIds = this.multipleSelection.map(item => {
-          return item.userId
+        let jobIds = this.multipleSelection.map(item => {
+          return item.jobId
         })
         let params = {
-          url: 'sys/user/delete',
+          url: '/sys/schedule/delete',
           type: 'post',
-          data: userIds,
-          loadingDom: 'userTableId',
+          data: jobIds,
           scb: (response) => {
             this.loadData()
           }
@@ -112,7 +126,6 @@ export default {
     addNew(){
       this.showList = !this.showList;
       this.resetForm()
-      this.loadDeptList()
     },
     handleSelectionChange(val){
       this.multipleSelection = val
@@ -132,7 +145,6 @@ export default {
       let params = {
         url: '/sys/schedule/list',
         data: this.searchForm,
-        loadingDom: 'userTableId',
         scb: (response) => {
           this.tableData.rows = response.page.list
           this.tableData.pagination.total = response.page.totalCount
@@ -140,29 +152,14 @@ export default {
       }
       ajax(params)
     },
-
-    loadRoleList(){
-      let params = {
-        url: 'sys/role/select',
-        showLoading: false,
-        scb: (response) => {
-          this.roleList = response.list
-        }
-      }
-      ajax(params)
-    },
-
     //edit部分
 
     //save
     onSubmit(){
       this.$refs['form'].validate((valid) => {
         if (valid) {
-          this.form.status = this.boolStatus ? '1' : '0'
-          this.form.deptId = this.form.parentIds[this.form.parentIds.length - 1]
-          this.form["createUserId"] = this.user.userId
           let params = {
-            url: 'sys/user/save?password=' + this.form.password,
+            url: '/sys/schedule/save',
             type: 'post',
             data: this.form,
             scb: (res) => {
@@ -172,18 +169,15 @@ export default {
             }
           }
           ajax(params)
-        } else {
-        }
+        } else {}
       })
     },
     //edit
     onUpdate(){
       this.$refs['form'].validate((valid) => {
         if (valid) {
-          this.form.status = this.boolStatus ? '1' : '0'
-          this.form.deptId = this.form.parentIds[this.form.parentIds.length - 1]
           let params = {
-            url: 'sys/user/update',
+            url: '/sys/schedule/update',
             type: 'post',
             data: this.form,
             scb: (res) => {
@@ -193,8 +187,7 @@ export default {
             }
           }
           ajax(params)
-        } else {
-        }
+        } else {}
       })
     },
     resetForm() {
@@ -210,27 +203,33 @@ export default {
     }),
     permissions(){
       return {
-        list: stringUtils.hasPermission(this.userPerms,perms.SYS_USER_LIST),
-        add: stringUtils.hasPermission(this.userPerms,perms.SYS_DEPT_SELECT)
-        && stringUtils.hasPermission(this.userPerms,perms.SYS_ROLE_SELECT)
-        && stringUtils.hasPermission(this.userPerms,perms.SYS_USER_SAVE),
-        edit: stringUtils.hasPermission(this.userPerms,perms.SYS_USER_INFO)
-        && stringUtils.hasPermission(this.userPerms,perms.SYS_ROLE_SELECT)
-        && stringUtils.hasPermission(this.userPerms,perms.SYS_DEPT_SELECT)
-        && stringUtils.hasPermission(this.userPerms,perms.SYS_USER_UPDATE),
-        resetPwd: stringUtils.hasPermission(this.userPerms,perms.USER_RESET_PWD),
-        delete: stringUtils.hasPermission(this.userPerms,perms.SYS_USER_DELETE),
+        list:     stringUtils.hasPermission(this.userPerms,perms.SYS_SCHEDULE_LIST),
+        add:      stringUtils.hasPermission(this.userPerms,perms.SYS_SCHEDULE_SAVE),
+        edit:     stringUtils.hasPermission(this.userPerms,perms.SYS_SCHEDULE_UPDATE),
+        delete:   stringUtils.hasPermission(this.userPerms,perms.SYS_SCHEDULE_DELETE),
+        pause:    stringUtils.hasPermission(this.userPerms,perms.SYS_SCHEDULE_PAUSE),
+        resume:   stringUtils.hasPermission(this.userPerms,perms.SYS_SCHEDULE_RESUME),
+        run:      stringUtils.hasPermission(this.userPerms,perms.SYS_SCHEDULE_RUN),
+        log:      stringUtils.hasPermission(this.userPerms,perms.SYS_SCHEDULE_LOG),
+
       }
     },
     btnEnable(){
       return {
         edit: !(this.multipleSelection.length == 1),
-        delete: !(this.multipleSelection.length >= 1),
-        resetPwd: !(this.multipleSelection.length == 1),
+        multi: !(this.multipleSelection.length >= 1),
       }
     },
   },
   created(){
     this.loadData();
+  },
+  watch:{
+    showList(newVal,oldVal) {
+      console.log("new :",newVal)
+      if(newVal){
+        this.multipleSelection = []
+      }
+    }
   }
 }

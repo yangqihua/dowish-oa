@@ -58,9 +58,7 @@ public class ScheduleJobController {
 	@RequiresPermissions("sys:schedule:save")
 	public Apis save(@RequestBody ScheduleJobEntity scheduleJob){
 		ValidatorUtils.validateEntity(scheduleJob);
-		
 		scheduleJobService.save(scheduleJob);
-		
 		return Apis.ok();
 	}
 	
