@@ -2,7 +2,7 @@
 
   <content-panel>
     <h3 class="box-title" slot="header" style="width: 100%;">
-      <el-button v-if="permissions.add && !form.menuId" type="primary" icon="plus" @click="newAdd">新增</el-button>
+      <el-button v-if="permissions.add" type="primary" icon="plus" @click="newAdd">新增</el-button>
     </h3>
     <el-row slot="body">
       <el-col :span="6">

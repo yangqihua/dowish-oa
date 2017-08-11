@@ -1,31 +1,13 @@
 package net.dowish.modules.sys.controller;
 
-import net.dowish.common.annotation.SysLog;
 import net.dowish.common.base.controller.BaseController;
-import net.dowish.common.security.validator.ValidatorUtils;
 import net.dowish.common.utils.Apis;
-import net.dowish.common.utils.Page;
-import net.dowish.common.utils.Query;
-import net.dowish.modules.sys.entity.Dict;
-import net.dowish.modules.sys.service.ConfigService;
-import org.apache.http.client.HttpClient;
-import org.apache.http.client.methods.CloseableHttpResponse;
-import org.apache.http.client.methods.HttpGet;
-import org.apache.http.impl.client.CloseableHttpClient;
-import org.apache.http.impl.client.HttpClients;
-import org.apache.http.util.EntityUtils;
+import net.dowish.modules.sys.service.DictService;
 import org.apache.shiro.authz.annotation.RequiresPermissions;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.core.io.ClassPathResource;
-import org.springframework.core.io.Resource;
 import org.springframework.web.bind.annotation.*;
 
 import javax.servlet.http.HttpServletRequest;
-import java.io.IOException;
-import java.nio.charset.StandardCharsets;
-import java.nio.file.Files;
-import java.nio.file.Paths;
-import java.util.List;
 import java.util.Map;
 
 /**
@@ -35,7 +17,7 @@ import java.util.Map;
 @RequestMapping("/sys/druid")
 public class DruidController extends BaseController {
 	@Autowired
-	private ConfigService configService;
+	private DictService dictService;
 
 	/**
 	 * 获取sql内容

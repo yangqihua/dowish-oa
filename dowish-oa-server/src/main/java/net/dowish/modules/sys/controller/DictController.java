@@ -4,7 +4,7 @@ import net.dowish.common.annotation.SysLog;
 import net.dowish.common.base.controller.BaseController;
 import net.dowish.common.utils.Apis;
 import net.dowish.modules.sys.entity.Dict;
-import net.dowish.modules.sys.service.ConfigService;
+import net.dowish.modules.sys.service.DictService;
 import net.dowish.common.utils.Page;
 import net.dowish.common.utils.Query;
 import net.dowish.common.security.validator.ValidatorUtils;
@@ -19,21 +19,21 @@ import java.util.Map;
  * 系统配置信息
  */
 @RestController
-@RequestMapping("/sys/config")
-public class ConfigController extends BaseController {
+@RequestMapping("/sys/dict")
+public class DictController extends BaseController {
 	@Autowired
-	private ConfigService configService;
+	private DictService dictService;
 	
 	/**
 	 * 所有配置列表
 	 */
 	@RequestMapping("/list")
-	@RequiresPermissions("sys:config:list")
+	@RequiresPermissions("sys:dict:list")
 	public Apis list(@RequestParam Map<String, Object> params){
 		//查询列表数据
 		Query query = new Query(params);
-		List<Dict> configList = configService.queryList(query);
-		int total = configService.queryTotal(query);
+		List<Dict> configList = dictService.queryList(query);
+		int total = dictService.queryTotal(query);
 		
 		Page pageUtil = new Page(configList, total, query.getLimit(), query.getPage());
 		
@@ -45,9 +45,9 @@ public class ConfigController extends BaseController {
 	 * 配置信息
 	 */
 	@RequestMapping("/info/{id}")
-	@RequiresPermissions("sys:config:info")
+	@RequiresPermissions("sys:dict:info")
 	public Apis info(@PathVariable("id") Long id){
-		Dict config = configService.queryObject(id);
+		Dict config = dictService.queryObject(id);
 		
 		return Apis.ok().put("config", config);
 	}
@@ -57,11 +57,11 @@ public class ConfigController extends BaseController {
 	 */
 	@SysLog("保存配置")
 	@RequestMapping("/save")
-	@RequiresPermissions("sys:config:save")
+	@RequiresPermissions("sys:dict:save")
 	public Apis save(@RequestBody Dict config){
 		ValidatorUtils.validateEntity(config);
 
-		configService.save(config);
+		dictService.save(config);
 		
 		return Apis.ok();
 	}
@@ -71,11 +71,11 @@ public class ConfigController extends BaseController {
 	 */
 	@SysLog("修改配置")
 	@RequestMapping("/update")
-	@RequiresPermissions("sys:config:update")
+	@RequiresPermissions("sys:dict:update")
 	public Apis update(@RequestBody Dict config){
 		ValidatorUtils.validateEntity(config);
 		
-		configService.update(config);
+		dictService.update(config);
 		
 		return Apis.ok();
 	}
@@ -85,9 +85,9 @@ public class ConfigController extends BaseController {
 	 */
 	@SysLog("删除配置")
 	@RequestMapping("/delete")
-	@RequiresPermissions("sys:config:delete")
+	@RequiresPermissions("sys:dict:delete")
 	public Apis delete(@RequestBody Long[] ids){
-		configService.deleteBatch(ids);
+		dictService.deleteBatch(ids);
 		
 		return Apis.ok();
 	}

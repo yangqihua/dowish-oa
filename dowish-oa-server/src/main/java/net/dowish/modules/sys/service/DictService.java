@@ -8,7 +8,7 @@ import java.util.Map;
 /**
  * 系统配置信息
  */
-public interface ConfigService {
+public interface DictService {
 	
 	/**
 	 * 保存配置信息

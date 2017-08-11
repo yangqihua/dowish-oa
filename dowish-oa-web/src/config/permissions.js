@@ -48,6 +48,13 @@ const permissions = {
   SYS_SCHEDULE_RESUME:'sys:schedule:resume',
   SYS_SCHEDULE_RUN:'sys:schedule:run',
   SYS_SCHEDULE_LOG:'sys:schedule:log',
+
+  // DICT 部分
+  SYS_DICT_LIST:'sys:dict:list',
+  SYS_DICT_INFO:'sys:dict:info',
+  SYS_DICT_DELETE:'sys:dict:delete',
+  SYS_DICT_UPDATE:'sys:dict:update',
+  SYS_DICT_SAVE:'sys:dict:save',
 };
 
 

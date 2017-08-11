@@ -3,7 +3,7 @@ package net.dowish.modules.sys.service.impl;
 import com.google.gson.Gson;
 import net.dowish.modules.sys.dao.ConfigDao;
 import net.dowish.modules.sys.entity.Dict;
-import net.dowish.modules.sys.service.ConfigService;
+import net.dowish.modules.sys.service.DictService;
 import net.dowish.common.exception.ResultException;
 import org.apache.commons.lang.StringUtils;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -14,7 +14,7 @@ import java.util.List;
 import java.util.Map;
 
 @Service("sysConfigService")
-public class ConfigServiceImpl implements ConfigService {
+public class DictServiceImpl implements DictService {
 	@Autowired
 	private ConfigDao configDao;
 	

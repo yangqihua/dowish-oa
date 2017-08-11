@@ -70,7 +70,6 @@ public class MenuController extends BaseController {
 		//查询列表数据
 //		List<MenuEntity> menuList = menuService.getUserAllTreeMenuList(getUserId());
 		
-//		只有超级管理员，才能查看所有管理员列表
 		List<MenuEntity> menuList;
 		if(getUserId() == Constant.SUPER_ADMIN){
 			menuList = menuService.queryList(new HashMap<>());

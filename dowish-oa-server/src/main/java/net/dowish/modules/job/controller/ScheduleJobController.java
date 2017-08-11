@@ -34,9 +34,9 @@ public class ScheduleJobController {
 		List<ScheduleJobEntity> jobList = scheduleJobService.queryList(query);
 		int total = scheduleJobService.queryTotal(query);
 		
-		Page pageUtil = new Page(jobList, total, query.getLimit(), query.getPage());
+		Page page = new Page(jobList, total, query.getLimit(), query.getPage());
 		
-		return Apis.ok().put("page", pageUtil);
+		return Apis.ok().put("page", page);
 	}
 	
 	/**
