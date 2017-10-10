@@ -36,6 +36,8 @@
 		<velocity.version>1.7</velocity.version>
 		<lombok.version>1.16.6</lombok.version>
 		<dozer.version>5.5.1</dozer.version>
+		<mybatisplus-spring-boot-starter.version>1.0.4</mybatisplus-spring-boot-starter.version>
+		<mybatis-plus.version>2.1.0</mybatis-plus.version>
 
 		<!--wagon plugin 配置-->
 		<service-path>deploy_path</service-path>
@@ -191,6 +193,19 @@
 			<artifactId>dozer</artifactId>
 			<version>${dozer.version}</version>
 		</dependency>
+
+		<!--mybatis-plus-->
+		<dependency>
+			<groupId>com.baomidou</groupId>
+			<artifactId>mybatisplus-spring-boot-starter</artifactId>
+			<version>${mybatisplus-spring-boot-starter.version}</version>
+		</dependency>
+		<dependency>
+			<groupId>com.baomidou</groupId>
+			<artifactId>mybatis-plus</artifactId>
+			<version>${mybatis-plus.version}</version>
+		</dependency>
+
 	</dependencies>
 
 	<build>
